@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import Search from './pages/Search';
 import Contact from './pages/Contact';
 import AddHomestay from './pages/AddHomestay';
+import HomestayDetail from './pages/HomestayDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import './App.css';
 
@@ -22,6 +23,13 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/search" element={<Search />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/homestay/:id" element={
+              <>
+                <Header />
+                <HomestayDetail />
+                <Footer />
+              </>
+            } />
             <Route path="/contact" element={
               <>
                 <Header />
