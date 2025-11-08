@@ -17,6 +17,8 @@ function Register() {
   });
 
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -32,6 +34,7 @@ function Register() {
         [name]: ''
       });
     }
+    setApiError('');
   };
 
   const validateForm = () => {
@@ -72,7 +75,7 @@ function Register() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = validateForm();
@@ -82,13 +85,27 @@ function Register() {
       return;
     }
 
-    console.log('Register data:', formData);
+    setIsLoading(true);
+    setApiError('');
 
-    // Register user with AuthContext
-    register(formData);
+    try {
+      const result = await register(formData);
 
-    // Redirect to home page
-    navigate('/');
+      if (result.success) {
+        // Redirect based on role
+        if (result.user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      } else {
+        setApiError(result.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+      }
+    } catch (err) {
+      setApiError('Có lỗi xảy ra. Vui lòng thử lại sau.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -104,6 +121,20 @@ function Register() {
           </div>
 
           <form className="register-form" onSubmit={handleSubmit}>
+            {apiError && (
+              <div className="error-alert" style={{
+                padding: '12px',
+                backgroundColor: '#fee2e2',
+                border: '1px solid #fecaca',
+                borderRadius: '8px',
+                color: '#dc2626',
+                fontSize: '14px',
+                marginBottom: '20px'
+              }}>
+                {apiError}
+              </div>
+            )}
+
             <div className="form-group">
               <label htmlFor="fullName" className="form-label">Họ và tên</label>
               <input
@@ -231,8 +262,8 @@ function Register() {
               {errors.agreeTerms && <span className="error-message">{errors.agreeTerms}</span>}
             </div>
 
-            <button type="submit" className="btn-register">
-              Đăng ký
+            <button type="submit" className="btn-register" disabled={isLoading}>
+              {isLoading ? 'Đang đăng ký...' : 'Đăng ký'}
             </button>
           </form>
 

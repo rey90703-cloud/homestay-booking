@@ -11,28 +11,40 @@ function Login() {
     email: '',
     password: ''
   });
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError(''); // Clear error when user types
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login data:', formData);
+    setError('');
+    setIsLoading(true);
 
-    // Mock login - in real app, this would call an API
-    // For demo, we'll create a mock user based on email
-    const mockUser = {
-      email: formData.email,
-      fullName: formData.email.split('@')[0],
-      role: formData.email.includes('owner') ? 'owner' : 'renter',
-    };
+    try {
+      const result = await login(formData.email, formData.password);
 
-    login(mockUser);
-    navigate('/');
+      if (result.success) {
+        // Redirect based on role
+        if (result.user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      } else {
+        setError(result.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.');
+      }
+    } catch (err) {
+      setError('Có lỗi xảy ra. Vui lòng thử lại sau.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -48,6 +60,20 @@ function Login() {
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
+            {error && (
+              <div className="error-alert" style={{
+                padding: '12px',
+                backgroundColor: '#fee2e2',
+                border: '1px solid #fecaca',
+                borderRadius: '8px',
+                color: '#dc2626',
+                fontSize: '14px',
+                marginBottom: '20px'
+              }}>
+                {error}
+              </div>
+            )}
+
             <div className="form-group">
               <label htmlFor="email" className="form-label">Email</label>
               <input
@@ -58,6 +84,7 @@ function Login() {
                 placeholder="example@email.com"
                 value={formData.email}
                 onChange={handleChange}
+                disabled={isLoading}
                 required
               />
             </div>
@@ -72,6 +99,7 @@ function Login() {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
+                disabled={isLoading}
                 required
               />
             </div>
@@ -84,8 +112,8 @@ function Login() {
               <a href="#" className="forgot-link">Quên mật khẩu?</a>
             </div>
 
-            <button type="submit" className="btn-login">
-              Đăng nhập
+            <button type="submit" className="btn-login" disabled={isLoading}>
+              {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
           </form>
 
