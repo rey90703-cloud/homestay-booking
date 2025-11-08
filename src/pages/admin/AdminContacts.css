@@ -1,0 +1,269 @@
+.admin-contacts {
+  width: 100%;
+}
+
+.contacts-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 20px;
+  height: calc(100vh - 250px);
+}
+
+.contacts-list {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.contacts-table {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.contact-item {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.contact-item:hover {
+  background: #f8fafc;
+}
+
+.contact-item.active {
+  background: #eff6ff;
+  border-left: 3px solid #3b82f6;
+}
+
+.contact-item.unread {
+  background: #fef9f3;
+  font-weight: 600;
+}
+
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.contact-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.contact-date {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.contact-subject {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.contact-detail {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.detail-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  flex: 1;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.detail-info {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.info-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #64748b;
+  min-width: 100px;
+}
+
+.info-value {
+  color: #1e293b;
+}
+
+.detail-message {
+  margin-bottom: 25px;
+}
+
+.detail-message h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #475569;
+  margin: 0 0 15px 0;
+}
+
+.detail-message p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #334155;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.detail-reply {
+  background: #f0fdf4;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  border-left: 4px solid #10b981;
+}
+
+.detail-reply h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #065f46;
+  margin: 0 0 12px 0;
+}
+
+.detail-reply p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #064e3b;
+  margin: 0 0 10px 0;
+  white-space: pre-wrap;
+}
+
+.reply-info {
+  font-size: 13px;
+  color: #059669;
+  font-style: italic;
+}
+
+.reply-section {
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 2px solid #f1f5f9;
+}
+
+.reply-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #475569;
+  margin: 0 0 15px 0;
+}
+
+.reply-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 15px;
+  transition: border-color 0.2s;
+}
+
+.reply-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.btn-submit {
+  padding: 12px 24px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-submit:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.no-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+@media (max-width: 1024px) {
+  .contacts-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .contacts-list {
+    max-height: 400px;
+  }
+
+  .contact-detail {
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 640px) {
+  .detail-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .detail-actions {
+    width: 100%;
+  }
+
+  .detail-actions button {
+    flex: 1;
+  }
+}

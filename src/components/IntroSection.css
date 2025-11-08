@@ -1,0 +1,127 @@
+.intro-section {
+  max-width: 1200px;
+  margin: 56px auto;
+  display: flex;
+  gap: 24px;
+  padding: 0 20px;
+}
+
+.intro-card {
+  flex: 1;
+  padding: 32px;
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intro-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 6px 12px;
+  background: #F9A8D4;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4A0E2B;
+}
+
+.intro-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #141217;
+  margin: 0;
+}
+
+.intro-description {
+  font-size: 16px;
+  font-weight: 500;
+  color: #6B5A65;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.intro-stats {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.stat-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: #FFE3EF;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+  border-radius: 14px;
+}
+
+.stat-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #141217;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6B5A65;
+}
+
+.features-card {
+  flex: 1;
+  padding: 32px;
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.features-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #141217;
+  margin: 0;
+}
+
+.features-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature-item {
+  padding: 16px;
+  background: #FFE3EF;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+  border-radius: 14px;
+}
+
+.feature-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #141217;
+  margin: 0 0 8px 0;
+}
+
+.feature-description {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6B5A65;
+  margin: 0;
+  line-height: 1.5;
+}
+

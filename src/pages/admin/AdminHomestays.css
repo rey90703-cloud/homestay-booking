@@ -1,0 +1,66 @@
+.admin-homestays {
+  width: 100%;
+}
+
+.homestay-thumbnail {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.homestay-title {
+  font-weight: 600;
+  color: #1e293b;
+  max-width: 250px;
+}
+
+.badge-secondary {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.badge-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-dark {
+  background: #334155;
+  color: white;
+}
+
+.badge-primary {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.btn-action.btn-info {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-action.btn-info:hover {
+  background: #2563eb;
+}
+
+.btn-action.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-action.btn-danger:hover {
+  background: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .homestay-thumbnail {
+    width: 60px;
+    height: 45px;
+  }
+
+  .homestay-title {
+    max-width: 150px;
+    font-size: 13px;
+  }
+}
