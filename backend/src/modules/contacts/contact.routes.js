@@ -1,6 +1,7 @@
 const express = require('express');
 const contactController = require('./contact.controller');
-const { authenticate, authorize } = require('../../middlewares/auth.middleware');
+const { authenticate } = require('../../middlewares/auth.middleware');
+const { authorize } = require('../../middlewares/rbac.middleware');
 const { ROLES } = require('../../config/constants');
 
 const router = express.Router();

@@ -32,17 +32,22 @@ class EmailService {
       return;
     }
 
-    this.transporter = nodemailer.createTransporter(emailConfig);
+    try {
+      this.transporter = nodemailer.createTransport(emailConfig);
 
-    // Verify connection
-    this.transporter.verify((error) => {
-      if (error) {
-        logger.error(`Email service connection failed: ${error.message}`);
-        this.transporter = null;
-      } else {
-        logger.info('Email service is ready');
-      }
-    });
+      // Verify connection
+      this.transporter.verify((error) => {
+        if (error) {
+          logger.error(`Email service connection failed: ${error.message}`);
+          this.transporter = null;
+        } else {
+          logger.info('Email service is ready');
+        }
+      });
+    } catch (error) {
+      logger.error(`Email service initialization failed: ${error.message}`);
+      this.transporter = null;
+    }
   }
 
   async sendEmail(to, subject, html, text) {
