@@ -92,6 +92,12 @@
   gap: 8px;
 }
 
+.card-location {
+  font-size: 13px;
+  color: #717171;
+  margin: 0;
+}
+
 .card-title {
   font-family: 'Roboto Slab', serif;
   font-size: 15px;
