@@ -58,8 +58,10 @@ function Register() {
 
     if (!formData.password) {
       newErrors.password = 'Vui lòng nhập mật khẩu';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(formData.password)) {
+      newErrors.password = 'Mật khẩu phải có chữ hoa, chữ thường, số và ký tự đặc biệt (!@#$%^&*)';
     }
 
     if (!formData.confirmPassword) {
@@ -230,6 +232,9 @@ function Register() {
                 onChange={handleChange}
               />
               {errors.password && <span className="error-message">{errors.password}</span>}
+              <small style={{ fontSize: '12px', color: '#666', marginTop: '4px', display: 'block' }}>
+                Tối thiểu 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt (!@#$%^&*)
+              </small>
             </div>
 
             <div className="form-group">

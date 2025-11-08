@@ -91,7 +91,22 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Đăng ký thất bại');
+        // Get detailed error message
+        let errorMessage = 'Đăng ký thất bại';
+        
+        if (data.error?.message) {
+          errorMessage = data.error.message;
+        } else if (data.message) {
+          errorMessage = data.message;
+        }
+        
+        // If there are validation details, show them
+        if (data.error?.details && Array.isArray(data.error.details)) {
+          errorMessage += ': ' + data.error.details.map(d => d.message).join(', ');
+        }
+        
+        console.error('Registration error details:', data);
+        throw new Error(errorMessage);
       }
 
       // Save user and token
