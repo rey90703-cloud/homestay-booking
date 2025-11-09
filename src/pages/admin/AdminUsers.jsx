@@ -33,7 +33,7 @@ const AdminUsers = () => {
         ...(filters.search && { search: filters.search }),
       });
 
-      const response = await fetch(`http://localhost:5000/api/v1/users?${queryParams}`, {
+      const response = await fetch(`http://localhost:5001/api/v1/users?${queryParams}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -60,7 +60,7 @@ const AdminUsers = () => {
 
   const handleStatusChange = async (userId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/users/${userId}/status`, {
+      const response = await fetch(`http://localhost:5001/api/v1/users/${userId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

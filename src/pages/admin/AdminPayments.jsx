@@ -32,7 +32,7 @@ const AdminPayments = () => {
   const fetchStatistics = async () => {
     try {
       const response = await fetch(
-        'http://localhost:5000/api/v1/bookings/statistics/payments',
+        'http://localhost:5001/api/v1/bookings/statistics/payments',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -61,7 +61,7 @@ const AdminPayments = () => {
         ...(filters.endDate && { endDate: filters.endDate }),
       });
 
-      const response = await fetch(`http://localhost:5000/api/v1/bookings?${queryParams}`, {
+      const response = await fetch(`http://localhost:5001/api/v1/bookings?${queryParams}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -90,7 +90,7 @@ const AdminPayments = () => {
     if (!confirm('Xác nhận thanh toán cho chủ nhà?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/bookings/${bookingId}/payout`, {
+      const response = await fetch(`http://localhost:5001/api/v1/bookings/${bookingId}/payout`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

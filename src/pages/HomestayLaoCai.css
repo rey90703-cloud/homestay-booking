@@ -1,0 +1,145 @@
+.homestay-laocai-page {
+  min-height: 100vh;
+  background: #FFF1F7;
+}
+
+.location-intro {
+  max-width: 1152px;
+  margin: 60px auto;
+  padding: 0 24px;
+}
+
+.location-intro-content {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.location-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #141217;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.location-description {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #6B5A65;
+  margin-bottom: 40px;
+}
+
+.location-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-top: 40px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: 700;
+  color: #E11D48;
+}
+
+.stat-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B5A65;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.seasonal-guide {
+  max-width: 1152px;
+  margin: 80px auto 100px;
+  padding: 0 24px;
+}
+
+.seasonal-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #141217;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.seasons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.season-card {
+  padding: 32px 28px;
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.season-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.season-period {
+  display: inline-block;
+  padding: 6px 16px;
+  background: #F9A8D4;
+  color: #4A0E2B;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 999px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.season-card h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #141217;
+  margin-bottom: 12px;
+}
+
+.season-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #6B5A65;
+}
+
+@media (max-width: 768px) {
+  .location-title {
+    font-size: 36px;
+  }
+
+  .location-description {
+    font-size: 16px;
+  }
+
+  .location-stats {
+    gap: 30px;
+  }
+
+  .stat-number {
+    font-size: 28px;
+  }
+
+  .seasonal-title {
+    font-size: 28px;
+  }
+
+  .seasons-grid {
+    grid-template-columns: 1fr;
+  }
+}

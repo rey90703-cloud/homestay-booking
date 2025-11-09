@@ -16,7 +16,7 @@ class AuthService {
    */
   async register(userData) {
     const {
-      email, password, firstName, lastName, role,
+      email, password, firstName, lastName, role, profile,
     } = userData;
 
     // Check if user already exists
@@ -25,15 +25,20 @@ class AuthService {
       throw new ConflictError('Email already registered');
     }
 
+    // Extract profile data (support both nested profile object and direct fields)
+    const profileData = profile || {};
+    const userProfile = {
+      firstName: profileData.firstName || firstName,
+      lastName: profileData.lastName || lastName,
+      phone: profileData.phone,
+    };
+
     // Create user
     const user = await User.create({
       email,
       password,
       role: role || 'guest',
-      profile: {
-        firstName,
-        lastName,
-      },
+      profile: userProfile,
     });
 
     // Generate email verification token

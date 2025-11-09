@@ -59,7 +59,7 @@ function Login() {
             <p className="login-subtitle">Chào mừng bạn quay trở lại!</p>
           </div>
 
-          <form className="login-form" onSubmit={handleSubmit}>
+          <form className="login-form" onSubmit={handleSubmit} autoComplete="off">
             {error && (
               <div className="error-alert" style={{
                 padding: '12px',
@@ -85,6 +85,7 @@ function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 disabled={isLoading}
+                autoComplete="off"
                 required
               />
             </div>
@@ -100,6 +101,7 @@ function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
+                autoComplete="off"
                 required
               />
             </div>

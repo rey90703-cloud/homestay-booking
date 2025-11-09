@@ -7,7 +7,6 @@ const homestaySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      index: true,
     },
 
     // Basic Information
@@ -44,13 +43,11 @@ const homestaySchema = new mongoose.Schema(
       city: {
         type: String,
         required: [true, 'City is required'],
-        index: true,
       },
       state: String,
       country: {
         type: String,
         required: [true, 'Country is required'],
-        index: true,
       },
       zipCode: String,
       coordinates: {
@@ -209,7 +206,6 @@ const homestaySchema = new mongoose.Schema(
       type: String,
       enum: Object.values(HOMESTAY_STATUS),
       default: HOMESTAY_STATUS.DRAFT,
-      index: true,
     },
     verificationStatus: {
       type: String,

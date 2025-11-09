@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
-const API_URL = 'http://localhost:5000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -23,6 +23,16 @@ export const AuthProvider = ({ children }) => {
     const savedToken = localStorage.getItem('token');
     if (savedUser && savedToken) {
       const userData = JSON.parse(savedUser);
+      
+      // Apply role mapping for consistency (in case old data exists)
+      if (userData.role === 'host') {
+        userData.role = 'owner';
+        localStorage.setItem('user', JSON.stringify(userData)); // Update localStorage
+      } else if (userData.role === 'guest') {
+        userData.role = 'renter';
+        localStorage.setItem('user', JSON.stringify(userData)); // Update localStorage
+      }
+      
       setUser(userData);
       setIsAuthenticated(true);
     }
@@ -48,6 +58,19 @@ export const AuthProvider = ({ children }) => {
       // Save user and token
       const userData = data.data.user;
       const token = data.data.tokens.accessToken;
+
+      // Add fullName to user object if not already present
+      if (!userData.fullName && userData.profile) {
+        userData.fullName = `${userData.profile.firstName || ''} ${userData.profile.lastName || ''}`.trim() || 'User';
+      }
+
+      // Map backend roles to frontend roles for consistency
+      // Backend: 'host' -> Frontend: 'owner', Backend: 'guest' -> Frontend: 'renter'
+      if (userData.role === 'host') {
+        userData.role = 'owner';
+      } else if (userData.role === 'guest') {
+        userData.role = 'renter';
+      }
 
       setUser(userData);
       setIsAuthenticated(true);
@@ -112,6 +135,19 @@ export const AuthProvider = ({ children }) => {
       // Save user and token
       const userData = data.data.user;
       const token = data.data.tokens.accessToken;
+
+      // Add fullName to user object if not already present
+      if (!userData.fullName && userData.profile) {
+        userData.fullName = `${userData.profile.firstName || ''} ${userData.profile.lastName || ''}`.trim() || 'User';
+      }
+
+      // Map backend roles to frontend roles for consistency
+      // Backend: 'host' -> Frontend: 'owner', Backend: 'guest' -> Frontend: 'renter'
+      if (userData.role === 'host') {
+        userData.role = 'owner';
+      } else if (userData.role === 'guest') {
+        userData.role = 'renter';
+      }
 
       setUser(userData);
       setIsAuthenticated(true);

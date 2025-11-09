@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, 'Email is required'],
-      unique: true,
       lowercase: true,
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'],
@@ -109,7 +108,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Indexes
-userSchema.index({ email: 1 });
+userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ role: 1 });
 userSchema.index({ 'profile.phone': 1 });
 userSchema.index({ accountStatus: 1 });

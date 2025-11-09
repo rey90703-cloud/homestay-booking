@@ -10,6 +10,9 @@ import Search from './pages/Search';
 import Contact from './pages/Contact';
 import AddHomestay from './pages/AddHomestay';
 import HomestayDetail from './pages/HomestayDetail';
+import Profile from './pages/Profile';
+import HomestayHanoi from './pages/HomestayHanoi';
+import HomestayLaoCai from './pages/HomestayLaoCai';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import './App.css';
 
@@ -41,6 +44,27 @@ function App() {
               <>
                 <Header />
                 <AddHomestay />
+                <Footer />
+              </>
+            } />
+            <Route path="/profile" element={
+              <>
+                <Header />
+                <Profile />
+                <Footer />
+              </>
+            } />
+            <Route path="/homestay-ha-noi" element={
+              <>
+                <Header />
+                <HomestayHanoi />
+                <Footer />
+              </>
+            } />
+            <Route path="/homestay-lao-cai" element={
+              <>
+                <Header />
+                <HomestayLaoCai />
                 <Footer />
               </>
             } />

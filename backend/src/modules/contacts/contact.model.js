@@ -33,13 +33,11 @@ const contactSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      index: true,
     },
     status: {
       type: String,
       enum: ['new', 'read', 'replied', 'closed'],
       default: 'new',
-      index: true,
     },
     priority: {
       type: String,

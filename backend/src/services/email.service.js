@@ -26,8 +26,13 @@ class EmailService {
       },
     };
 
-    if (!emailConfig.auth.user || !emailConfig.auth.pass) {
-      logger.warn('Email service not configured. Email functionality will be disabled.');
+    const isPlaceholder = emailConfig.auth.user?.includes('your-email') || 
+                          emailConfig.auth.pass?.includes('your-') ||
+                          !emailConfig.auth.user || 
+                          !emailConfig.auth.pass;
+    
+    if (isPlaceholder) {
+      logger.info('Email service not configured (using placeholder values). Email functionality will be disabled.');
       this.transporter = null;
       return;
     }

@@ -35,7 +35,7 @@ const AdminContacts = () => {
         ...(filters.search && { search: filters.search }),
       });
 
-      const response = await fetch(`http://localhost:5000/api/v1/contacts?${queryParams}`, {
+      const response = await fetch(`http://localhost:5001/api/v1/contacts?${queryParams}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -69,7 +69,7 @@ const AdminContacts = () => {
 
   const markAsRead = async (contactId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/contacts/${contactId}/read`, {
+      const response = await fetch(`http://localhost:5001/api/v1/contacts/${contactId}/read`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -93,7 +93,7 @@ const AdminContacts = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/contacts/${selectedContact._id}/reply`,
+        `http://localhost:5001/api/v1/contacts/${selectedContact._id}/reply`,
         {
           method: 'POST',
           headers: {
@@ -119,7 +119,7 @@ const AdminContacts = () => {
 
   const handleStatusChange = async (contactId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/contacts/${contactId}/status`, {
+      const response = await fetch(`http://localhost:5001/api/v1/contacts/${contactId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

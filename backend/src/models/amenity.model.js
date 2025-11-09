@@ -5,14 +5,11 @@ const amenitySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
-      index: true,
     },
     slug: {
       type: String,
       required: true,
-      unique: true,
       lowercase: true,
     },
     icon: String,
@@ -20,13 +17,11 @@ const amenitySchema = new mongoose.Schema(
       type: String,
       enum: ['basic', 'features', 'location', 'safety'],
       default: 'basic',
-      index: true,
     },
     description: String,
     isActive: {
       type: Boolean,
       default: true,
-      index: true,
     },
   },
   {
@@ -35,8 +30,8 @@ const amenitySchema = new mongoose.Schema(
 );
 
 // Indexes
-amenitySchema.index({ name: 1 });
-amenitySchema.index({ slug: 1 });
+amenitySchema.index({ name: 1 }, { unique: true });
+amenitySchema.index({ slug: 1 }, { unique: true });
 amenitySchema.index({ category: 1, isActive: 1 });
 
 // Generate slug before saving

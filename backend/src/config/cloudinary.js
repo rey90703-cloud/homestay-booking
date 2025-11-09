@@ -10,6 +10,15 @@ cloudinary.config({
 
 // Test connection
 const testConnection = async () => {
+  const isPlaceholder = process.env.CLOUDINARY_CLOUD_NAME?.includes('your-') ||
+                        process.env.CLOUDINARY_API_KEY?.includes('your-') ||
+                        process.env.CLOUDINARY_API_SECRET?.includes('your-');
+  
+  if (isPlaceholder) {
+    logger.info('Cloudinary not configured (using placeholder values). Image uploads will be disabled.');
+    return;
+  }
+
   try {
     await cloudinary.api.ping();
     logger.info('Cloudinary connected successfully');

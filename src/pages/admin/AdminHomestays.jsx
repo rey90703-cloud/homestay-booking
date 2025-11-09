@@ -35,7 +35,7 @@ const AdminHomestays = () => {
         ...(filters.city && { city: filters.city }),
       });
 
-      const response = await fetch(`http://localhost:5000/api/v1/homestays?${queryParams}`, {
+      const response = await fetch(`http://localhost:5001/api/v1/homestays?${queryParams}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -63,7 +63,7 @@ const AdminHomestays = () => {
   const handleApprove = async (homestayId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/admin/homestays/${homestayId}/approve`,
+        `http://localhost:5001/api/v1/admin/homestays/${homestayId}/approve`,
         {
           method: 'PATCH',
           headers: {
@@ -87,7 +87,7 @@ const AdminHomestays = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/admin/homestays/${homestayId}/reject`,
+        `http://localhost:5001/api/v1/admin/homestays/${homestayId}/reject`,
         {
           method: 'PATCH',
           headers: {

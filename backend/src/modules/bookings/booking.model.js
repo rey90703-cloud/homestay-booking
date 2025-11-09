@@ -7,31 +7,26 @@ const bookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Homestay',
       required: true,
-      index: true,
     },
     hostId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      index: true,
     },
     guestId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      index: true,
     },
 
     // Booking dates
     checkInDate: {
       type: Date,
       required: true,
-      index: true,
     },
     checkOutDate: {
       type: Date,
       required: true,
-      index: true,
     },
     numberOfNights: {
       type: Number,
@@ -94,7 +89,6 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       enum: Object.values(BOOKING_STATUS),
       default: BOOKING_STATUS.PENDING,
-      index: true,
     },
 
     // Payment information
@@ -103,7 +97,6 @@ const bookingSchema = new mongoose.Schema(
         type: String,
         enum: Object.values(PAYMENT_STATUS),
         default: PAYMENT_STATUS.PENDING,
-        index: true,
       },
       method: {
         type: String,

@@ -122,7 +122,7 @@ function Register() {
             <p className="register-subtitle">Tạo tài khoản để bắt đầu đặt homestay</p>
           </div>
 
-          <form className="register-form" onSubmit={handleSubmit}>
+          <form className="register-form" onSubmit={handleSubmit} autoComplete="off">
             {apiError && (
               <div className="error-alert" style={{
                 padding: '12px',
@@ -147,6 +147,7 @@ function Register() {
                 placeholder="Nguyễn Văn A"
                 value={formData.fullName}
                 onChange={handleChange}
+                autoComplete="off"
               />
               {errors.fullName && <span className="error-message">{errors.fullName}</span>}
             </div>
@@ -161,6 +162,7 @@ function Register() {
                 placeholder="example@email.com"
                 value={formData.email}
                 onChange={handleChange}
+                autoComplete="off"
               />
               {errors.email && <span className="error-message">{errors.email}</span>}
             </div>
@@ -175,6 +177,7 @@ function Register() {
                 placeholder="0123456789"
                 value={formData.phone}
                 onChange={handleChange}
+                autoComplete="off"
               />
               {errors.phone && <span className="error-message">{errors.phone}</span>}
             </div>
@@ -230,6 +233,7 @@ function Register() {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
+                autoComplete="off"
               />
               {errors.password && <span className="error-message">{errors.password}</span>}
               <small style={{ fontSize: '12px', color: '#666', marginTop: '4px', display: 'block' }}>
@@ -247,6 +251,7 @@ function Register() {
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                autoComplete="off"
               />
               {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
             </div>
