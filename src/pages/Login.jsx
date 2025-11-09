@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Toast from '../components/Toast';
 import './Login.css';
 
 function Login() {
@@ -12,6 +13,7 @@ function Login() {
     password: ''
   });
   const [error, setError] = useState('');
+  const [toast, setToast] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -31,25 +33,41 @@ function Login() {
       const result = await login(formData.email, formData.password);
 
       if (result.success) {
-        // Redirect based on role
-        if (result.user.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
+        setIsLoading(false);
+        setToast({
+          message: 'Đăng nhập thành công! Chào mừng bạn trở lại.',
+          type: 'success'
+        });
+        
+        // Redirect based on role after showing toast
+        setTimeout(() => {
+          if (result.user.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        }, 2000);
       } else {
+        setIsLoading(false);
         setError(result.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.');
       }
     } catch (err) {
-      setError('Có lỗi xảy ra. Vui lòng thử lại sau.');
-    } finally {
       setIsLoading(false);
+      setError('Có lỗi xảy ra. Vui lòng thử lại sau.');
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
+    <>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+      <div className="login-page">
+        <div className="login-container">
         <div className="login-card">
           <div className="login-header">
             <Link to="/" className="logo-link">
@@ -85,7 +103,7 @@ function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 disabled={isLoading}
-                autoComplete="off"
+                autoComplete="new-email"
                 required
               />
             </div>
@@ -101,7 +119,7 @@ function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
-                autoComplete="off"
+                autoComplete="new-password"
                 required
               />
             </div>
@@ -148,7 +166,8 @@ function Login() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

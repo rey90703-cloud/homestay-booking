@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Toast from '../components/Toast';
 import './Register.css';
 
 function Register() {
@@ -18,6 +19,7 @@ function Register() {
 
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
+  const [toast, setToast] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -94,25 +96,41 @@ function Register() {
       const result = await register(formData);
 
       if (result.success) {
-        // Redirect based on role
-        if (result.user.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
+        setIsLoading(false);
+        setToast({
+          message: 'Đăng ký thành công! Chào mừng bạn đến với HomestayBooking.',
+          type: 'success'
+        });
+        
+        // Redirect based on role after showing toast
+        setTimeout(() => {
+          if (result.user.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        }, 2000);
       } else {
+        setIsLoading(false);
         setApiError(result.message || 'Đăng ký thất bại. Vui lòng thử lại.');
       }
     } catch (err) {
-      setApiError('Có lỗi xảy ra. Vui lòng thử lại sau.');
-    } finally {
       setIsLoading(false);
+      setApiError('Có lỗi xảy ra. Vui lòng thử lại sau.');
     }
   };
 
   return (
-    <div className="register-page">
-      <div className="register-container">
+    <>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+      <div className="register-page">
+        <div className="register-container">
         <div className="register-card">
           <div className="register-header">
             <Link to="/" className="logo-link">
@@ -147,7 +165,7 @@ function Register() {
                 placeholder="Nguyễn Văn A"
                 value={formData.fullName}
                 onChange={handleChange}
-                autoComplete="off"
+                autoComplete="new-name"
               />
               {errors.fullName && <span className="error-message">{errors.fullName}</span>}
             </div>
@@ -162,7 +180,7 @@ function Register() {
                 placeholder="example@email.com"
                 value={formData.email}
                 onChange={handleChange}
-                autoComplete="off"
+                autoComplete="new-email"
               />
               {errors.email && <span className="error-message">{errors.email}</span>}
             </div>
@@ -177,7 +195,7 @@ function Register() {
                 placeholder="0123456789"
                 value={formData.phone}
                 onChange={handleChange}
-                autoComplete="off"
+                autoComplete="new-tel"
               />
               {errors.phone && <span className="error-message">{errors.phone}</span>}
             </div>
@@ -233,7 +251,7 @@ function Register() {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
-                autoComplete="off"
+                autoComplete="new-password"
               />
               {errors.password && <span className="error-message">{errors.password}</span>}
               <small style={{ fontSize: '12px', color: '#666', marginTop: '4px', display: 'block' }}>
@@ -251,7 +269,7 @@ function Register() {
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                autoComplete="off"
+                autoComplete="new-password"
               />
               {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
             </div>
@@ -306,7 +324,8 @@ function Register() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

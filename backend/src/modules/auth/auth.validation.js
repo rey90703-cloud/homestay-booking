@@ -26,6 +26,23 @@ const registerSchema = Joi.object({
       'string.max': 'Last name cannot exceed 50 characters',
     }),
   role: Joi.string().valid('guest', 'host').default('guest'),
+  // Support nested profile object from frontend
+  profile: Joi.object({
+    firstName: Joi.string().trim().min(2).max(50)
+      .messages({
+        'string.min': 'First name must be at least 2 characters',
+        'string.max': 'First name cannot exceed 50 characters',
+      }),
+    lastName: Joi.string().trim().min(2).max(50)
+      .messages({
+        'string.min': 'Last name must be at least 2 characters',
+        'string.max': 'Last name cannot exceed 50 characters',
+      }),
+    phone: Joi.string().trim().pattern(/^[0-9]{10,11}$/)
+      .messages({
+        'string.pattern.base': 'Phone number must be 10-11 digits',
+      }),
+  }).optional(),
 });
 
 const loginSchema = Joi.object({

@@ -1,12 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Toast from './Toast';
 import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [toast, setToast] = useState(null);
   const dropdownRef = useRef(null);
 
   // Debug: Log user info
@@ -19,9 +22,18 @@ const Header = () => {
 
   const handleAddHomestay = () => {
     if (!isAuthenticated) {
-      navigate('/login');
+      setToast({
+        message: 'Bạn cần đăng nhập với tài khoản Người cho thuê để đăng homestay!',
+        type: 'warning'
+      });
+      setTimeout(() => navigate('/login'), 2000);
     } else if (user?.role === 'owner') {
       navigate('/add-homestay');
+    } else {
+      setToast({
+        message: 'Chỉ tài khoản Người cho thuê mới có thể đăng homestay!',
+        type: 'warning'
+      });
     }
   };
 
@@ -51,17 +63,25 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="header">
-      <div className="header-container">
+    <>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+      <header className="header">
+        <div className="header-container">
         <Link to="/" className="logo">
           <span className="logo-text">HomestayBooking</span>
         </Link>
 
         <nav className="nav-links">
-          <Link to="/" className="nav-link active">Trang chủ</Link>
-          <Link to="/homestay-ha-noi" className="nav-link">Homestay Hà Nội</Link>
-          <Link to="/homestay-lao-cai" className="nav-link">Homestay Lào Cai</Link>
-          <Link to="/contact" className="nav-link">Liên hệ</Link>
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Trang chủ</Link>
+          <Link to="/homestay-ha-noi" className={`nav-link ${location.pathname === '/homestay-ha-noi' ? 'active' : ''}`}>Homestay Hà Nội</Link>
+          <Link to="/homestay-lao-cai" className={`nav-link ${location.pathname === '/homestay-lao-cai' ? 'active' : ''}`}>Homestay Lào Cai</Link>
+          <Link to="/contact" className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`}>Liên hệ</Link>
           {!isAuthenticated && (
             <Link to="/login" className="nav-link">Đăng nhập</Link>
           )}
@@ -76,10 +96,10 @@ const Header = () => {
               {showDropdown && (
                 <div className="dropdown-menu">
                   <button className="dropdown-item" onClick={handleProfile}>
-                    <span>👤</span> Sửa thông tin cá nhân
+                    Thông tin cá nhân
                   </button>
                   <button className="dropdown-item" onClick={handleLogout}>
-                    <span>🚪</span> Đăng xuất
+                    Đăng xuất
                   </button>
                 </div>
               )}
@@ -93,8 +113,9 @@ const Header = () => {
             <span>Đăng homestay</span>
           </button>
         )}
-      </div>
-    </header>
+        </div>
+      </header>
+    </>
   );
 };
 

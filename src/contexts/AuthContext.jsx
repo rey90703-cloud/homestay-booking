@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     const savedToken = localStorage.getItem('token');
     if (savedUser && savedToken) {
       const userData = JSON.parse(savedUser);
-      
+
       // Apply role mapping for consistency (in case old data exists)
       if (userData.role === 'host') {
         userData.role = 'owner';
@@ -32,7 +32,12 @@ export const AuthProvider = ({ children }) => {
         userData.role = 'renter';
         localStorage.setItem('user', JSON.stringify(userData)); // Update localStorage
       }
-      
+
+      // Ensure fullName is set from profile if missing
+      if (!userData.fullName && userData.profile) {
+        userData.fullName = `${userData.profile.firstName || ''} ${userData.profile.lastName || ''}`.trim() || 'User';
+      }
+
       setUser(userData);
       setIsAuthenticated(true);
     }
@@ -92,13 +97,18 @@ export const AuthProvider = ({ children }) => {
         owner: 'host',
       };
 
+      // Split fullName into firstName and lastName properly
+      const nameParts = registerData.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       const requestData = {
         email: registerData.email,
         password: registerData.password,
         role: roleMapping[registerData.role] || 'guest',
         profile: {
-          firstName: registerData.fullName.split(' ')[0],
-          lastName: registerData.fullName.split(' ').slice(1).join(' ') || registerData.fullName,
+          firstName: firstName,
+          lastName: lastName,
           phone: registerData.phone,
         },
       };

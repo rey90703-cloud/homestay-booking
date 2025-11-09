@@ -22,8 +22,20 @@ function App() {
       <Router>
         <div className="app">
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={
+              <>
+                <Header />
+                <Login />
+                <Footer />
+              </>
+            } />
+            <Route path="/register" element={
+              <>
+                <Header />
+                <Register />
+                <Footer />
+              </>
+            } />
             <Route path="/search" element={<Search />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/homestay/:id" element={

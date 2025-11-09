@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Profile.css';
@@ -9,7 +9,7 @@ function Profile() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  
+
   const [formData, setFormData] = useState({
     fullName: user?.fullName || '',
     email: user?.email || '',
@@ -20,6 +20,20 @@ function Profile() {
   });
 
   const [errors, setErrors] = useState({});
+
+  // Update formData when user changes (e.g., after refresh)
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.fullName || `${user.profile?.firstName || ''} ${user.profile?.lastName || ''}`.trim() || '',
+        email: user.email || '',
+        phone: user.profile?.phone || '',
+        currentPassword: '',
+        newPassword: '',
+        confirmNewPassword: ''
+      });
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,17 +113,28 @@ function Profile() {
       const token = localStorage.getItem('token');
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
 
+      // Debug: Check token
+      console.log('Token exists:', !!token);
+      console.log('Token value:', token ? token.substring(0, 20) + '...' : 'null');
+
+      if (!token) {
+        throw new Error('Bạn chưa đăng nhập. Vui lòng đăng nhập lại.');
+      }
+
       // Update profile information
+      // Split fullName into firstName and lastName properly
+      const nameParts = formData.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       const profileData = {
-        profile: {
-          firstName: formData.fullName.split(' ')[0],
-          lastName: formData.fullName.split(' ').slice(1).join(' ') || formData.fullName,
-          phone: formData.phone
-        }
+        firstName: firstName,
+        lastName: lastName,
+        phone: formData.phone
       };
 
       const profileResponse = await fetch(`${API_URL}/users/me`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -122,6 +147,10 @@ function Profile() {
         throw new Error(errorData.message || 'Cập nhật thông tin thất bại');
       }
 
+      // Get updated user data from response
+      const profileResult = await profileResponse.json();
+      const updatedUserFromServer = profileResult.data.user;
+
       // Update password if provided
       if (formData.currentPassword && formData.newPassword) {
         const passwordData = {
@@ -129,7 +158,7 @@ function Profile() {
           newPassword: formData.newPassword
         };
 
-        const passwordResponse = await fetch(`${API_URL}/users/me/password`, {
+        const passwordResponse = await fetch(`${API_URL}/auth/change-password`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -152,17 +181,11 @@ function Profile() {
         });
       }
 
-      // Update user in localStorage
+      // Update user in localStorage with data from server
       const updatedUser = {
-        ...user,
-        fullName: formData.fullName,
-        email: formData.email,
-        profile: {
-          ...user.profile,
-          firstName: formData.fullName.split(' ')[0],
-          lastName: formData.fullName.split(' ').slice(1).join(' ') || formData.fullName,
-          phone: formData.phone
-        }
+        ...updatedUserFromServer,
+        fullName: `${updatedUserFromServer.profile.firstName || ''} ${updatedUserFromServer.profile.lastName || ''}`.trim() || 'User',
+        role: updatedUserFromServer.role === 'host' ? 'owner' : updatedUserFromServer.role === 'guest' ? 'renter' : updatedUserFromServer.role
       };
       localStorage.setItem('user', JSON.stringify(updatedUser));
 

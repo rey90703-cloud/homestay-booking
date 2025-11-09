@@ -28,10 +28,15 @@ class AuthService {
     // Extract profile data (support both nested profile object and direct fields)
     const profileData = profile || {};
     const userProfile = {
-      firstName: profileData.firstName || firstName,
-      lastName: profileData.lastName || lastName,
-      phone: profileData.phone,
+      firstName: profileData.firstName || firstName || '',
+      lastName: profileData.lastName || lastName || '',
+      phone: profileData.phone || '',
     };
+
+    // Validate that we have at least firstName
+    if (!userProfile.firstName.trim()) {
+      throw new BadRequestError('First name is required');
+    }
 
     // Create user
     const user = await User.create({
@@ -47,7 +52,7 @@ class AuthService {
 
     // Send verification email
     await emailService.sendVerificationEmail(user, verificationToken);
-    logger.info(`User registered: ${user.email}`);
+    logger.info(`User registered: ${user.email} - Name: ${userProfile.firstName} ${userProfile.lastName}`);
 
     // Generate tokens
     const tokens = generateTokenPair({
