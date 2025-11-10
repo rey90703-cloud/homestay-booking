@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from '../../config/api';
 import './AdminPayments.css';
 
 const AdminPayments = () => {
@@ -31,14 +32,29 @@ const AdminPayments = () => {
 
   const fetchStatistics = async () => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        window.location.href = '/admin/login';
+        return;
+      }
+
       const response = await fetch(
-        'http://localhost:5001/api/v1/bookings/statistics/payments',
+        '${API_BASE_URL}/bookings/statistics/payments',
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
+
+      if (response.status === 401) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/admin/login';
+        return;
+      }
 
       const data = await response.json();
       if (data.success) {
@@ -61,11 +77,26 @@ const AdminPayments = () => {
         ...(filters.endDate && { endDate: filters.endDate }),
       });
 
-      const response = await fetch(`http://localhost:5001/api/v1/bookings?${queryParams}`, {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        window.location.href = '/admin/login';
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/bookings?${queryParams}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+
+      if (response.status === 401) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/admin/login';
+        return;
+      }
 
       const data = await response.json();
       if (data.success) {
@@ -90,7 +121,7 @@ const AdminPayments = () => {
     if (!confirm('Xác nhận thanh toán cho chủ nhà?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5001/api/v1/bookings/${bookingId}/payout`, {
+      const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/payout`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

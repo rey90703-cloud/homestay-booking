@@ -247,36 +247,61 @@ class AuthService {
       return true;
     }
 
-    // Generate reset token
-    const resetToken = user.generatePasswordResetToken();
+    // Generate 6-digit OTP
+    const otp = user.generatePasswordResetOTP();
     await user.save();
 
-    // Send password reset email
-    await emailService.sendPasswordResetEmail(user, resetToken);
-    logger.info(`Password reset token generated for: ${user.email}`);
+    // Send OTP email
+    await emailService.sendPasswordResetOTPEmail(user, otp);
+    logger.info(`Password reset OTP generated for: ${user.email}`);
 
     return true;
   }
 
   /**
-   * Reset password
+   * Verify OTP without resetting password
    */
-  async resetPassword(token, newPassword) {
-    // Hash token
-    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-
-    // Find user with valid token
-    const user = await User.findOne({
-      passwordResetToken: hashedToken,
-      passwordResetExpires: { $gt: Date.now() },
-    });
+  async verifyOTP(email, otp) {
+    const user = await User.findByEmail(email);
 
     if (!user) {
-      throw new BadRequestError('Invalid or expired reset token');
+      throw new BadRequestError('User not found');
+    }
+
+    // Verify OTP
+    const isValidOTP = user.verifyPasswordResetOTP(otp);
+
+    if (!isValidOTP) {
+      throw new BadRequestError('Invalid or expired OTP');
+    }
+
+    logger.info(`OTP verified for: ${user.email}`);
+
+    return { valid: true };
+  }
+
+  /**
+   * Reset password with OTP
+   */
+  async resetPassword(email, otp, newPassword) {
+    // Find user by email
+    const user = await User.findByEmail(email);
+
+    if (!user) {
+      throw new BadRequestError('User not found');
+    }
+
+    // Verify OTP
+    const isValidOTP = user.verifyPasswordResetOTP(otp);
+
+    if (!isValidOTP) {
+      throw new BadRequestError('Invalid or expired OTP');
     }
 
     // Update password
     user.password = newPassword;
+    user.passwordResetOTP = undefined;
+    user.passwordResetOTPExpires = undefined;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     user.refreshToken = null; // Logout from all devices

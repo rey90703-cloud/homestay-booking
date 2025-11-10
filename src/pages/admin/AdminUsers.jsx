@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from '../../config/api';
 import './AdminUsers.css';
 
 const AdminUsers = () => {
@@ -17,6 +18,17 @@ const AdminUsers = () => {
     totalUsers: 0,
     limit: 20,
   });
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState('create'); // 'create' or 'edit'
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    role: 'guest',
+    firstName: '',
+    lastName: '',
+    phone: '',
+  });
 
   useEffect(() => {
     fetchUsers();
@@ -33,17 +45,37 @@ const AdminUsers = () => {
         ...(filters.search && { search: filters.search }),
       });
 
-      const response = await fetch(`http://localhost:5001/api/v1/users?${queryParams}`, {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        window.location.href = '/admin/login';
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/users?${queryParams}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+
+      if (response.status === 401) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/admin/login';
+        return;
+      }
 
       const data = await response.json();
       if (data.success) {
         setUsers(data.data || []);
-        if (data.meta?.pagination) {
-          setPagination(data.meta.pagination);
+        if (data.metadata?.pagination) {
+          setPagination({
+            currentPage: data.metadata.pagination.page,
+            totalPages: data.metadata.pagination.pages,
+            totalUsers: data.metadata.pagination.total,
+            limit: data.metadata.pagination.limit,
+          });
         }
       }
     } catch (error) {
@@ -60,7 +92,7 @@ const AdminUsers = () => {
 
   const handleStatusChange = async (userId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/v1/users/${userId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/users/${userId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -75,6 +107,140 @@ const AdminUsers = () => {
       }
     } catch (error) {
       console.error('Error updating user status:', error);
+    }
+  };
+
+  const openCreateModal = () => {
+    setModalMode('create');
+    setFormData({
+      email: '',
+      password: '',
+      role: 'guest',
+      firstName: '',
+      lastName: '',
+      phone: '',
+    });
+    setShowModal(true);
+  };
+
+  const openEditModal = (user) => {
+    setModalMode('edit');
+    setSelectedUser(user);
+    setFormData({
+      email: user.email,
+      password: '',
+      role: user.role,
+      firstName: user.profile?.firstName || '',
+      lastName: user.profile?.lastName || '',
+      phone: user.profile?.phone || '',
+    });
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedUser(null);
+    setFormData({
+      email: '',
+      password: '',
+      role: 'guest',
+      firstName: '',
+      lastName: '',
+      phone: '',
+    });
+  };
+
+  const handleFormChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const payload = {
+      email: formData.email,
+      role: formData.role,
+      profile: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: formData.phone,
+      },
+    };
+
+    if (formData.password) {
+      payload.password = formData.password;
+    }
+
+    try {
+      if (modalMode === 'create') {
+        const response = await fetch('${API_BASE_URL}/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert('Tạo người dùng thành công!');
+          fetchUsers();
+          closeModal();
+        } else {
+          alert(data.error?.message || 'Có lỗi xảy ra');
+        }
+      } else {
+        const response = await fetch(`${API_BASE_URL}/users/${selectedUser._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert('Cập nhật người dùng thành công!');
+          fetchUsers();
+          closeModal();
+        } else {
+          alert(data.error?.message || 'Có lỗi xảy ra');
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Có lỗi xảy ra khi lưu dữ liệu');
+    }
+  };
+
+  const handleDelete = async (userId) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Xóa người dùng thành công!');
+        fetchUsers();
+      } else {
+        alert(data.error?.message || 'Có lỗi xảy ra');
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Có lỗi xảy ra khi xóa người dùng');
     }
   };
 
@@ -140,7 +306,12 @@ const AdminUsers = () => {
   return (
     <div className="admin-users">
       <div className="admin-header">
-        <h1>Quản lý người dùng</h1>
+        <div className="header-top">
+          <h1>Quản lý người dùng</h1>
+          <button className="btn-add" onClick={openCreateModal}>
+            + Thêm người dùng mới
+          </button>
+        </div>
         <div className="admin-stats">
           <div className="stat-card">
             <span className="stat-label">Tổng số người dùng</span>
@@ -256,6 +427,12 @@ const AdminUsers = () => {
                   <td>{formatDate(user.createdAt)}</td>
                   <td>
                     <div className="action-buttons">
+                      <button
+                        className="btn-action btn-primary"
+                        onClick={() => openEditModal(user)}
+                      >
+                        Sửa
+                      </button>
                       {user.accountStatus === 'active' ? (
                         <button
                           className="btn-action btn-warning"
@@ -271,6 +448,12 @@ const AdminUsers = () => {
                           Mở khóa
                         </button>
                       )}
+                      <button
+                        className="btn-action btn-danger"
+                        onClick={() => handleDelete(user._id)}
+                      >
+                        Xóa
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -304,6 +487,100 @@ const AdminUsers = () => {
           Sau
         </button>
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{modalMode === 'create' ? 'Thêm người dùng mới' : 'Chỉnh sửa người dùng'}</h2>
+              <button className="modal-close" onClick={closeModal}>×</button>
+            </div>
+            <form onSubmit={handleSubmit} className="modal-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Email *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleFormChange}
+                    required
+                    disabled={modalMode === 'edit'}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Vai trò *</label>
+                  <select name="role" value={formData.role} onChange={handleFormChange} required>
+                    <option value="guest">Khách</option>
+                    <option value="host">Chủ nhà</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Họ *</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleFormChange}
+                    required
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Tên *</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleFormChange}
+                    required
+                    autoComplete="off"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Số điện thoại</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleFormChange}
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Mật khẩu {modalMode === 'create' ? '*' : '(để trống nếu không đổi)'}</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleFormChange}
+                  required={modalMode === 'create'}
+                  minLength={8}
+                  autoComplete="new-password"
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={closeModal}>
+                  Hủy
+                </button>
+                <button type="submit" className="btn-submit">
+                  {modalMode === 'create' ? 'Tạo mới' : 'Cập nhật'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

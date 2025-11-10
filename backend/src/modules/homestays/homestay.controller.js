@@ -9,7 +9,19 @@ class HomestayController {
    * POST /api/v1/homestays
    */
   createHomestay = catchAsync(async (req, res) => {
-    const homestay = await homestayService.createHomestay(req.user._id, req.body);
+    const homestayData = req.body;
+    
+    // Handle file uploads
+    if (req.files) {
+      if (req.files.coverImage && req.files.coverImage[0]) {
+        homestayData.coverImageBuffer = req.files.coverImage[0].buffer;
+      }
+      if (req.files.images && req.files.images.length > 0) {
+        homestayData.imagesBuffers = req.files.images.map(file => file.buffer);
+      }
+    }
+    
+    const homestay = await homestayService.createHomestay(req.user._id, homestayData);
     ApiResponse.created(res, { homestay }, 'Homestay created successfully');
   });
 
@@ -57,7 +69,19 @@ class HomestayController {
    * PUT /api/v1/homestays/:id
    */
   updateHomestay = catchAsync(async (req, res) => {
-    const homestay = await homestayService.updateHomestay(req.params.id, req.user._id, req.body);
+    const homestayData = req.body;
+    
+    // Handle file uploads
+    if (req.files) {
+      if (req.files.coverImage && req.files.coverImage[0]) {
+        homestayData.coverImageBuffer = req.files.coverImage[0].buffer;
+      }
+      if (req.files.images && req.files.images.length > 0) {
+        homestayData.imagesBuffers = req.files.images.map(file => file.buffer);
+      }
+    }
+    
+    const homestay = await homestayService.updateHomestay(req.params.id, req.user._id, homestayData);
     ApiResponse.success(res, { homestay }, 'Homestay updated successfully');
   });
 

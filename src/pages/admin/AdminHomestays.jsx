@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from '../../config/api';
 import './AdminHomestays.css';
 
 const AdminHomestays = () => {
@@ -16,6 +17,23 @@ const AdminHomestays = () => {
     totalHomestays: 0,
     limit: 20,
   });
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState('create');
+  const [selectedHomestay, setSelectedHomestay] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    city: '',
+    address: '',
+    basePrice: '',
+    maxGuests: '',
+    bedrooms: '',
+    bathrooms: '',
+    coverImage: null,
+    images: [],
+  });
+  const [coverImagePreview, setCoverImagePreview] = useState('');
+  const [imagesPreview, setImagesPreview] = useState([]);
 
   useEffect(() => {
     fetchHomestays();
@@ -35,11 +53,26 @@ const AdminHomestays = () => {
         ...(filters.city && { city: filters.city }),
       });
 
-      const response = await fetch(`http://localhost:5001/api/v1/homestays?${queryParams}`, {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        window.location.href = '/admin/login';
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/homestays?${queryParams}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+
+      if (response.status === 401) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/admin/login';
+        return;
+      }
 
       const data = await response.json();
       if (data.success) {
@@ -63,7 +96,7 @@ const AdminHomestays = () => {
   const handleApprove = async (homestayId) => {
     try {
       const response = await fetch(
-        `http://localhost:5001/api/v1/admin/homestays/${homestayId}/approve`,
+        `${API_BASE_URL}/admin/homestays/${homestayId}/approve`,
         {
           method: 'PATCH',
           headers: {
@@ -87,7 +120,7 @@ const AdminHomestays = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5001/api/v1/admin/homestays/${homestayId}/reject`,
+        `${API_BASE_URL}/admin/homestays/${homestayId}/reject`,
         {
           method: 'PATCH',
           headers: {
@@ -104,6 +137,196 @@ const AdminHomestays = () => {
       }
     } catch (error) {
       console.error('Error rejecting homestay:', error);
+    }
+  };
+
+  const openCreateModal = () => {
+    setModalMode('create');
+    setFormData({
+      title: '',
+      description: '',
+      city: '',
+      address: '',
+      basePrice: '',
+      maxGuests: '',
+      bedrooms: '',
+      bathrooms: '',
+      coverImage: null,
+      images: [],
+    });
+    setCoverImagePreview('');
+    setImagesPreview([]);
+    setShowModal(true);
+  };
+
+  const openEditModal = (homestay) => {
+    setModalMode('edit');
+    setSelectedHomestay(homestay);
+    setFormData({
+      title: homestay.title || '',
+      description: homestay.description || '',
+      city: homestay.location?.city || '',
+      address: homestay.location?.address || '',
+      basePrice: homestay.pricing?.basePrice || '',
+      maxGuests: homestay.capacity?.maxGuests || '',
+      bedrooms: homestay.capacity?.bedrooms || '',
+      bathrooms: homestay.capacity?.bathrooms || '',
+      coverImage: null,
+      images: [],
+    });
+    setCoverImagePreview(homestay.coverImage || '');
+    setImagesPreview(homestay.images || []);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedHomestay(null);
+    setFormData({
+      title: '',
+      description: '',
+      city: '',
+      address: '',
+      basePrice: '',
+      maxGuests: '',
+      bedrooms: '',
+      bathrooms: '',
+      coverImage: null,
+      images: [],
+    });
+    setCoverImagePreview('');
+    setImagesPreview([]);
+  };
+
+  const handleFormChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCoverImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, coverImage: file });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setFormData({ ...formData, images: files });
+      const previews = [];
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          previews.push(reader.result);
+          if (previews.length === files.length) {
+            setImagesPreview(previews);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('description', formData.description);
+    formDataToSend.append('location[city]', formData.city);
+    formDataToSend.append('location[address]', formData.address);
+    formDataToSend.append('location[country]', 'Vietnam');
+    formDataToSend.append('pricing[basePrice]', formData.basePrice);
+    formDataToSend.append('capacity[maxGuests]', formData.maxGuests);
+    formDataToSend.append('capacity[bedrooms]', formData.bedrooms);
+    formDataToSend.append('capacity[bathrooms]', formData.bathrooms);
+
+    if (formData.coverImage) {
+      formDataToSend.append('coverImage', formData.coverImage);
+    }
+
+    if (formData.images && formData.images.length > 0) {
+      formData.images.forEach((image) => {
+        formDataToSend.append('images', image);
+      });
+    }
+
+    try {
+      if (modalMode === 'create') {
+        const response = await fetch('${API_BASE_URL}/homestays', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: formDataToSend,
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert('Tạo homestay thành công!');
+          fetchHomestays();
+          closeModal();
+        } else {
+          alert(data.error?.message || 'Có lỗi xảy ra');
+        }
+      } else {
+        const response = await fetch(
+          `${API_BASE_URL}/homestays/${selectedHomestay._id}`,
+          {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: formDataToSend,
+          },
+        );
+
+        const data = await response.json();
+        if (data.success) {
+          alert('Cập nhật homestay thành công!');
+          fetchHomestays();
+          closeModal();
+        } else {
+          alert(data.error?.message || 'Có lỗi xảy ra');
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Có lỗi xảy ra khi lưu dữ liệu');
+    }
+  };
+
+  const handleDelete = async (homestayId) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa homestay này?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/homestays/${homestayId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Xóa homestay thành công!');
+        fetchHomestays();
+      } else {
+        alert(data.error?.message || 'Có lỗi xảy ra');
+      }
+    } catch (error) {
+      console.error('Error deleting homestay:', error);
+      alert('Có lỗi xảy ra khi xóa homestay');
     }
   };
 
@@ -145,7 +368,12 @@ const AdminHomestays = () => {
   return (
     <div className="admin-homestays">
       <div className="admin-header">
-        <h1>Quản lý Homestay</h1>
+        <div className="header-top">
+          <h1>Quản lý Homestay</h1>
+          <button className="btn-add" onClick={openCreateModal}>
+            + Thêm homestay mới
+          </button>
+        </div>
         <div className="admin-stats">
           <div className="stat-card">
             <span className="stat-label">Tổng số homestay</span>
@@ -277,7 +505,18 @@ const AdminHomestays = () => {
                           </button>
                         </>
                       )}
-                      <button className="btn-action btn-info">Xem</button>
+                      <button
+                        className="btn-action btn-primary"
+                        onClick={() => openEditModal(homestay)}
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        className="btn-action btn-danger"
+                        onClick={() => handleDelete(homestay._id)}
+                      >
+                        Xóa
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -311,6 +550,167 @@ const AdminHomestays = () => {
           Sau
         </button>
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{modalMode === 'create' ? 'Thêm homestay mới' : 'Chỉnh sửa homestay'}</h2>
+              <button className="modal-close" onClick={closeModal}>
+                ×
+              </button>
+            </div>
+            <form onSubmit={handleSubmit} className="modal-form">
+              <div className="form-group">
+                <label>Tiêu đề *</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleFormChange}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Thành phố *</label>
+                  <select
+                    name="city"
+                    value={formData.city}
+                    onChange={handleFormChange}
+                    required
+                  >
+                    <option value="">Chọn thành phố</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Lào Cai">Lào Cai</option>
+                    <option value="Hạ Long">Hạ Long</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                    <option value="Nha Trang">Nha Trang</option>
+                    <option value="Đà Lạt">Đà Lạt</option>
+                    <option value="TP.HCM">TP.HCM</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Giá (VNĐ/đêm) *</label>
+                  <input
+                    type="number"
+                    name="basePrice"
+                    value={formData.basePrice}
+                    onChange={handleFormChange}
+                    required
+                    min="0"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Địa chỉ *</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleFormChange}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Số khách *</label>
+                  <input
+                    type="number"
+                    name="maxGuests"
+                    value={formData.maxGuests}
+                    onChange={handleFormChange}
+                    required
+                    min="1"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Phòng ngủ *</label>
+                  <input
+                    type="number"
+                    name="bedrooms"
+                    value={formData.bedrooms}
+                    onChange={handleFormChange}
+                    required
+                    min="1"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Phòng tắm *</label>
+                  <input
+                    type="number"
+                    name="bathrooms"
+                    value={formData.bathrooms}
+                    onChange={handleFormChange}
+                    required
+                    min="1"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Mô tả *</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleFormChange}
+                  required
+                  rows="4"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Ảnh bìa *</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange}
+                  required={modalMode === 'create'}
+                />
+                {coverImagePreview && (
+                  <div className="image-preview">
+                    <img src={coverImagePreview} alt="Cover preview" />
+                  </div>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>Ảnh phụ (có thể chọn nhiều ảnh)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImagesChange}
+                />
+                {imagesPreview.length > 0 && (
+                  <div className="images-preview-grid">
+                    {imagesPreview.map((preview, index) => (
+                      <div key={index} className="image-preview-item">
+                        <img src={preview} alt={`Preview ${index + 1}`} />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={closeModal}>
+                  Hủy
+                </button>
+                <button type="submit" className="btn-submit">
+                  {modalMode === 'create' ? 'Tạo mới' : 'Cập nhật'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

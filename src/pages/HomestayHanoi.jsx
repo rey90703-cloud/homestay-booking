@@ -1,76 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero from '../components/Hero';
 import HomestaySection from '../components/HomestaySection';
 import IntroSection from '../components/IntroSection';
+import API_BASE_URL from '../config/api';
 import './HomestayHanoi.css';
 
 function HomestayHanoi() {
-  const hanoiHomestays = [
-    {
-      name: 'The Chill House – Tây Hồ',
-      image: '/images/hn1-a061b2.png',
-      badge: 'Trending',
-      price: '650.000đ/đêm',
-      rating: '⭐ 4.8/5',
-      heartIcon: '/images/icon-heart-1.svg'
-    },
-    {
-      name: 'Old Quarter Loft – Hoàn Kiếm',
-      image: '/images/hn2-7326f7.png',
-      badge: 'Mới',
-      price: '820.000đ/đêm',
-      rating: '⭐ 4.7/5',
-      heartIcon: '/images/icon-heart-2.svg'
-    },
-    {
-      name: 'Lake View Studio – Trúc Bạch',
-      image: '/images/hn3-64c570.png',
-      badge: 'Ưa thích',
-      price: '720.000đ/đêm',
-      rating: '⭐ 4.9/5',
-      heartIcon: '/images/icon-heart-3.svg'
-    },
-    {
-      name: 'Skyline Minimal – Cầu Giấy',
-      image: '/images/hn4-a061b2.png',
-      badge: 'Hot',
-      price: '680.000đ/đêm',
-      rating: '⭐ 4.6/5',
-      heartIcon: '/images/icon-heart-4.svg'
-    },
-    {
-      name: 'Heritage House – Phố Cổ',
-      image: '/images/hn1-a061b2.png',
-      badge: 'Authentic',
-      price: '750.000đ/đêm',
-      rating: '⭐ 4.7/5',
-      heartIcon: '/images/icon-heart-1.svg'
-    },
-    {
-      name: 'Garden Villa – Ba Đình',
-      image: '/images/hn2-7326f7.png',
-      badge: 'Premium',
-      price: '920.000đ/đêm',
-      rating: '⭐ 4.9/5',
-      heartIcon: '/images/icon-heart-2.svg'
-    },
-    {
-      name: 'Cozy Studio – Đống Đa',
-      image: '/images/hn3-64c570.png',
-      badge: 'Budget',
-      price: '550.000đ/đêm',
-      rating: '⭐ 4.6/5',
-      heartIcon: '/images/icon-heart-3.svg'
-    },
-    {
-      name: 'Modern Loft – Hai Bà Trưng',
-      image: '/images/hn4-a061b2.png',
-      badge: 'Chic',
-      price: '780.000đ/đêm',
-      rating: '⭐ 4.8/5',
-      heartIcon: '/images/icon-heart-4.svg'
+  const [hanoiHomestays, setHanoiHomestays] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    total: 0,
+    districts: 15,
+    avgRating: 4.8
+  });
+
+  useEffect(() => {
+    fetchHomestays();
+  }, []);
+
+  const fetchHomestays = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/homestays?city=Hà Nội&status=active`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setHanoiHomestays(formatHomestays(data.data));
+        setStats({
+          total: data.data.length,
+          districts: 15,
+          avgRating: calculateAverageRating(data.data)
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching homestays:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const formatHomestays = (homestays) => {
+    return homestays.map((homestay, index) => ({
+      id: homestay._id,
+      name: homestay.title,
+      image: homestay.coverImage || '/images/hn1-a061b2.png',
+      badge: homestay.verificationStatus === 'approved' ? 'Verified' : 'New',
+      price: `${new Intl.NumberFormat('vi-VN').format(homestay.pricing?.basePrice || 0)}đ/đêm`,
+      rating: `⭐ ${homestay.averageRating || 5.0}/5`,
+      heartIcon: `/images/icon-heart-${(index % 8) + 1}.svg`
+    }));
+  };
+
+  const calculateAverageRating = (homestays) => {
+    if (homestays.length === 0) return 4.8;
+    const total = homestays.reduce((sum, h) => sum + (h.averageRating || 5.0), 0);
+    return (total / homestays.length).toFixed(1);
+  };
 
   return (
     <div className="homestay-hanoi-page">
@@ -86,15 +71,15 @@ function HomestayHanoi() {
           </p>
           <div className="location-stats">
             <div className="stat-item">
-              <span className="stat-number">200+</span>
+              <span className="stat-number">{stats.total}+</span>
               <span className="stat-label">Homestay</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">15</span>
+              <span className="stat-number">{stats.districts}</span>
               <span className="stat-label">Quận/Huyện</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">4.8</span>
+              <span className="stat-number">{stats.avgRating}</span>
               <span className="stat-label">Đánh giá TB</span>
             </div>
           </div>

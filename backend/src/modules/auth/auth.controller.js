@@ -1,4 +1,5 @@
 const authService = require('./auth.service');
+const firebaseService = require('../../services/firebase.service');
 const ApiResponse = require('../../utils/apiResponse');
 const catchAsync = require('../../utils/catchAsync');
 
@@ -106,12 +107,23 @@ class AuthController {
   });
 
   /**
+   * Verify OTP
+   * POST /api/v1/auth/verify-otp
+   */
+  verifyOTP = catchAsync(async (req, res) => {
+    const { email, otp } = req.body;
+    await authService.verifyOTP(email, otp);
+
+    ApiResponse.success(res, null, 'OTP verified successfully');
+  });
+
+  /**
    * Reset password
    * POST /api/v1/auth/reset-password
    */
   resetPassword = catchAsync(async (req, res) => {
-    const { token, password } = req.body;
-    await authService.resetPassword(token, password);
+    const { email, otp, password } = req.body;
+    await authService.resetPassword(email, otp, password);
 
     ApiResponse.success(res, null, 'Password reset successful. Please login with your new password.');
   });
@@ -140,6 +152,33 @@ class AuthController {
    */
   getCurrentUser = catchAsync(async (req, res) => {
     ApiResponse.success(res, { user: req.user }, 'User retrieved successfully');
+  });
+
+  /**
+   * Google Login with Firebase
+   * POST /api/v1/auth/google
+   */
+  googleLogin = catchAsync(async (req, res) => {
+    const { idToken, role } = req.body;
+
+    if (!idToken) {
+      return ApiResponse.error(res, 'Firebase ID token is required', 400);
+    }
+
+    const result = await firebaseService.googleLogin(idToken, role);
+
+    // Set refresh token in httpOnly cookie
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    ApiResponse.success(res, {
+      user: result.user,
+      accessToken: result.accessToken
+    }, 'Google login successful');
   });
 }
 

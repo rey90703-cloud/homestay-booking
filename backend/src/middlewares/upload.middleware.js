@@ -34,6 +34,12 @@ const uploadSingle = upload.single('avatar');
 // Multiple images upload
 const uploadMultiple = upload.array('images', FILE_UPLOAD.MAX_IMAGES_PER_HOMESTAY);
 
+// Upload homestay images (cover + multiple images)
+const uploadHomestayImages = upload.fields([
+  { name: 'coverImage', maxCount: 1 },
+  { name: 'images', maxCount: FILE_UPLOAD.MAX_IMAGES_PER_HOMESTAY },
+]);
+
 // Handle multer errors
 const handleMulterError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -57,5 +63,6 @@ const handleMulterError = (err, req, res, next) => {
 module.exports = {
   uploadSingle,
   uploadMultiple,
+  uploadHomestayImages,
   handleMulterError,
 };

@@ -67,11 +67,22 @@ router.put(
 // Get all users (Admin only)
 router.get('/', authorize(ROLES.ADMIN), userController.getAllUsers);
 
+// Create new user (Admin only)
+router.post('/', authorize(ROLES.ADMIN), userController.createUser);
+
 // Get user by ID
 router.get(
   '/:id',
   validateParams(userIdParamSchema),
   userController.getUserById,
+);
+
+// Update user (Admin only)
+router.put(
+  '/:id',
+  authorize(ROLES.ADMIN),
+  validateParams(userIdParamSchema),
+  userController.updateUser,
 );
 
 // Update user status (Admin only)
@@ -80,6 +91,14 @@ router.patch(
   authorize(ROLES.ADMIN),
   validateParams(userIdParamSchema),
   userController.updateUserStatus,
+);
+
+// Delete user (Admin only)
+router.delete(
+  '/:id',
+  authorize(ROLES.ADMIN),
+  validateParams(userIdParamSchema),
+  userController.deleteUser,
 );
 
 module.exports = router;

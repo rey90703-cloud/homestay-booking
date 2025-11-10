@@ -29,11 +29,37 @@ class HomestayService {
       }
     }
 
+    // Extract file buffers
+    const { coverImageBuffer, imagesBuffers, ...dataToSave } = homestayData;
+
     const homestay = await Homestay.create({
-      ...homestayData,
+      ...dataToSave,
       hostId,
       status: HOMESTAY_STATUS.DRAFT,
     });
+
+    try {
+      // Upload cover image if provided
+      if (coverImageBuffer) {
+        const uploadResults = await uploadMultipleImages([coverImageBuffer], `homestays/${homestay._id}`);
+        homestay.coverImage = uploadResults[0].url;
+      }
+
+      // Upload additional images if provided
+      if (imagesBuffers && imagesBuffers.length > 0) {
+        const uploadResults = await uploadMultipleImages(imagesBuffers, `homestays/${homestay._id}`);
+        homestay.images = uploadResults.map((result, index) => ({
+          url: result.url,
+          publicId: result.publicId,
+          order: index,
+        }));
+      }
+
+      await homestay.save();
+    } catch (error) {
+      logger.error(`Image upload failed for homestay ${homestay._id}: ${error.message}`);
+      // Don't fail the creation, just log the error
+    }
 
     logger.info(`Homestay created: ${homestay._id} by host: ${hostId}`);
 
@@ -145,7 +171,33 @@ class HomestayService {
       }
     }
 
-    Object.assign(homestay, updateData);
+    // Extract file buffers
+    const { coverImageBuffer, imagesBuffers, ...dataToUpdate } = updateData;
+
+    Object.assign(homestay, dataToUpdate);
+
+    try {
+      // Upload new cover image if provided
+      if (coverImageBuffer) {
+        const uploadResults = await uploadMultipleImages([coverImageBuffer], `homestays/${homestayId}`);
+        homestay.coverImage = uploadResults[0].url;
+      }
+
+      // Upload new additional images if provided
+      if (imagesBuffers && imagesBuffers.length > 0) {
+        const uploadResults = await uploadMultipleImages(imagesBuffers, `homestays/${homestayId}`);
+        const newImages = uploadResults.map((result, index) => ({
+          url: result.url,
+          publicId: result.publicId,
+          order: homestay.images.length + index,
+        }));
+        homestay.images.push(...newImages);
+      }
+    } catch (error) {
+      logger.error(`Image upload failed for homestay ${homestayId}: ${error.message}`);
+      // Don't fail the update, just log the error
+    }
+
     await homestay.save();
 
     logger.info(`Homestay updated: ${homestayId}`);

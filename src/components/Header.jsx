@@ -9,6 +9,7 @@ const Header = () => {
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [toast, setToast] = useState(null);
   const dropdownRef = useRef(null);
 
@@ -74,16 +75,34 @@ const Header = () => {
       <header className="header">
         <div className="header-container">
         <Link to="/" className="logo">
+          <img src="/logo.png" alt="HomestayBooking" className="logo-image" />
           <span className="logo-text">HomestayBooking</span>
         </Link>
 
-        <nav className="nav-links">
-          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Trang chủ</Link>
-          <Link to="/homestay-ha-noi" className={`nav-link ${location.pathname === '/homestay-ha-noi' ? 'active' : ''}`}>Homestay Hà Nội</Link>
-          <Link to="/homestay-lao-cai" className={`nav-link ${location.pathname === '/homestay-lao-cai' ? 'active' : ''}`}>Homestay Lào Cai</Link>
-          <Link to="/contact" className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`}>Liên hệ</Link>
+        {/* Hamburger Menu Button - Mobile Only */}
+        <button 
+          className="hamburger-menu"
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={`nav-links ${showMobileMenu ? 'mobile-open' : ''}`}>
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setShowMobileMenu(false)}>Trang chủ</Link>
+          <Link to="/homestay-ha-noi" className={`nav-link ${location.pathname === '/homestay-ha-noi' ? 'active' : ''}`} onClick={() => setShowMobileMenu(false)}>Homestay Hà Nội</Link>
+          <Link to="/homestay-lao-cai" className={`nav-link ${location.pathname === '/homestay-lao-cai' ? 'active' : ''}`} onClick={() => setShowMobileMenu(false)}>Homestay Lào Cai</Link>
+          <Link to="/contact" className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} onClick={() => setShowMobileMenu(false)}>Liên hệ</Link>
           {!isAuthenticated && (
-            <Link to="/login" className="nav-link">Đăng nhập</Link>
+            <Link to="/login" className="nav-link" onClick={() => setShowMobileMenu(false)}>Đăng nhập</Link>
+          )}
+          {(!isAuthenticated || user?.role === 'owner') && (
+            <button className="btn-primary mobile-btn" onClick={() => { handleAddHomestay(); setShowMobileMenu(false); }}>
+              <img src="/images/icon-plus.svg" alt="plus" className="btn-icon" />
+              <span>Đăng homestay</span>
+            </button>
           )}
           {isAuthenticated && (
             <div className="user-dropdown" ref={dropdownRef}>
@@ -108,7 +127,7 @@ const Header = () => {
         </nav>
 
         {(!isAuthenticated || user?.role === 'owner') && (
-          <button className="btn-primary" onClick={handleAddHomestay}>
+          <button className="btn-primary desktop-btn" onClick={handleAddHomestay}>
             <img src="/images/icon-plus.svg" alt="plus" className="btn-icon" />
             <span>Đăng homestay</span>
           </button>

@@ -114,39 +114,79 @@ class EmailService {
     return this.sendEmail(user.email, 'Verify Your Email Address', html, text);
   }
 
-  async sendPasswordResetEmail(user, resetToken) {
-    const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
-
+  async sendPasswordResetOTPEmail(user, otp) {
     const html = `
-      <h2>Password Reset Request</h2>
-      <p>Hi ${user.profile.firstName || 'there'},</p>
-      <p>We received a request to reset your password. Click the link below to create a new password:</p>
-      <p><a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
-      <p>Or copy and paste this URL into your browser:</p>
-      <p>${resetUrl}</p>
-      <p>This link will expire in 1 hour.</p>
-      <p>If you didn't request a password reset, please ignore this email. Your password will remain unchanged.</p>
-      <br>
-      <p>Best regards,<br>Booking Homestay Team</p>
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .logo-icon { font-size: 48px; margin: 0 0 10px 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .otp-box { background: white; border: 2px dashed #E11D48; border-radius: 10px; padding: 20px; text-align: center; margin: 20px 0; }
+          .otp-code { font-size: 36px; font-weight: bold; color: #E11D48; letter-spacing: 8px; font-family: monospace; }
+          .info { background: #FFF1F7; border-left: 4px solid #E11D48; padding: 15px; margin: 20px 0; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="logo-icon">🏠</div>
+            <h1 style="margin: 0; font-size: 26px; font-weight: 700;">HomestayBooking</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">Mã xác thực đặt lại mật khẩu</p>
+          </div>
+          <div class="content">
+            <p>Xin chào <strong>${user.profile.firstName || 'bạn'}</strong>,</p>
+            <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Sử dụng mã OTP bên dưới để tiếp tục:</p>
+            
+            <div class="otp-box">
+              <p style="margin: 0 0 10px 0; color: #666;">Mã xác thực của bạn:</p>
+              <div class="otp-code">${otp}</div>
+              <p style="margin: 10px 0 0 0; color: #999; font-size: 14px;">Mã có hiệu lực trong 5 phút</p>
+            </div>
+
+            <div class="info">
+              <p style="margin: 0;"><strong>⚠️ Lưu ý bảo mật:</strong></p>
+              <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>Không chia sẻ mã này với bất kỳ ai</li>
+                <li>Mã chỉ được sử dụng một lần</li>
+                <li>Nếu không phải bạn yêu cầu, hãy bỏ qua email này</li>
+              </ul>
+            </div>
+
+            <p style="margin-top: 20px;">Trân trọng,<br><strong>Đội ngũ Homestay Booking</strong></p>
+          </div>
+          <div class="footer">
+            <p>Email này được gửi tự động, vui lòng không trả lời.</p>
+            <p>© 2025 Homestay Booking. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
     `;
 
     const text = `
-      Password Reset Request
+      Mã xác thực đặt lại mật khẩu - Homestay Booking
       
-      Hi ${user.profile.firstName || 'there'},
+      Xin chào ${user.profile.firstName || 'bạn'},
       
-      We received a request to reset your password. Visit the following link to create a new password:
-      ${resetUrl}
+      Mã OTP của bạn: ${otp}
       
-      This link will expire in 1 hour.
+      Mã này có hiệu lực trong 5 phút.
       
-      If you didn't request a password reset, please ignore this email.
+      Lưu ý bảo mật:
+      - Không chia sẻ mã này với bất kỳ ai
+      - Mã chỉ được sử dụng một lần
+      - Nếu không phải bạn yêu cầu, hãy bỏ qua email này
       
-      Best regards,
-      Booking Homestay Team
+      Trân trọng,
+      Đội ngũ Homestay Booking
     `;
 
-    return this.sendEmail(user.email, 'Reset Your Password', html, text);
+    return this.sendEmail(user.email, '[Homestay Booking] Mã xác thực đặt lại mật khẩu', html, text);
   }
 
   async sendBookingConfirmationEmail(booking, guest, host, homestay) {

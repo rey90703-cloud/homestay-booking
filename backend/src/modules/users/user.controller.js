@@ -112,6 +112,33 @@ class UserController {
     const user = await userService.updateUserStatus(req.params.id, status);
     ApiResponse.success(res, { user }, 'User status updated successfully');
   });
+
+  /**
+   * Create new user (Admin only)
+   * POST /api/v1/users
+   */
+  createUser = catchAsync(async (req, res) => {
+    const user = await userService.createUser(req.body);
+    ApiResponse.created(res, { user }, 'User created successfully');
+  });
+
+  /**
+   * Update user (Admin only)
+   * PUT /api/v1/users/:id
+   */
+  updateUser = catchAsync(async (req, res) => {
+    const user = await userService.updateUser(req.params.id, req.body);
+    ApiResponse.success(res, { user }, 'User updated successfully');
+  });
+
+  /**
+   * Delete user (Admin only)
+   * DELETE /api/v1/users/:id
+   */
+  deleteUser = catchAsync(async (req, res) => {
+    await userService.deleteUser(req.params.id);
+    ApiResponse.success(res, null, 'User deleted successfully');
+  });
 }
 
 module.exports = new UserController();

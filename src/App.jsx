@@ -6,6 +6,8 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPasswordNew from './pages/ResetPasswordNew';
 import Search from './pages/Search';
 import Contact from './pages/Contact';
 import AddHomestay from './pages/AddHomestay';
@@ -13,6 +15,7 @@ import HomestayDetail from './pages/HomestayDetail';
 import Profile from './pages/Profile';
 import HomestayHanoi from './pages/HomestayHanoi';
 import HomestayLaoCai from './pages/HomestayLaoCai';
+import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import './App.css';
 
@@ -36,7 +39,28 @@ function App() {
                 <Footer />
               </>
             } />
+            <Route path="/forgot-password" element={
+              <>
+                <Header />
+                <ForgotPassword />
+                <Footer />
+              </>
+            } />
+            <Route path="/reset-password" element={
+              <>
+                <Header />
+                <ResetPasswordNew />
+                <Footer />
+              </>
+            } />
             <Route path="/search" element={<Search />} />
+            <Route path="/admin/login" element={
+              <>
+                <Header />
+                <AdminLogin />
+                <Footer />
+              </>
+            } />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/homestay/:id" element={
               <>

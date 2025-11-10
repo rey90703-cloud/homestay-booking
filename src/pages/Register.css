@@ -1,56 +1,9 @@
+/* Register page uses Auth.css for layout */
+
+/* Reset any conflicting styles */
 .register-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #FFF1F7;
-  padding: 40px 20px;
-}
-
-.register-container {
-  width: 100%;
-  max-width: 520px;
-}
-
-.register-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(20, 18, 23, 0.08);
-  border-radius: 24px;
-  padding: 48px 40px;
-  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.08);
-}
-
-.register-header {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.logo-link {
-  text-decoration: none;
-  display: inline-block;
-  margin-bottom: 24px;
-}
-
-.logo-text {
-  font-size: 24px;
-  font-weight: 700;
-  color: #141217;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
-
-.register-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #141217;
-  margin: 0 0 8px 0;
-}
-
-.register-subtitle {
-  font-size: 16px;
-  font-weight: 400;
-  color: #6B5A65;
-  margin: 0;
+  all: unset;
+  display: block;
 }
 
 .register-form {
@@ -183,15 +136,27 @@
   font-weight: 400;
   color: #141217;
   cursor: pointer;
+  line-height: 1.5;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+.checkbox-label span {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .checkbox-input {
-  width: 18px;
-  height: 18px;
+  width: 18px !important;
+  height: 18px !important;
   margin-top: 2px;
   cursor: pointer;
   accent-color: #E11D48;
-  flex-shrink: 0;
+  flex-shrink: 0 !important;
+  max-width: 18px !important;
 }
 
 .link-text {
@@ -199,6 +164,7 @@
   font-weight: 500;
   text-decoration: none;
   transition: color 0.2s;
+  word-break: keep-all;
 }
 
 .link-text:hover {

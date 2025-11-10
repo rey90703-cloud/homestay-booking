@@ -3,7 +3,7 @@ const homestayController = require('./homestay.controller');
 const { authenticate, optionalAuthenticate } = require('../../middlewares/auth.middleware');
 const { authorize, ROLES } = require('../../middlewares/rbac.middleware');
 const { validate, validateQuery, validateParams } = require('../../middlewares/validation.middleware');
-const { uploadMultiple, handleMulterError } = require('../../middlewares/upload.middleware');
+const { uploadMultiple, uploadHomestayImages, handleMulterError } = require('../../middlewares/upload.middleware');
 const {
   createHomestaySchema,
   updateHomestaySchema,
@@ -51,7 +51,8 @@ router.post(
   '/',
   authenticate,
   authorize(ROLES.HOST, ROLES.ADMIN),
-  validate(createHomestaySchema),
+  uploadHomestayImages,
+  handleMulterError,
   homestayController.createHomestay,
 );
 
@@ -61,7 +62,8 @@ router.put(
   authenticate,
   authorize(ROLES.HOST, ROLES.ADMIN),
   validateParams(homestayIdSchema),
-  validate(updateHomestaySchema),
+  uploadHomestayImages,
+  handleMulterError,
   homestayController.updateHomestay,
 );
 

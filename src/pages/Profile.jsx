@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import API_BASE_URL from '../config/api';
 import './Profile.css';
 
 function Profile() {
@@ -111,7 +112,7 @@ function Profile() {
 
     try {
       const token = localStorage.getItem('token');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
+      const API_URL = import.meta.env.VITE_API_URL || '${API_BASE_URL}';
 
       // Debug: Check token
       console.log('Token exists:', !!token);

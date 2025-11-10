@@ -19,7 +19,12 @@ const app = express();
 /**
  * Security Middleware
  */
-app.use(helmet()); // Set security headers
+app.use(
+  helmet({
+    crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
 
 /**
  * CORS Configuration

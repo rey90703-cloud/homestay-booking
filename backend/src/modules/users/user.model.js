@@ -14,7 +14,10 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: function() {
+        // Password is not required for Google/Firebase users
+        return !this.firebaseUid;
+      },
       minlength: [8, 'Password must be at least 8 characters'],
       select: false, // Don't return password by default
     },
@@ -22,6 +25,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: Object.values(ROLES),
       default: ROLES.GUEST,
+    },
+    
+    // Firebase Authentication
+    firebaseUid: {
+      type: String,
+      sparse: true, // Allow multiple null values but unique non-null values
+    },
+    
+    // Full name (convenience field for Firebase users)
+    fullName: {
+      type: String,
+      trim: true,
+    },
+    
+    // Avatar (top-level for Firebase users)
+    avatar: {
+      type: String,
     },
 
     // Profile Information
@@ -67,6 +87,8 @@ const userSchema = new mongoose.Schema(
     emailVerificationExpires: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    passwordResetOTP: String, // 6-digit OTP
+    passwordResetOTPExpires: Date,
     refreshToken: String,
 
     // Host-specific fields
@@ -109,20 +131,31 @@ const userSchema = new mongoose.Schema(
 
 // Indexes
 userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ firebaseUid: 1 }, { unique: true, sparse: true });
 userSchema.index({ role: 1 });
 userSchema.index({ 'profile.phone': 1 });
 userSchema.index({ accountStatus: 1 });
 
-// Virtual for full name
-userSchema.virtual('fullName').get(function () {
-  if (this.profile.firstName && this.profile.lastName) {
-    return `${this.profile.firstName} ${this.profile.lastName}`;
+// Virtual for full name (only if fullName field is not set)
+userSchema.virtual('displayName').get(function () {
+  // Use fullName field if available (Firebase users)
+  if (this.fullName) {
+    return this.fullName;
   }
-  return this.profile.firstName || this.profile.lastName || 'User';
+  // Otherwise construct from profile fields (regular users)
+  if (this.profile && (this.profile.firstName || this.profile.lastName)) {
+    return `${this.profile.firstName || ''} ${this.profile.lastName || ''}`.trim();
+  }
+  return 'User';
 });
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
+  // Skip password hashing for Firebase users
+  if (this.firebaseUid) {
+    return next();
+  }
+  
   // Only hash password if it has been modified
   if (!this.isModified('password')) {
     return next();
@@ -176,6 +209,43 @@ userSchema.methods.generatePasswordResetToken = function () {
   this.passwordResetExpires = Date.now() + 60 * 60 * 1000; // 1 hour
 
   return token;
+};
+
+// Instance method to generate 6-digit OTP for password reset
+userSchema.methods.generatePasswordResetOTP = function () {
+  // Generate random 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // Store hashed OTP
+  this.passwordResetOTP = crypto
+    .createHash('sha256')
+    .update(otp)
+    .digest('hex');
+
+  // OTP expires in 5 minutes
+  this.passwordResetOTPExpires = Date.now() + 5 * 60 * 1000;
+
+  return otp;
+};
+
+// Instance method to verify OTP
+userSchema.methods.verifyPasswordResetOTP = function (otp) {
+  if (!this.passwordResetOTP || !this.passwordResetOTPExpires) {
+    return false;
+  }
+
+  // Check if OTP expired
+  if (Date.now() > this.passwordResetOTPExpires) {
+    return false;
+  }
+
+  // Hash input OTP and compare
+  const hashedOTP = crypto
+    .createHash('sha256')
+    .update(otp)
+    .digest('hex');
+
+  return hashedOTP === this.passwordResetOTP;
 };
 
 // Static method to find user by email

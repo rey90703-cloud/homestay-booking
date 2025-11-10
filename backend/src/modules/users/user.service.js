@@ -227,6 +227,96 @@ class UserService {
 
     return user;
   }
+
+  /**
+   * Create new user (Admin only)
+   */
+  async createUser(userData) {
+    const { email, password, role, profile } = userData;
+
+    // Check if email already exists
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      throw new BadRequestError('Email already registered');
+    }
+
+    // Create new user
+    const user = new User({
+      email: email.toLowerCase(),
+      password,
+      role: role || ROLES.GUEST,
+      profile: {
+        firstName: profile?.firstName || '',
+        lastName: profile?.lastName || '',
+        phone: profile?.phone || '',
+      },
+      emailVerified: true,
+      accountStatus: 'active',
+    });
+
+    await user.save();
+
+    logger.info(`New user created by admin: ${user.email}`);
+
+    // Return user without password
+    return User.findById(user._id).select('-password -refreshToken');
+  }
+
+  /**
+   * Update user (Admin only)
+   */
+  async updateUser(userId, updateData) {
+    const user = await findByIdOrFail(User, userId, 'User');
+
+    // Update basic fields
+    if (updateData.email) {
+      const existingUser = await User.findOne({ 
+        email: updateData.email.toLowerCase(),
+        _id: { $ne: userId }
+      });
+      if (existingUser) {
+        throw new BadRequestError('Email already exists');
+      }
+      user.email = updateData.email.toLowerCase();
+    }
+
+    if (updateData.role) user.role = updateData.role;
+    if (updateData.accountStatus) user.accountStatus = updateData.accountStatus;
+
+    // Update profile fields
+    if (updateData.profile) {
+      if (updateData.profile.firstName) user.profile.firstName = updateData.profile.firstName;
+      if (updateData.profile.lastName) user.profile.lastName = updateData.profile.lastName;
+      if (updateData.profile.phone) user.profile.phone = updateData.profile.phone;
+    }
+
+    // Update password if provided
+    if (updateData.password) {
+      user.password = updateData.password;
+    }
+
+    await user.save();
+
+    logger.info(`User updated by admin: ${user.email}`);
+
+    return User.findById(user._id).select('-password -refreshToken');
+  }
+
+  /**
+   * Delete user (Admin only)
+   */
+  async deleteUser(userId) {
+    const user = await findByIdOrFail(User, userId, 'User');
+
+    // Soft delete
+    user.accountStatus = 'deleted';
+    user.email = `deleted_${Date.now()}_${user.email}`;
+    await user.save();
+
+    logger.info(`User deleted by admin: ${userId}`);
+
+    return true;
+  }
 }
 
 module.exports = new UserService();

@@ -8,6 +8,7 @@ const {
   loginSchema,
   refreshTokenSchema,
   forgotPasswordSchema,
+  verifyOTPSchema,
   resetPasswordSchema,
   verifyEmailSchema,
   changePasswordSchema,
@@ -153,6 +154,9 @@ router.post('/verify-email', validate(verifyEmailSchema), authController.verifyE
 // Resend verification email
 router.post('/resend-verification', authController.resendVerification);
 
+// Google login
+router.post('/google', authController.googleLogin);
+
 // Forgot password with rate limiting
 router.post(
   '/forgot-password',
@@ -160,6 +164,9 @@ router.post(
   validate(forgotPasswordSchema),
   authController.forgotPassword,
 );
+
+// Verify OTP
+router.post('/verify-otp', validate(verifyOTPSchema), authController.verifyOTP);
 
 // Reset password
 router.post('/reset-password', validate(resetPasswordSchema), authController.resetPassword);
