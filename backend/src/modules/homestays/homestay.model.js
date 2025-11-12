@@ -263,9 +263,9 @@ homestaySchema.virtual('totalPrice').get(function () {
   return this.pricing.basePrice + this.pricing.cleaningFee + this.pricing.serviceFee;
 });
 
-// Pre-save middleware to set cover image
+// Pre-save middleware to set cover image (only if not already set)
 homestaySchema.pre('save', function (next) {
-  if (this.images && this.images.length > 0) {
+  if (!this.coverImage && this.images && this.images.length > 0) {
     this.coverImage = this.images[0].url;
   }
   next();

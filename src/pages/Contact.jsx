@@ -12,6 +12,9 @@ const Contact = () => {
   });
 
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api/v1';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,24 +24,46 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Simulate form submission
-    console.log('Form submitted:', formData);
-    setSubmitStatus('success');
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: ''
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/contacts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-      setSubmitStatus(null);
-    }, 3000);
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitStatus('success');
+
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            subject: '',
+            message: ''
+          });
+          setSubmitStatus(null);
+        }, 3000);
+      } else {
+        setSubmitStatus('error');
+        console.error('Error submitting contact:', data.message);
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      console.error('Error submitting contact:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -183,14 +208,20 @@ const Contact = () => {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="form-submit-btn">
-                  <span>Gửi tin nhắn</span>
-                  <img src="/images/icon-send.svg" alt="Send" className="btn-icon" />
+                <button type="submit" className="form-submit-btn" disabled={isSubmitting}>
+                  <span>{isSubmitting ? 'Đang gửi...' : 'Gửi tin nhắn'}</span>
+                  {!isSubmitting && <img src="/images/icon-send.svg" alt="Send" className="btn-icon" />}
                 </button>
 
                 {submitStatus === 'success' && (
                   <div className="submit-success">
                     ✓ Tin nhắn của bạn đã được gửi thành công! Chúng tôi sẽ phản hồi sớm nhất.
+                  </div>
+                )}
+
+                {submitStatus === 'error' && (
+                  <div className="submit-error">
+                    ✗ Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại sau.
                   </div>
                 )}
               </form>

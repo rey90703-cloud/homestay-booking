@@ -9,6 +9,7 @@ const {
   updateHomestaySchema,
   searchHomestaySchema,
   homestayIdSchema,
+  deleteImageSchema,
   updateVerificationSchema,
 } = require('./homestay.validation');
 
@@ -92,7 +93,7 @@ router.delete(
   '/:id/images/:imageIndex',
   authenticate,
   authorize(ROLES.HOST, ROLES.ADMIN),
-  validateParams(homestayIdSchema),
+  validateParams(deleteImageSchema),
   homestayController.deleteImage,
 );
 

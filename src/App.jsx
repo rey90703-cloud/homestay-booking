@@ -10,13 +10,18 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPasswordNew from './pages/ResetPasswordNew';
 import Search from './pages/Search';
 import Contact from './pages/Contact';
-import AddHomestay from './pages/AddHomestay';
+
 import HomestayDetail from './pages/HomestayDetail';
+import BookingCheckout from './pages/BookingCheckout';
+import PaymentSuccess from './pages/PaymentSuccess';
+import MyBookings from './pages/MyBookings';
 import Profile from './pages/Profile';
 import HomestayHanoi from './pages/HomestayHanoi';
 import HomestayLaoCai from './pages/HomestayLaoCai';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import HostHomestays from './pages/host/HostHomestays';
+import AddHomestay from './pages/AddHomestay';
 import './App.css';
 
 function App() {
@@ -69,6 +74,27 @@ function App() {
                 <Footer />
               </>
             } />
+            <Route path="/booking/:id" element={
+              <>
+                <Header />
+                <BookingCheckout />
+                <Footer />
+              </>
+            } />
+            <Route path="/payment-success/:bookingId" element={
+              <>
+                <Header />
+                <PaymentSuccess />
+                <Footer />
+              </>
+            } />
+            <Route path="/my-bookings" element={
+              <>
+                <Header />
+                <MyBookings />
+                <Footer />
+              </>
+            } />
             <Route path="/contact" element={
               <>
                 <Header />
@@ -76,13 +102,7 @@ function App() {
                 <Footer />
               </>
             } />
-            <Route path="/add-homestay" element={
-              <>
-                <Header />
-                <AddHomestay />
-                <Footer />
-              </>
-            } />
+            <Route path="/add-homestay" element={<AddHomestay />} />
             <Route path="/profile" element={
               <>
                 <Header />
@@ -90,6 +110,7 @@ function App() {
                 <Footer />
               </>
             } />
+            <Route path="/host/homestays" element={<HostHomestays />} />
             <Route path="/homestay-ha-noi" element={
               <>
                 <Header />

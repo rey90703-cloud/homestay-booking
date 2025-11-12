@@ -1,0 +1,261 @@
+.my-bookings {
+  min-height: calc(100vh - 200px);
+  background: #f8f9fa;
+  padding-top: 140px;
+  padding-bottom: 60px;
+}
+
+.my-bookings-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #141217;
+  margin-bottom: 8px;
+}
+
+.page-header p {
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* Tabs */
+.bookings-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(20, 18, 23, 0.12);
+  overflow-x: auto;
+}
+
+.bookings-tabs .tab {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.bookings-tabs .tab:hover {
+  color: #e11d48;
+}
+
+.bookings-tabs .tab.active {
+  color: #e11d48;
+  border-bottom-color: #e11d48;
+}
+
+/* Bookings List */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.booking-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.booking-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.booking-image {
+  position: relative;
+  height: 200px;
+}
+
+.booking-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.status-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  background: white;
+}
+
+.status-upcoming {
+  color: #2563eb;
+  background: #dbeafe;
+}
+
+.status-completed {
+  color: #16a34a;
+  background: #dcfce7;
+}
+
+.status-cancelled {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* Booking Info */
+.booking-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.booking-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #141217;
+  margin-bottom: 4px;
+}
+
+.booking-code {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.booking-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.detail-item .icon {
+  font-size: 16px;
+}
+
+.booking-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(20, 18, 23, 0.12);
+}
+
+.price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.price-label {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.price-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e11d48;
+}
+
+.btn-view-details {
+  padding: 10px 24px;
+  background: #e11d48;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-view-details:hover {
+  background: #be123c;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 16px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* Loading */
+.my-bookings-loading {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(225, 29, 72, 0.1);
+  border-top-color: #e11d48;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .my-bookings {
+    padding-top: 100px;
+  }
+
+  .booking-card {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-image {
+    height: 180px;
+  }
+
+  .booking-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .btn-view-details {
+    width: 100%;
+  }
+}
+

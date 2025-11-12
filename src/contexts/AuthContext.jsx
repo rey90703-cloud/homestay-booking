@@ -180,6 +180,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = (updatedUserData) => {
+    const userData = {
+      ...user,
+      ...updatedUserData,
+    };
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
@@ -288,9 +297,13 @@ export const AuthProvider = ({ children }) => {
       const userData = data.data.user;
       const token = data.data.accessToken;
 
-      // Add fullName to user object if not already present
-      if (!userData.fullName && userData.profile) {
-        userData.fullName = `${userData.profile.firstName || ''} ${userData.profile.lastName || ''}`.trim() || 'User';
+      console.log('Google login response:', userData);
+
+      // Build fullName from profile if available, otherwise use existing fullName
+      if (userData.profile && (userData.profile.firstName || userData.profile.lastName)) {
+        userData.fullName = `${userData.profile.firstName || ''} ${userData.profile.lastName || ''}`.trim() || userData.fullName || 'User';
+      } else if (!userData.fullName) {
+        userData.fullName = 'User';
       }
 
       // Map backend roles to frontend roles for consistency
@@ -329,6 +342,7 @@ export const AuthProvider = ({ children }) => {
     forgotPassword,
     resetPassword,
     googleLogin,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -141,6 +141,12 @@ const searchHomestaySchema = Joi.object({
   ),
   minRating: Joi.number().min(0).max(5),
   instantBook: Joi.boolean(),
+  // Admin filters
+  status: Joi.string().valid('draft', 'pending', 'active', 'suspended', 'deleted'),
+  verificationStatus: Joi.string().valid('pending', 'approved', 'rejected'),
+  search: Joi.string().trim(),
+  isAdmin: Joi.alternatives().try(Joi.boolean(), Joi.string().valid('true', 'false')),
+  // Pagination
   page: Joi.number().min(1).default(1),
   limit: Joi.number().min(1).max(100).default(20),
   sort: Joi.string().valid('price', '-price', 'rating', '-rating', 'createdAt', '-createdAt'),
@@ -152,6 +158,23 @@ const homestayIdSchema = Joi.object({
     .required()
     .messages({
       'string.pattern.base': 'Invalid homestay ID format',
+    }),
+});
+
+const deleteImageSchema = Joi.object({
+  id: Joi.string()
+    .pattern(/^[0-9a-fA-F]{24}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Invalid homestay ID format',
+    }),
+  imageIndex: Joi.number()
+    .integer()
+    .min(0)
+    .required()
+    .messages({
+      'number.base': 'Image index must be a number',
+      'number.min': 'Image index must be >= 0',
     }),
 });
 
@@ -180,6 +203,7 @@ module.exports = {
   updateHomestaySchema,
   searchHomestaySchema,
   homestayIdSchema,
+  deleteImageSchema,
   updateStatusSchema,
   updateVerificationSchema,
 };

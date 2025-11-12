@@ -1,0 +1,438 @@
+/* Loading & Not Found */
+.checkout-loading,
+.checkout-not-found {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* Main Container */
+.booking-checkout {
+  min-height: calc(100vh - 200px);
+  background: #f8f9fa;
+  padding-top: 120px;
+}
+
+/* Breadcrumb Section */
+.checkout-breadcrumb {
+  background: white;
+  border-bottom: 1px solid rgba(20, 18, 23, 0.08);
+  padding: 24px 0;
+}
+
+.breadcrumb-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.breadcrumb-container a {
+  color: #e11d48;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.breadcrumb-container a:hover {
+  opacity: 0.8;
+}
+
+.breadcrumb-container .separator {
+  opacity: 0.6;
+}
+
+.breadcrumb-container strong {
+  color: #141217;
+}
+
+.checkout-title-section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.checkout-title-section h1 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #141217;
+  margin: 0;
+}
+
+.discount-badge {
+  padding: 6px 12px;
+  background: rgba(225, 29, 72, 0.1);
+  border: 1px solid rgba(225, 29, 72, 0.2);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #e11d48;
+}
+
+.security-info {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.security-info span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Main Content */
+.checkout-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Left Column */
+.checkout-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.checkout-card {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+}
+
+.checkout-card h3 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #141217;
+  margin: 0 0 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(20, 18, 23, 0.08);
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.input-field input {
+  padding: 12px 14px;
+  border: 1px solid rgba(20, 18, 23, 0.12);
+  border-radius: 14px;
+  font-size: 15px;
+  color: #141217;
+  background: white;
+  transition: all 0.2s;
+}
+
+.input-field input:focus {
+  outline: none;
+  border-color: #e11d48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+.input-field input:read-only {
+  background: #f8f9fa;
+  cursor: not-allowed;
+}
+
+.info-text {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.payment-method-momo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 14px;
+  border: 2px solid #a50064;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fff, #fff7fb);
+}
+
+.momo-logo {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.momo-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.payment-method-momo label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #a50064;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.payment-method-momo p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.momo-info {
+  padding: 12px 14px;
+  background: rgba(165, 0, 100, 0.05);
+  border-radius: 14px;
+  border: 1px solid rgba(165, 0, 100, 0.1);
+}
+
+.momo-info .info-text {
+  color: #a50064;
+  font-weight: 500;
+}
+
+/* Right Sidebar */
+.checkout-right {
+  position: sticky;
+  top: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.summary-card,
+.host-info-card {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(20, 18, 23, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.homestay-summary {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.homestay-summary img {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+}
+
+.summary-info h4 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #141217;
+  margin: 0 0 4px 0;
+}
+
+.summary-info p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.pricing-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.pricing-row.discount {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.pricing-row.total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #141217;
+}
+
+.pricing-divider {
+  height: 1px;
+  background: rgba(20, 18, 23, 0.08);
+  margin: 8px 0;
+}
+
+.btn-confirm {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 12px;
+}
+
+.btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+}
+
+.btn-confirm:active {
+  transform: translateY(0);
+}
+
+.disclaimer {
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Host Info Card */
+.host-info-card h4 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #141217;
+  margin: 0 0 16px 0;
+}
+
+.host-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.host-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.host-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #141217;
+  margin: 0 0 4px 0;
+}
+
+.host-status {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(20, 18, 23, 0.08);
+  margin: 16px 0;
+}
+
+.btn-contact {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: white;
+  border: 1px solid rgba(20, 18, 23, 0.12);
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #141217;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-contact:hover {
+  background: #f8f9fa;
+  border-color: #e11d48;
+  color: #e11d48;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .checkout-container {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-right {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-title-section h1 {
+    font-size: 24px;
+  }
+}
+

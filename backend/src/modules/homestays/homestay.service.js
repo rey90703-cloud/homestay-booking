@@ -3,6 +3,7 @@ const User = require('../users/user.model');
 const Amenity = require('../../models/amenity.model');
 const { NotFoundError, ForbiddenError, BadRequestError } = require('../../utils/apiError');
 const { uploadMultipleImages, deleteMultipleImages } = require('../../utils/cloudinary.util');
+const { resizeAndConvertToBase64 } = require('../../utils/image.util');
 const logger = require('../../utils/logger');
 const { HOMESTAY_STATUS, ROLES } = require('../../config/constants');
 const { createSafeRegex } = require('../../utils/regex.util');
@@ -15,10 +16,10 @@ class HomestayService {
    * Create new homestay
    */
   async createHomestay(hostId, homestayData) {
-    // Verify user is a host
+    // Verify user is a host or admin
     const user = await User.findById(hostId);
     if (!user || (user.role !== ROLES.HOST && user.role !== ROLES.ADMIN)) {
-      throw new ForbiddenError('Only hosts can create homestays');
+      throw new ForbiddenError('Only hosts and admins can create homestays');
     }
 
     // Verify amenities exist
@@ -32,34 +33,36 @@ class HomestayService {
     // Extract file buffers
     const { coverImageBuffer, imagesBuffers, ...dataToSave } = homestayData;
 
+    // Resize and convert cover image to base64 if provided
+    if (coverImageBuffer && coverImageBuffer.length > 0) {
+      dataToSave.coverImage = await resizeAndConvertToBase64(coverImageBuffer, {
+        maxWidth: 1200,
+        maxHeight: 800,
+        quality: 70,
+      });
+      logger.info('Cover image resized and converted to base64');
+    }
+
+    // Resize and convert additional images to base64 if provided
+    if (imagesBuffers && imagesBuffers.length > 0) {
+      const imagePromises = imagesBuffers.map(async (buffer, index) => ({
+        url: await resizeAndConvertToBase64(buffer, {
+          maxWidth: 1200,
+          maxHeight: 800,
+          quality: 70,
+        }),
+        publicId: `homestay_${Date.now()}_${index}`,
+        order: index,
+      }));
+      dataToSave.images = await Promise.all(imagePromises);
+      logger.info(`${imagesBuffers.length} images resized and converted to base64`);
+    }
+
     const homestay = await Homestay.create({
       ...dataToSave,
       hostId,
       status: HOMESTAY_STATUS.DRAFT,
     });
-
-    try {
-      // Upload cover image if provided
-      if (coverImageBuffer) {
-        const uploadResults = await uploadMultipleImages([coverImageBuffer], `homestays/${homestay._id}`);
-        homestay.coverImage = uploadResults[0].url;
-      }
-
-      // Upload additional images if provided
-      if (imagesBuffers && imagesBuffers.length > 0) {
-        const uploadResults = await uploadMultipleImages(imagesBuffers, `homestays/${homestay._id}`);
-        homestay.images = uploadResults.map((result, index) => ({
-          url: result.url,
-          publicId: result.publicId,
-          order: index,
-        }));
-      }
-
-      await homestay.save();
-    } catch (error) {
-      logger.error(`Image upload failed for homestay ${homestay._id}: ${error.message}`);
-      // Don't fail the creation, just log the error
-    }
 
     logger.info(`Homestay created: ${homestay._id} by host: ${hostId}`);
 
@@ -69,11 +72,11 @@ class HomestayService {
   /**
    * Upload images for homestay
    */
-  async uploadImages(homestayId, hostId, fileBuffers) {
+  async uploadImages(homestayId, hostId, userRole, fileBuffers) {
     const homestay = await findByIdOrFail(Homestay, homestayId, 'Homestay');
 
-    // Check ownership
-    verifyHomestayOwnership(homestay, hostId);
+    // Check ownership (admin can modify any homestay)
+    verifyHomestayOwnership(homestay, hostId, userRole);
 
     try {
       // Upload images to Cloudinary
@@ -101,28 +104,21 @@ class HomestayService {
   /**
    * Delete image from homestay
    */
-  async deleteImage(homestayId, hostId, imageIndex) {
+  async deleteImage(homestayId, hostId, userRole, imageIndex) {
     const homestay = await findByIdOrFail(Homestay, homestayId, 'Homestay');
 
-    verifyHomestayOwnership(homestay, hostId);
+    verifyHomestayOwnership(homestay, hostId, userRole);
 
     if (!homestay.images[imageIndex]) {
       throw new BadRequestError('Image not found');
     }
 
-    const image = homestay.images[imageIndex];
-
     try {
-      // Delete from Cloudinary
-      if (image.publicId) {
-        await deleteMultipleImages([image.publicId]);
-      }
-
-      // Remove from array
+      // Remove from array (no need to delete from Cloudinary since we're using base64)
       homestay.images.splice(imageIndex, 1);
       await homestay.save();
 
-      logger.info(`Image deleted from homestay: ${homestayId}`);
+      logger.info(`Image deleted from homestay: ${homestayId}, index: ${imageIndex}`);
 
       return homestay;
     } catch (error) {
@@ -158,10 +154,10 @@ class HomestayService {
   /**
    * Update homestay
    */
-  async updateHomestay(homestayId, hostId, updateData) {
+  async updateHomestay(homestayId, hostId, userRole, updateData) {
     const homestay = await findByIdOrFail(Homestay, homestayId, 'Homestay');
 
-    verifyHomestayOwnership(homestay, hostId);
+    verifyHomestayOwnership(homestay, hostId, userRole);
 
     // Verify amenities if updated
     if (updateData.amenities && updateData.amenities.length > 0) {
@@ -174,31 +170,85 @@ class HomestayService {
     // Extract file buffers
     const { coverImageBuffer, imagesBuffers, ...dataToUpdate } = updateData;
 
-    Object.assign(homestay, dataToUpdate);
-
-    try {
-      // Upload new cover image if provided
-      if (coverImageBuffer) {
-        const uploadResults = await uploadMultipleImages([coverImageBuffer], `homestays/${homestayId}`);
-        homestay.coverImage = uploadResults[0].url;
-      }
-
-      // Upload new additional images if provided
-      if (imagesBuffers && imagesBuffers.length > 0) {
-        const uploadResults = await uploadMultipleImages(imagesBuffers, `homestays/${homestayId}`);
-        const newImages = uploadResults.map((result, index) => ({
-          url: result.url,
-          publicId: result.publicId,
-          order: homestay.images.length + index,
-        }));
-        homestay.images.push(...newImages);
-      }
-    } catch (error) {
-      logger.error(`Image upload failed for homestay ${homestayId}: ${error.message}`);
-      // Don't fail the update, just log the error
+    // Merge nested objects instead of replacing them
+    if (dataToUpdate.location) {
+      homestay.location = {
+        ...(homestay.location ? homestay.location.toObject() : {}),
+        ...dataToUpdate.location
+      };
+      homestay.markModified('location'); // Mark as modified for Mongoose
+      delete dataToUpdate.location;
+    }
+    if (dataToUpdate.capacity) {
+      homestay.capacity = {
+        ...(homestay.capacity ? homestay.capacity.toObject() : {}),
+        ...dataToUpdate.capacity
+      };
+      homestay.markModified('capacity'); // Mark as modified for Mongoose
+      delete dataToUpdate.capacity;
+    }
+    if (dataToUpdate.pricing) {
+      homestay.pricing = {
+        ...(homestay.pricing ? homestay.pricing.toObject() : {}),
+        ...dataToUpdate.pricing
+      };
+      homestay.markModified('pricing'); // Mark as modified for Mongoose
+      delete dataToUpdate.pricing;
+    }
+    if (dataToUpdate.houseRules) {
+      homestay.houseRules = {
+        ...(homestay.houseRules ? homestay.houseRules.toObject() : {}),
+        ...dataToUpdate.houseRules
+      };
+      homestay.markModified('houseRules'); // Mark as modified for Mongoose
+      delete dataToUpdate.houseRules;
+    }
+    if (dataToUpdate.availability) {
+      homestay.availability = {
+        ...(homestay.availability ? homestay.availability.toObject() : {}),
+        ...dataToUpdate.availability
+      };
+      homestay.markModified('availability'); // Mark as modified for Mongoose
+      delete dataToUpdate.availability;
     }
 
+    Object.assign(homestay, dataToUpdate);
+
+    logger.info(`Updating homestay ${homestayId} with data:`, {
+      location: homestay.location,
+      capacity: homestay.capacity,
+      pricing: homestay.pricing
+    });
+
+    // Handle cover image - resize and convert to base64
+    if (coverImageBuffer && coverImageBuffer.length > 0) {
+      homestay.coverImage = await resizeAndConvertToBase64(coverImageBuffer, {
+        maxWidth: 1200,
+        maxHeight: 800,
+        quality: 70,
+      });
+      logger.info(`Cover image resized and converted to base64 for homestay: ${homestayId}`);
+    }
+
+    // Handle additional images - resize and convert to base64
+    if (imagesBuffers && imagesBuffers.length > 0) {
+      const imagePromises = imagesBuffers.map(async (buffer, index) => ({
+        url: await resizeAndConvertToBase64(buffer, {
+          maxWidth: 1200,
+          maxHeight: 800,
+          quality: 70,
+        }),
+        publicId: `homestay_${homestayId}_${Date.now()}_${index}`,
+        order: homestay.images.length + index,
+      }));
+      const newImages = await Promise.all(imagePromises);
+      homestay.images.push(...newImages);
+      logger.info(`${imagesBuffers.length} images resized and converted to base64 for homestay: ${homestayId}`);
+    }
+
+    // Save all data including images
     await homestay.save();
+    logger.info(`Homestay updated successfully: ${homestayId}`);
 
     logger.info(`Homestay updated: ${homestayId}`);
 
@@ -208,10 +258,10 @@ class HomestayService {
   /**
    * Delete homestay
    */
-  async deleteHomestay(homestayId, hostId) {
+  async deleteHomestay(homestayId, hostId, userRole) {
     const homestay = await findByIdOrFail(Homestay, homestayId, 'Homestay');
 
-    verifyHomestayOwnership(homestay, hostId);
+    verifyHomestayOwnership(homestay, hostId, userRole);
 
     // Soft delete by changing status
     homestay.status = HOMESTAY_STATUS.DELETED;
@@ -251,10 +301,10 @@ class HomestayService {
   /**
    * Submit homestay for verification
    */
-  async submitForVerification(homestayId, hostId) {
+  async submitForVerification(homestayId, hostId, userRole) {
     const homestay = await findByIdOrFail(Homestay, homestayId, 'Homestay');
 
-    verifyHomestayOwnership(homestay, hostId);
+    verifyHomestayOwnership(homestay, hostId, userRole);
 
     // Validate homestay has minimum requirements
     if (!homestay.images || homestay.images.length < 3) {
@@ -287,17 +337,48 @@ class HomestayService {
       amenities,
       minRating,
       instantBook,
+      status,
+      verificationStatus,
+      search,
+      isAdmin,
       page = 1,
       limit = 20,
       sort = '-createdAt',
     } = searchParams;
 
-    const query = { status: HOMESTAY_STATUS.ACTIVE };
+    const query = {};
+
+    // Status filter - only show active by default for public searches
+    // isAdmin comes from query params as string, so check for string 'true'
+    const isAdminRequest = isAdmin === 'true' || isAdmin === true;
+    
+    if (status) {
+      query.status = status;
+    } else if (!isAdminRequest) {
+      // Only apply default active filter for public searches (not admin)
+      query.status = HOMESTAY_STATUS.ACTIVE;
+    }
+    // If isAdminRequest is true and no status filter, show all homestays regardless of status
+
+    // Verification status filter (for admin)
+    if (verificationStatus) {
+      query.verificationStatus = verificationStatus;
+    }
+
+    // Text search (for admin)
+    if (search) {
+      query.$or = [
+        { title: createSafeRegex(search) },
+        { description: createSafeRegex(search) },
+        { 'location.city': createSafeRegex(search) },
+        { 'location.address': createSafeRegex(search) },
+      ];
+    }
 
     // Location search (using safe regex to prevent ReDoS)
     if (city) query['location.city'] = createSafeRegex(city);
     if (country) query['location.country'] = createSafeRegex(country);
-    if (location) {
+    if (location && !search) {
       query.$or = [
         { 'location.city': createSafeRegex(location) },
         { 'location.country': createSafeRegex(location) },

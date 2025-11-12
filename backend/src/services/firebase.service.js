@@ -68,13 +68,20 @@ const googleLogin = async (idToken, role = 'guest') => {
   user.refreshToken = tokens.refreshToken;
   await user.save();
 
+  // Build fullName from profile if available, otherwise use existing fullName
+  let fullName = user.fullName;
+  if (user.profile && (user.profile.firstName || user.profile.lastName)) {
+    fullName = `${user.profile.firstName || ''} ${user.profile.lastName || ''}`.trim() || user.fullName;
+  }
+
   return {
     user: {
       id: user._id,
       email: user.email,
-      fullName: user.fullName,
+      fullName: fullName,
       role: user.role,
-      avatar: user.avatar
+      avatar: user.avatar,
+      profile: user.profile
     },
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken

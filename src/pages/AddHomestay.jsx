@@ -1,380 +1,407 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import './AddHomestay.css';
 
-const AddHomestay = () => {
-  const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
 
+function AddHomestay() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    name: '',
-    location: '',
+    title: '',
+    description: '',
+    city: '',
     address: '',
-    price: '',
+    maxGuests: '',
     bedrooms: '',
     bathrooms: '',
-    maxGuests: '',
-    description: '',
-    amenities: {
-      wifi: false,
-      ac: false,
-      kitchen: false,
-      parking: false,
-      garden: false,
-      mountain: false,
-    },
+    basePrice: '',
+    coverImage: null,
     images: [],
+    amenities: []
   });
 
-  const [errors, setErrors] = useState({});
-  const [submitStatus, setSubmitStatus] = useState(null);
+  const AMENITIES = [
+    { id: 'wifi', name: 'WiFi' },
+    { id: 'tv', name: 'TV' },
+    { id: 'kitchen', name: 'Bếp' },
+    { id: 'washing_machine', name: 'Máy giặt' },
+    { id: 'air_conditioning', name: 'Điều hòa' },
+    { id: 'heating', name: 'Sưởi ấm' },
+    { id: 'workspace', name: 'Không gian làm việc' },
+    { id: 'pool', name: 'Hồ bơi' },
+    { id: 'gym', name: 'Phòng gym' },
+    { id: 'parking', name: 'Đỗ xe miễn phí' },
+    { id: 'balcony', name: 'Ban công' },
+    { id: 'garden', name: 'Vườn' },
+  ];
 
-  // Redirect if not authenticated or not owner
-  React.useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'owner') {
+  const [coverImagePreview, setCoverImagePreview] = useState('');
+  const [imagesPreview, setImagesPreview] = useState([]);
+
+  useEffect(() => {
+    if (!user || user.role !== 'owner') {
       navigate('/');
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [user, navigate]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    
-    if (name.startsWith('amenities.')) {
-      const amenityName = name.split('.')[1];
-      setFormData({
-        ...formData,
-        amenities: {
-          ...formData.amenities,
-          [amenityName]: checked,
-        },
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: type === 'checkbox' ? checked : value,
-      });
-    }
-
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: '',
-      });
-    }
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setFormData({
-      ...formData,
-      images: files,
+  const handleAmenityToggle = (amenityId) => {
+    setFormData((prev) => {
+      const amenities = prev.amenities || [];
+      if (amenities.includes(amenityId)) {
+        return { ...prev, amenities: amenities.filter((id) => id !== amenityId) };
+      } else {
+        return { ...prev, amenities: [...amenities, amenityId] };
+      }
     });
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Vui lòng nhập tên homestay';
+  const handleCoverImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, coverImage: file });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-
-    if (!formData.location.trim()) {
-      newErrors.location = 'Vui lòng chọn khu vực';
-    }
-
-    if (!formData.address.trim()) {
-      newErrors.address = 'Vui lòng nhập địa chỉ';
-    }
-
-    if (!formData.price || formData.price <= 0) {
-      newErrors.price = 'Vui lòng nhập giá hợp lệ';
-    }
-
-    if (!formData.bedrooms || formData.bedrooms <= 0) {
-      newErrors.bedrooms = 'Vui lòng nhập số phòng ngủ';
-    }
-
-    if (!formData.bathrooms || formData.bathrooms <= 0) {
-      newErrors.bathrooms = 'Vui lòng nhập số phòng tắm';
-    }
-
-    if (!formData.maxGuests || formData.maxGuests <= 0) {
-      newErrors.maxGuests = 'Vui lòng nhập số khách tối đa';
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = 'Vui lòng nhập mô tả';
-    }
-
-    return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      const existingImages = formData.images || [];
+      setFormData({ ...formData, images: [...existingImages, ...files] });
+
+      const previews = [];
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          previews.push(reader.result);
+          if (previews.length === files.length) {
+            setImagesPreview([...imagesPreview, ...previews]);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const handleNext = () => {
+    if (currentStep < 4) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newErrors = validateForm();
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('location[city]', formData.city);
+      formDataToSend.append('location[address]', formData.address);
+      formDataToSend.append('capacity[guests]', formData.maxGuests);
+      formDataToSend.append('capacity[bedrooms]', formData.bedrooms);
+      formDataToSend.append('capacity[bathrooms]', formData.bathrooms);
+      formDataToSend.append('pricing[basePrice]', formData.basePrice);
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
+      if (formData.amenities && formData.amenities.length > 0) {
+        formData.amenities.forEach((amenity) => {
+          formDataToSend.append('amenities[]', amenity);
+        });
+      }
+
+      if (formData.coverImage) {
+        formDataToSend.append('coverImage', formData.coverImage);
+      }
+
+      if (formData.images && formData.images.length > 0) {
+        Array.from(formData.images).forEach((file) => {
+          formDataToSend.append('images', file);
+        });
+      }
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/homestays`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formDataToSend,
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Đăng homestay thành công! Homestay của bạn đang chờ phê duyệt.');
+        navigate('/host/homestays');
+      } else {
+        alert(data.error?.message || 'Có lỗi xảy ra');
+      }
+    } catch (err) {
+      alert('Có lỗi xảy ra khi đăng homestay');
     }
-
-    console.log('Homestay data:', formData);
-    setSubmitStatus('success');
-
-    // Reset form after 2 seconds and redirect
-    setTimeout(() => {
-      navigate('/');
-    }, 2000);
   };
 
-  if (!isAuthenticated || user?.role !== 'owner') {
-    return null;
-  }
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="step-content">
+            <h2>Thông tin cơ bản</h2>
+            <p className="step-description">Hãy cho chúng tôi biết về homestay của bạn</p>
 
-  return (
-    <div className="add-homestay-page">
-      <div className="add-homestay-container">
-        <div className="add-homestay-header">
-          <h1 className="add-homestay-title">Đăng homestay mới</h1>
-          <p className="add-homestay-subtitle">
-            Điền thông tin chi tiết về homestay của bạn để bắt đầu cho thuê
-          </p>
-        </div>
-
-        <form className="add-homestay-form" onSubmit={handleSubmit}>
-          {/* Basic Information */}
-          <div className="form-section">
-            <h2 className="section-title">Thông tin cơ bản</h2>
-            
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Tên homestay *</label>
-                <input
-                  type="text"
-                  name="name"
-                  className={`form-input ${errors.name ? 'error' : ''}`}
-                  placeholder="VD: The Chill House – Tây Hồ"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-                {errors.name && <span className="error-message">{errors.name}</span>}
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Khu vực *</label>
-                <select
-                  name="location"
-                  className={`form-input ${errors.location ? 'error' : ''}`}
-                  value={formData.location}
-                  onChange={handleChange}
-                >
-                  <option value="">Chọn khu vực</option>
-                  <option value="Hà Nội">Hà Nội</option>
-                  <option value="Lào Cai">Lào Cai (Sa Pa)</option>
-                  <option value="Hạ Long">Hạ Long</option>
-                  <option value="Đà Nẵng">Đà Nẵng</option>
-                  <option value="Nha Trang">Nha Trang</option>
-                  <option value="Đà Lạt">Đà Lạt</option>
-                  <option value="TP.HCM">TP. Hồ Chí Minh</option>
-                </select>
-                {errors.location && <span className="error-message">{errors.location}</span>}
-              </div>
+            <div className="form-group">
+              <label>Tiêu đề <span className="required">*</span></label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder="VD: Căn hộ view biển tuyệt đẹp"
+                required
+              />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Địa chỉ chi tiết *</label>
-              <input
-                type="text"
-                name="address"
-                className={`form-input ${errors.address ? 'error' : ''}`}
-                placeholder="Số nhà, tên đường, phường/xã"
-                value={formData.address}
-                onChange={handleChange}
+              <label>Mô tả <span className="required">*</span></label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Mô tả chi tiết về homestay của bạn..."
+                rows="6"
+                required
               />
-              {errors.address && <span className="error-message">{errors.address}</span>}
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label className="form-label">Giá thuê (VNĐ/đêm) *</label>
-                <input
-                  type="number"
-                  name="price"
-                  className={`form-input ${errors.price ? 'error' : ''}`}
-                  placeholder="650000"
-                  min="0"
-                  value={formData.price}
-                  onChange={handleChange}
-                />
-                {errors.price && <span className="error-message">{errors.price}</span>}
+                <label>Thành phố <span className="required">*</span></label>
+                <select name="city" value={formData.city} onChange={handleInputChange} required>
+                  <option value="">Chọn thành phố</option>
+                  <option value="Hà Nội">Hà Nội</option>
+                  <option value="Lào Cai">Lào Cai</option>
+                  <option value="Đà Nẵng">Đà Nẵng</option>
+                  <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                  <option value="Nha Trang">Nha Trang</option>
+                  <option value="Đà Lạt">Đà Lạt</option>
+                </select>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Số khách tối đa *</label>
+                <label>Địa chỉ <span className="required">*</span></label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  placeholder="Số nhà, tên đường"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="step-content">
+            <h2>Sức chứa & Giá</h2>
+            <p className="step-description">Thông tin về không gian và giá cả</p>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>Số khách tối đa <span className="required">*</span></label>
                 <input
                   type="number"
                   name="maxGuests"
-                  className={`form-input ${errors.maxGuests ? 'error' : ''}`}
-                  placeholder="4"
-                  min="1"
                   value={formData.maxGuests}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
+                  min="1"
+                  placeholder="VD: 4"
+                  required
                 />
-                {errors.maxGuests && <span className="error-message">{errors.maxGuests}</span>}
+              </div>
+
+              <div className="form-group">
+                <label>Số phòng ngủ <span className="required">*</span></label>
+                <input
+                  type="number"
+                  name="bedrooms"
+                  value={formData.bedrooms}
+                  onChange={handleInputChange}
+                  min="1"
+                  placeholder="VD: 2"
+                  required
+                />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label className="form-label">Số phòng ngủ *</label>
-                <input
-                  type="number"
-                  name="bedrooms"
-                  className={`form-input ${errors.bedrooms ? 'error' : ''}`}
-                  placeholder="2"
-                  min="1"
-                  value={formData.bedrooms}
-                  onChange={handleChange}
-                />
-                {errors.bedrooms && <span className="error-message">{errors.bedrooms}</span>}
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Số phòng tắm *</label>
+                <label>Số phòng tắm <span className="required">*</span></label>
                 <input
                   type="number"
                   name="bathrooms"
-                  className={`form-input ${errors.bathrooms ? 'error' : ''}`}
-                  placeholder="1"
-                  min="1"
                   value={formData.bathrooms}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
+                  min="1"
+                  placeholder="VD: 1"
+                  required
                 />
-                {errors.bathrooms && <span className="error-message">{errors.bathrooms}</span>}
+              </div>
+
+              <div className="form-group">
+                <label>Giá mỗi đêm (VNĐ) <span className="required">*</span></label>
+                <input
+                  type="number"
+                  name="basePrice"
+                  value={formData.basePrice}
+                  onChange={handleInputChange}
+                  min="0"
+                  placeholder="VD: 500000"
+                  required
+                />
               </div>
             </div>
           </div>
+        );
 
-          {/* Description */}
-          <div className="form-section">
-            <h2 className="section-title">Mô tả</h2>
-            <div className="form-group">
-              <label className="form-label">Mô tả chi tiết *</label>
-              <textarea
-                name="description"
-                className={`form-textarea ${errors.description ? 'error' : ''}`}
-                placeholder="Mô tả về homestay của bạn, vị trí, tiện nghi, điểm nổi bật..."
-                rows="6"
-                value={formData.description}
-                onChange={handleChange}
-              ></textarea>
-              {errors.description && <span className="error-message">{errors.description}</span>}
-            </div>
-          </div>
+      case 3:
+        return (
+          <div className="step-content">
+            <h2>Tiện nghi</h2>
+            <p className="step-description">Chọn các tiện nghi có sẵn tại homestay</p>
 
-          {/* Amenities */}
-          <div className="form-section">
-            <h2 className="section-title">Tiện nghi</h2>
             <div className="amenities-grid">
-              <label className="amenity-item">
-                <input
-                  type="checkbox"
-                  name="amenities.wifi"
-                  checked={formData.amenities.wifi}
-                  onChange={handleChange}
-                />
-                <span>📶 WiFi</span>
-              </label>
-              <label className="amenity-item">
-                <input
-                  type="checkbox"
-                  name="amenities.ac"
-                  checked={formData.amenities.ac}
-                  onChange={handleChange}
-                />
-                <span>❄️ Điều hòa</span>
-              </label>
-              <label className="amenity-item">
-                <input
-                  type="checkbox"
-                  name="amenities.kitchen"
-                  checked={formData.amenities.kitchen}
-                  onChange={handleChange}
-                />
-                <span>🍳 Bếp</span>
-              </label>
-              <label className="amenity-item">
-                <input
-                  type="checkbox"
-                  name="amenities.parking"
-                  checked={formData.amenities.parking}
-                  onChange={handleChange}
-                />
-                <span>🚗 Chỗ đậu xe</span>
-              </label>
-              <label className="amenity-item">
-                <input
-                  type="checkbox"
-                  name="amenities.garden"
-                  checked={formData.amenities.garden}
-                  onChange={handleChange}
-                />
-                <span>🌳 Sân vườn</span>
-              </label>
-              <label className="amenity-item">
-                <input
-                  type="checkbox"
-                  name="amenities.mountain"
-                  checked={formData.amenities.mountain}
-                  onChange={handleChange}
-                />
-                <span>⛰️ View núi</span>
-              </label>
+              {AMENITIES.map((amenity) => (
+                <label key={amenity.id} className="amenity-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={formData.amenities?.includes(amenity.id) || false}
+                    onChange={() => handleAmenityToggle(amenity.id)}
+                  />
+                  <span className="amenity-name">{amenity.name}</span>
+                </label>
+              ))}
             </div>
           </div>
+        );
 
-          {/* Images */}
-          <div className="form-section">
-            <h2 className="section-title">Hình ảnh</h2>
+      case 4:
+        return (
+          <div className="step-content">
+            <h2>Hình ảnh</h2>
+            <p className="step-description">Thêm ảnh để thu hút khách hàng</p>
+
             <div className="form-group">
-              <label className="form-label">Tải lên hình ảnh</label>
+              <label>Ảnh bìa <span className="required">*</span></label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleCoverImageChange}
+                required={!coverImagePreview}
+              />
+              {coverImagePreview && (
+                <div className="image-preview">
+                  <img src={coverImagePreview} alt="Cover preview" />
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label>Ảnh bổ sung (tối đa 10 ảnh)</label>
               <input
                 type="file"
                 accept="image/*"
                 multiple
-                onChange={handleImageChange}
-                className="file-input"
+                onChange={handleImagesChange}
               />
-              <p className="form-hint">Tải lên tối đa 10 hình ảnh (JPG, PNG)</p>
-              {formData.images.length > 0 && (
-                <p className="file-count">Đã chọn {formData.images.length} hình ảnh</p>
+              {imagesPreview.length > 0 && (
+                <div className="images-preview-grid">
+                  {imagesPreview.map((preview, index) => (
+                    <div key={index} className="image-preview-item">
+                      <img src={preview} alt={`Preview ${index + 1}`} />
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
+        );
 
-          {/* Submit */}
-          <div className="form-actions">
-            <button type="button" className="btn-cancel" onClick={() => navigate('/')}>
-              Hủy
-            </button>
-            <button type="submit" className="btn-submit">
-              Đăng homestay
-            </button>
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      <Header />
+      <div className="add-homestay-page">
+        <div className="add-homestay-container">
+        <div className="progress-bar">
+          <div className="progress-steps">
+            {[1, 2, 3, 4].map((step) => (
+              <div key={step} className={`progress-step ${currentStep >= step ? 'active' : ''}`}>
+                <div className="step-number">{step}</div>
+                <div className="step-label">
+                  {step === 1 && 'Thông tin'}
+                  {step === 2 && 'Sức chứa'}
+                  {step === 3 && 'Tiện nghi'}
+                  {step === 4 && 'Hình ảnh'}
+                </div>
+              </div>
+            ))}
           </div>
+          <div className="progress-line">
+            <div className="progress-fill" style={{ width: `${((currentStep - 1) / 3) * 100}%` }}></div>
+          </div>
+        </div>
 
-          {submitStatus === 'success' && (
-            <div className="submit-success">
-              ✓ Homestay đã được đăng thành công! Đang chuyển hướng...
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="add-homestay-form">
+          {renderStepContent()}
+
+          <div className="form-navigation">
+            {currentStep > 1 && (
+              <button type="button" className="btn-back" onClick={handleBack}>
+                ← Quay lại
+              </button>
+            )}
+            {currentStep < 4 ? (
+              <button type="button" className="btn-next" onClick={handleNext}>
+                Tiếp theo →
+              </button>
+            ) : (
+              <button type="submit" className="btn-submit">
+                🎉 Đăng homestay
+              </button>
+            )}
+          </div>
         </form>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
-};
+}
 
 export default AddHomestay;
 

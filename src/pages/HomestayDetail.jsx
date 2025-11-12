@@ -10,7 +10,6 @@ const HomestayDetail = () => {
   const { user, isAuthenticated } = useAuth();
   const [homestay, setHomestay] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(0);
   const [bookingData, setBookingData] = useState({
     checkInDate: '',
     checkOutDate: '',
@@ -42,8 +41,21 @@ const HomestayDetail = () => {
       navigate('/login');
       return;
     }
-    // Handle booking logic
-    console.log('Booking:', bookingData);
+
+    // Validate booking data
+    if (!bookingData.checkInDate || !bookingData.checkOutDate) {
+      alert('Vui lòng chọn ngày nhận phòng và trả phòng');
+      return;
+    }
+
+    // Navigate to checkout page with booking data
+    navigate(`/booking/${id}`, {
+      state: {
+        checkInDate: bookingData.checkInDate,
+        checkOutDate: bookingData.checkOutDate,
+        guests: bookingData.guests,
+      }
+    });
   };
 
   const calculateNights = () => {
@@ -59,10 +71,9 @@ const HomestayDetail = () => {
   const calculateTotal = () => {
     const nights = calculateNights();
     if (nights > 0 && homestay) {
-      const basePrice = homestay.pricing.basePrice * nights;
-      const cleaningFee = homestay.pricing.cleaningFee || 0;
-      const serviceFee = homestay.pricing.serviceFee || 0;
-      return basePrice + cleaningFee + serviceFee;
+      const subtotal = homestay.pricing.basePrice * nights;
+      const discount = subtotal * 0.1;
+      return subtotal - discount;
     }
     return 0;
   };
@@ -80,295 +91,222 @@ const HomestayDetail = () => {
     return (
       <div className="homestay-not-found">
         <h2>Không tìm thấy homestay</h2>
-        <button onClick={() => navigate('/search')}>Quay lại tìm kiếm</button>
+        <button onClick={() => navigate('/')}>Quay lại trang chủ</button>
       </div>
     );
   }
 
+  const nights = calculateNights();
+  const subtotal = nights > 0 ? homestay.pricing.basePrice * nights : 0;
+  const discount = subtotal * 0.1;
+  const total = subtotal - discount;
+
+  const amenityLabels = {
+    'wifi': 'WiFi tốc độ cao',
+    'kitchen': 'Bếp riêng',
+    'balcony': 'View hồ',
+    'parking': 'Chỗ đỗ xe',
+    'tv': 'TV',
+    'washing_machine': 'Máy giặt',
+    'air_conditioning': 'Điều hòa',
+    'heating': 'Sưởi ấm',
+    'workspace': 'Không gian làm việc',
+    'pool': 'Hồ bơi',
+    'gym': 'Phòng gym',
+    'garden': 'Vườn',
+  };
+
   return (
-    <div className="homestay-detail">
-      {/* Header */}
-      <div className="detail-header">
-        <div className="header-content">
-          <h1 className="homestay-title">{homestay.title}</h1>
-          <div className="header-info">
-            <span className="rating">
-              ⭐ {homestay.stats.averageRating.toFixed(1)} ({homestay.stats.totalReviews} đánh giá)
-            </span>
-            <span className="location">
-              📍 {homestay.location.city}, {homestay.location.country}
-            </span>
+    <div className="listing-detail">
+        <div className="breadcrumb">
+          <span onClick={() => navigate('/')}>Kết quả</span>
+          <span className="separator">/</span>
+          <span className="current">{homestay.title}</span>
+        </div>
+
+        <div className="detail-header">
+          <h1>{homestay.title}</h1>
+          <div className="header-badge">
+            <span className="badge-text">Homestay tại {homestay.location.city}</span>
           </div>
         </div>
-        <div className="header-actions">
-          <button className="btn-share">
-            <span>🔗</span> Chia sẻ
-          </button>
-          <button className="btn-save">
-            <span>❤️</span> Lưu
-          </button>
+
+        <div className="detail-meta">
+          <span>{homestay.capacity.guests} khách</span>
+          <span>·</span>
+          <span>{homestay.capacity.bedrooms} phòng ngủ</span>
+          <span>·</span>
+          <span>{homestay.capacity.bathrooms} phòng tắm</span>
         </div>
-      </div>
 
-      {/* Image Gallery */}
-      <div className="image-gallery">
-        <div className="main-image">
-          <img 
-            src={homestay.images[selectedImage]?.url || '/placeholder.jpg'} 
-            alt={homestay.title}
-          />
-        </div>
-        <div className="thumbnail-grid">
-          {homestay.images.slice(0, 5).map((image, index) => (
-            <div 
-              key={index}
-              className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
-              onClick={() => setSelectedImage(index)}
-            >
-              <img src={image.url} alt={`View ${index + 1}`} />
-              {index === 4 && homestay.images.length > 5 && (
-                <div className="more-images">
-                  +{homestay.images.length - 5} ảnh
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="detail-content">
-        {/* Left Column */}
-        <div className="content-left">
-          {/* Host Info */}
-          <section className="host-section">
-            <div className="host-info">
-              <div className="host-avatar">
-                <img src={homestay.hostId?.profile?.avatar || '/default-avatar.png'} alt="Host" />
+        <div className="detail-container">
+          <div className="detail-left">
+            {/* Images Gallery */}
+            <div className="images-gallery">
+              <div className="main-image">
+                <img src={homestay.coverImage} alt={homestay.title} />
               </div>
-              <div className="host-details">
-                <h3>Chủ nhà: {homestay.hostId?.fullName || 'Host'}</h3>
-                <p>{homestay.hostId?.profile?.bio || 'Chào mừng bạn đến với homestay của tôi!'}</p>
+              <div className="gallery-grid">
+                {homestay.images?.slice(0, 4).map((img, index) => (
+                  <div key={index} className="gallery-item">
+                    <img src={img.url} alt={`${homestay.title} ${index + 1}`} />
+                  </div>
+                ))}
               </div>
             </div>
-            {homestay.hostId?.hostProfile?.superhost && (
-              <div className="superhost-badge">⭐ Superhost</div>
-            )}
-          </section>
 
-          {/* Basic Info */}
-          <section className="info-section">
-            <h2>Thông tin cơ bản</h2>
-            <div className="info-grid">
-              <div className="info-item">
-                <span className="info-icon">👥</span>
-                <div>
-                  <strong>{homestay.capacity.guests} khách</strong>
-                  <p>Tối đa</p>
-                </div>
-              </div>
-              <div className="info-item">
-                <span className="info-icon">🛏️</span>
-                <div>
-                  <strong>{homestay.capacity.bedrooms} phòng ngủ</strong>
-                  <p>{homestay.capacity.beds} giường</p>
-                </div>
-              </div>
-              <div className="info-item">
-                <span className="info-icon">🚿</span>
-                <div>
-                  <strong>{homestay.capacity.bathrooms} phòng tắm</strong>
-                  <p>Riêng biệt</p>
-                </div>
-              </div>
-              <div className="info-item">
-                <span className="info-icon">🏠</span>
-                <div>
-                  <strong>
-                    {homestay.propertyType === 'entire_place' ? 'Toàn bộ nhà' :
-                     homestay.propertyType === 'private_room' ? 'Phòng riêng' : 'Phòng chung'}
-                  </strong>
-                  <p>Loại phòng</p>
-                </div>
+            {/* Introduction Section */}
+            <div className="section-card">
+              <h3 className="section-title">Giới thiệu</h3>
+              <p className="description-text">{homestay.description}</p>
+              <div className="amenities-pills">
+                {homestay.amenityNames?.slice(0, 4).map((amenity, index) => (
+                  <div key={index} className="amenity-pill">
+                    <span>{amenityLabels[amenity] || amenity}</span>
+                  </div>
+                ))}
               </div>
             </div>
-          </section>
 
-          {/* Description */}
-          <section className="description-section">
-            <h2>Mô tả</h2>
-            <p className="description-text">{homestay.description}</p>
-          </section>
-
-          {/* Amenities */}
-          <section className="amenities-section">
-            <h2>Tiện nghi</h2>
-            <div className="amenities-grid">
-              {homestay.amenityNames.map((amenity, index) => (
-                <div key={index} className="amenity-item">
-                  <span className="amenity-icon">✓</span>
-                  <span>{amenity}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* House Rules */}
-          <section className="rules-section">
-            <h2>Nội quy nhà</h2>
-            <div className="rules-list">
-              <div className="rule-item">
-                <span className="rule-icon">🕐</span>
-                <div>
-                  <strong>Nhận phòng:</strong> {homestay.houseRules.checkInTime}
-                </div>
+            {/* Location Section */}
+            <div className="section-card">
+              <h3 className="section-title">Vị trí</h3>
+              <div className="map-placeholder">
+                <div className="map-icon">📍</div>
+                <p>Bản đồ</p>
               </div>
-              <div className="rule-item">
-                <span className="rule-icon">🕐</span>
-                <div>
-                  <strong>Trả phòng:</strong> {homestay.houseRules.checkOutTime}
-                </div>
-              </div>
-              <div className="rule-item">
-                <span className="rule-icon">{homestay.houseRules.smokingAllowed ? '✓' : '❌'}</span>
-                <div>
-                  <strong>Hút thuốc:</strong> {homestay.houseRules.smokingAllowed ? 'Được phép' : 'Không được phép'}
-                </div>
-              </div>
-              <div className="rule-item">
-                <span className="rule-icon">{homestay.houseRules.petsAllowed ? '✓' : '❌'}</span>
-                <div>
-                  <strong>Thú cưng:</strong> {homestay.houseRules.petsAllowed ? 'Được phép' : 'Không được phép'}
-                </div>
-              </div>
-              <div className="rule-item">
-                <span className="rule-icon">{homestay.houseRules.partiesAllowed ? '✓' : '❌'}</span>
-                <div>
-                  <strong>Tiệc tùng:</strong> {homestay.houseRules.partiesAllowed ? 'Được phép' : 'Không được phép'}
-                </div>
-              </div>
-              <div className="rule-item">
-                <span className="rule-icon">🌙</span>
-                <div>
-                  <strong>Số đêm tối thiểu:</strong> {homestay.houseRules.minNights} đêm
-                </div>
-              </div>
-            </div>
-            {homestay.houseRules.additionalRules && homestay.houseRules.additionalRules.length > 0 && (
-              <div className="additional-rules">
-                <h3>Quy định bổ sung:</h3>
-                <ul>
-                  {homestay.houseRules.additionalRules.map((rule, index) => (
-                    <li key={index}>{rule}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </section>
-
-          {/* Location */}
-          <section className="location-section">
-            <h2>Vị trí</h2>
-            <div className="location-info">
-              <p className="address">
-                <strong>📍 Địa chỉ:</strong> {homestay.location.address}
-              </p>
-              <p className="city">
-                {homestay.location.city}, {homestay.location.country}
+              <p className="location-text">
+                {homestay.location.address}, {homestay.location.city}, {homestay.location.country}
               </p>
             </div>
-            <div className="map-placeholder">
-              <p>🗺️ Bản đồ sẽ hiển thị tại đây</p>
-            </div>
-          </section>
-        </div>
 
-        {/* Right Column - Booking Card */}
-        <div className="content-right">
-          <div className="booking-card">
-            <div className="booking-header">
-              <div className="price">
-                <span className="price-amount">
-                  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(homestay.pricing.basePrice)}
-                </span>
-                <span className="price-unit">/đêm</span>
-              </div>
-              <div className="rating-small">
-                ⭐ {homestay.stats.averageRating.toFixed(1)} ({homestay.stats.totalReviews})
-              </div>
-            </div>
-
-            <div className="booking-form">
-              <div className="form-group">
-                <label>Nhận phòng</label>
-                <input
-                  type="date"
-                  value={bookingData.checkInDate}
-                  onChange={(e) => setBookingData({ ...bookingData, checkInDate: e.target.value })}
-                  min={new Date().toISOString().split('T')[0]}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Trả phòng</label>
-                <input
-                  type="date"
-                  value={bookingData.checkOutDate}
-                  onChange={(e) => setBookingData({ ...bookingData, checkOutDate: e.target.value })}
-                  min={bookingData.checkInDate || new Date().toISOString().split('T')[0]}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Số khách</label>
-                <select
-                  value={bookingData.guests}
-                  onChange={(e) => setBookingData({ ...bookingData, guests: parseInt(e.target.value) })}
-                >
-                  {[...Array(homestay.capacity.guests)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1} khách
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {calculateNights() > 0 && (
-                <div className="price-breakdown">
-                  <div className="breakdown-item">
-                    <span>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(homestay.pricing.basePrice)} x {calculateNights()} đêm</span>
-                    <span>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(homestay.pricing.basePrice * calculateNights())}</span>
+            {/* Reviews Section */}
+            <div className="section-card">
+              <h3 className="section-title">
+                Đánh giá · {homestay.stats?.averageRating?.toFixed(1) || '5.0'} · {homestay.stats?.totalReviews || 0} đánh giá
+              </h3>
+              <div className="reviews-list">
+                {homestay.reviews?.slice(0, 3).map((review, index) => (
+                  <div key={index} className="review-card">
+                    <div className="review-header">
+                      <div className="reviewer-avatar">
+                        {review.user?.name?.charAt(0) || 'U'}
+                      </div>
+                      <div className="reviewer-info">
+                        <p className="reviewer-name">{review.user?.name || 'Người dùng'}</p>
+                        <p className="review-date">{new Date(review.createdAt).toLocaleDateString('vi-VN')}</p>
+                      </div>
+                    </div>
+                    <p className="review-comment">{review.comment}</p>
                   </div>
-                  {homestay.pricing.cleaningFee > 0 && (
-                    <div className="breakdown-item">
-                      <span>Phí vệ sinh</span>
-                      <span>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(homestay.pricing.cleaningFee)}</span>
-                    </div>
-                  )}
-                  {homestay.pricing.serviceFee > 0 && (
-                    <div className="breakdown-item">
-                      <span>Phí dịch vụ</span>
-                      <span>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(homestay.pricing.serviceFee)}</span>
-                    </div>
-                  )}
-                  <div className="breakdown-total">
-                    <strong>Tổng cộng</strong>
-                    <strong>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(calculateTotal())}</strong>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="detail-right">
+            {/* Booking Card */}
+            <div className="booking-card">
+              <div className="booking-price">
+                <span className="price-amount">{homestay.pricing.basePrice.toLocaleString('vi-VN')}đ</span>
+                <span className="price-unit">/ đêm</span>
+              </div>
+
+              <div className="booking-form">
+                <div className="date-inputs">
+                  <div className="date-input-group">
+                    <label>Nhận phòng</label>
+                    <input
+                      type="date"
+                      value={bookingData.checkInDate}
+                      onChange={(e) => setBookingData({ ...bookingData, checkInDate: e.target.value })}
+                    />
+                  </div>
+                  <div className="date-input-group">
+                    <label>Trả phòng</label>
+                    <input
+                      type="date"
+                      value={bookingData.checkOutDate}
+                      onChange={(e) => setBookingData({ ...bookingData, checkOutDate: e.target.value })}
+                    />
                   </div>
                 </div>
-              )}
 
-              <button className="btn-booking" onClick={handleBooking}>
-                {isAuthenticated ? 'Đặt phòng' : 'Đăng nhập để đặt phòng'}
-              </button>
+                <div className="guest-input-group">
+                  <label>Khách</label>
+                  <select
+                    value={bookingData.guests}
+                    onChange={(e) => setBookingData({ ...bookingData, guests: parseInt(e.target.value) })}
+                  >
+                    {[...Array(homestay.capacity.guests)].map((_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1} người
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              <p className="booking-note">Bạn sẽ chưa bị trừ tiền</p>
+                {nights > 0 && (
+                  <div className="pricing-breakdown">
+                    <div className="pricing-row">
+                      <span>Ưu đãi -10%</span>
+                      <span className="discount">-{discount.toLocaleString('vi-VN')}đ</span>
+                    </div>
+                    <div className="pricing-row">
+                      <span>Tạm tính ({nights} đêm)</span>
+                      <span>{subtotal.toLocaleString('vi-VN')}đ</span>
+                    </div>
+                    <div className="pricing-divider"></div>
+                    <div className="pricing-row total">
+                      <span>Tổng</span>
+                      <span>{total.toLocaleString('vi-VN')}đ</span>
+                    </div>
+                  </div>
+                )}
+
+                <button className="btn-book" onClick={handleBooking}>
+                  Đặt ngay
+                </button>
+
+                <p className="booking-disclaimer">
+                  Bạn sẽ không bị trừ tiền ngay lúc này
+                </p>
+              </div>
+            </div>
+
+            {/* Host Info Card */}
+            <div className="host-card">
+              <h3 className="section-title">Chủ nhà</h3>
+              <div className="host-info">
+                <div className="host-avatar">
+                  {homestay.owner?.name?.charAt(0) || 'H'}
+                </div>
+                <div className="host-details">
+                  <p className="host-name">{homestay.owner?.name || 'Chủ nhà'}</p>
+                  <p className="host-status">Đã xác minh · Phản hồi trong 1 giờ</p>
+                </div>
+              </div>
+              <div className="host-rules">
+                <div className="rule-item">
+                  <span className="rule-icon">🕐</span>
+                  <span>Check-in sau 14:00 · Check-out trước 11:00</span>
+                </div>
+                <div className="rule-item">
+                  <span className="rule-icon">🚭</span>
+                  <span>Không hút thuốc</span>
+                </div>
+                <div className="rule-item">
+                  <span className="rule-icon">🐾</span>
+                  <span>Không thú cưng</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
 export default HomestayDetail;
+

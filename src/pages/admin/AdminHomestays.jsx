@@ -15,7 +15,7 @@ const AdminHomestays = () => {
     currentPage: 1,
     totalPages: 1,
     totalHomestays: 0,
-    limit: 20,
+    limit: 100, // Tăng limit để admin có thể thấy nhiều homestay hơn
   });
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('create');
@@ -31,9 +31,26 @@ const AdminHomestays = () => {
     bathrooms: '',
     coverImage: null,
     images: [],
+    amenities: [],
   });
   const [coverImagePreview, setCoverImagePreview] = useState('');
   const [imagesPreview, setImagesPreview] = useState([]);
+
+  // Danh sách tiện nghi
+  const AMENITIES = [
+    { id: 'wifi', name: 'WiFi' },
+    { id: 'tv', name: 'TV' },
+    { id: 'kitchen', name: 'Bếp' },
+    { id: 'washing_machine', name: 'Máy giặt' },
+    { id: 'air_conditioning', name: 'Điều hòa' },
+    { id: 'heating', name: 'Sưởi ấm' },
+    { id: 'workspace', name: 'Không gian làm việc' },
+    { id: 'pool', name: 'Hồ bơi' },
+    { id: 'gym', name: 'Phòng gym' },
+    { id: 'parking', name: 'Đỗ xe miễn phí' },
+    { id: 'balcony', name: 'Ban công' },
+    { id: 'garden', name: 'Vườn' },
+  ];
 
   useEffect(() => {
     fetchHomestays();
@@ -41,10 +58,12 @@ const AdminHomestays = () => {
 
   const fetchHomestays = async () => {
     try {
+      console.log('Fetching homestays...');
       setLoading(true);
       const queryParams = new URLSearchParams({
         page: pagination.currentPage,
         limit: pagination.limit,
+        isAdmin: 'true', // Thêm flag để backend biết đây là admin request
         ...(filters.status && { status: filters.status }),
         ...(filters.verificationStatus && {
           verificationStatus: filters.verificationStatus,
@@ -60,7 +79,7 @@ const AdminHomestays = () => {
         return;
       }
 
-      const response = await fetch(`${API_BASE_URL}/homestays?${queryParams}`, {
+      const response = await fetch(`${API_BASE_URL}/homestays?${queryParams}&_t=${Date.now()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -75,10 +94,16 @@ const AdminHomestays = () => {
       }
 
       const data = await response.json();
+      console.log('Fetched homestays:', data.data?.map(h => ({ id: h._id, guests: h.capacity?.guests })));
       if (data.success) {
         setHomestays(data.data || []);
-        if (data.meta?.pagination) {
-          setPagination(data.meta.pagination);
+        if (data.metadata?.pagination) {
+          setPagination({
+            currentPage: data.metadata.pagination.page || 1,
+            totalPages: data.metadata.pagination.pages || 1,
+            totalHomestays: data.metadata.pagination.total || 0,
+            limit: data.metadata.pagination.limit || 20,
+          });
         }
       }
     } catch (error) {
@@ -96,7 +121,7 @@ const AdminHomestays = () => {
   const handleApprove = async (homestayId) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/admin/homestays/${homestayId}/approve`,
+        `${API_BASE_URL}/homestays/admin/${homestayId}/approve`,
         {
           method: 'PATCH',
           headers: {
@@ -120,7 +145,7 @@ const AdminHomestays = () => {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/admin/homestays/${homestayId}/reject`,
+        `${API_BASE_URL}/homestays/admin/${homestayId}/reject`,
         {
           method: 'PATCH',
           headers: {
@@ -153,6 +178,7 @@ const AdminHomestays = () => {
       bathrooms: '',
       coverImage: null,
       images: [],
+      amenities: [],
     });
     setCoverImagePreview('');
     setImagesPreview([]);
@@ -168,14 +194,15 @@ const AdminHomestays = () => {
       city: homestay.location?.city || '',
       address: homestay.location?.address || '',
       basePrice: homestay.pricing?.basePrice || '',
-      maxGuests: homestay.capacity?.maxGuests || '',
+      maxGuests: homestay.capacity?.guests || homestay.capacity?.maxGuests || '',
       bedrooms: homestay.capacity?.bedrooms || '',
       bathrooms: homestay.capacity?.bathrooms || '',
       coverImage: null,
       images: [],
+      amenities: homestay.amenityNames || [],
     });
     setCoverImagePreview(homestay.coverImage || '');
-    setImagesPreview(homestay.images || []);
+    setImagesPreview(homestay.images?.map(img => img.url) || []);
     setShowModal(true);
   };
 
@@ -193,6 +220,7 @@ const AdminHomestays = () => {
       bathrooms: '',
       coverImage: null,
       images: [],
+      amenities: [],
     });
     setCoverImagePreview('');
     setImagesPreview([]);
@@ -202,6 +230,17 @@ const AdminHomestays = () => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleAmenityToggle = (amenityId) => {
+    setFormData((prev) => {
+      const amenities = prev.amenities || [];
+      if (amenities.includes(amenityId)) {
+        return { ...prev, amenities: amenities.filter((id) => id !== amenityId) };
+      } else {
+        return { ...prev, amenities: [...amenities, amenityId] };
+      }
     });
   };
 
@@ -220,14 +259,18 @@ const AdminHomestays = () => {
   const handleImagesChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
-      setFormData({ ...formData, images: files });
+      // Append new images to existing ones
+      const existingImages = formData.images || [];
+      setFormData({ ...formData, images: [...existingImages, ...files] });
+
       const previews = [];
       files.forEach((file) => {
         const reader = new FileReader();
         reader.onloadend = () => {
           previews.push(reader.result);
           if (previews.length === files.length) {
-            setImagesPreview(previews);
+            // Append new previews to existing ones
+            setImagesPreview([...imagesPreview, ...previews]);
           }
         };
         reader.readAsDataURL(file);
@@ -237,6 +280,8 @@ const AdminHomestays = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log('Form data before submit:', formData);
 
     const formDataToSend = new FormData();
     formDataToSend.append('title', formData.title);
@@ -248,6 +293,16 @@ const AdminHomestays = () => {
     formDataToSend.append('capacity[maxGuests]', formData.maxGuests);
     formDataToSend.append('capacity[bedrooms]', formData.bedrooms);
     formDataToSend.append('capacity[bathrooms]', formData.bathrooms);
+
+    // Thêm amenities
+    if (formData.amenities && formData.amenities.length > 0) {
+      formData.amenities.forEach((amenity) => {
+        formDataToSend.append('amenities[]', amenity);
+      });
+    }
+
+    console.log('Sending maxGuests:', formData.maxGuests);
+    console.log('Sending amenities:', formData.amenities);
 
     if (formData.coverImage) {
       formDataToSend.append('coverImage', formData.coverImage);
@@ -261,7 +316,7 @@ const AdminHomestays = () => {
 
     try {
       if (modalMode === 'create') {
-        const response = await fetch('${API_BASE_URL}/homestays', {
+        const response = await fetch(`${API_BASE_URL}/homestays`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -290,6 +345,8 @@ const AdminHomestays = () => {
         );
 
         const data = await response.json();
+        console.log('Update response:', data);
+        console.log('Updated capacity:', data.data?.homestay?.capacity);
         if (data.success) {
           alert('Cập nhật homestay thành công!');
           fetchHomestays();
@@ -327,6 +384,42 @@ const AdminHomestays = () => {
     } catch (error) {
       console.error('Error deleting homestay:', error);
       alert('Có lỗi xảy ra khi xóa homestay');
+    }
+  };
+
+  const handleDeleteImage = async (imageIndex) => {
+    if (!window.confirm('Bạn có chắc muốn xóa ảnh này?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/homestays/${selectedHomestay._id}/images/${imageIndex}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        // Update local state
+        const updatedImages = [...imagesPreview];
+        updatedImages.splice(imageIndex, 1);
+        setImagesPreview(updatedImages);
+
+        // Update selectedHomestay
+        const updatedHomestay = { ...selectedHomestay };
+        updatedHomestay.images.splice(imageIndex, 1);
+        setSelectedHomestay(updatedHomestay);
+      } else {
+        alert(data.error?.message || 'Có lỗi xảy ra');
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      alert('Có lỗi xảy ra khi xóa ảnh');
     }
   };
 
@@ -666,6 +759,22 @@ const AdminHomestays = () => {
               </div>
 
               <div className="form-group">
+                <label>Tiện nghi</label>
+                <div className="amenities-grid">
+                  {AMENITIES.map((amenity) => (
+                    <label key={amenity.id} className="amenity-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={formData.amenities?.includes(amenity.id) || false}
+                        onChange={() => handleAmenityToggle(amenity.id)}
+                      />
+                      <span className="amenity-name">{amenity.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-group">
                 <label>Ảnh bìa *</label>
                 <input
                   type="file"
@@ -693,6 +802,16 @@ const AdminHomestays = () => {
                     {imagesPreview.map((preview, index) => (
                       <div key={index} className="image-preview-item">
                         <img src={preview} alt={`Preview ${index + 1}`} />
+                        {modalMode === 'edit' && selectedHomestay?.images?.[index] && (
+                          <button
+                            type="button"
+                            className="btn-delete-image"
+                            onClick={() => handleDeleteImage(index)}
+                            title="Xóa ảnh"
+                          >
+                            ×
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>

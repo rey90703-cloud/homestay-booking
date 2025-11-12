@@ -44,6 +44,9 @@ class UserService {
       };
     }
 
+    // Mark profile as modified for Mongoose
+    user.markModified('profile');
+
     await user.save();
 
     logger.info(`Profile updated for user: ${user.email}`);
@@ -154,6 +157,9 @@ class UserService {
         ...updateData.address,
       };
     }
+
+    // Mark profile as modified for Mongoose
+    user.markModified('profile');
 
     await user.save();
 

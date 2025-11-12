@@ -40,7 +40,7 @@ const AdminPayments = () => {
       }
 
       const response = await fetch(
-        '${API_BASE_URL}/bookings/statistics/payments',
+        `${API_BASE_URL}/bookings/statistics/payments`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

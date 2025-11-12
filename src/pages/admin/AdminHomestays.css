@@ -77,6 +77,7 @@
 }
 
 .image-preview-item {
+  position: relative;
   border-radius: 8px;
   overflow: hidden;
   aspect-ratio: 1;
@@ -88,6 +89,78 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.btn-delete-image {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-delete-image:hover {
+  background: rgba(220, 38, 38, 1);
+  transform: scale(1.1);
+}
+
+/* Amenities Grid */
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.amenity-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+}
+
+.amenity-checkbox:hover {
+  border-color: #3b82f6;
+  background: #f0f9ff;
+}
+
+.amenity-checkbox input[type="checkbox"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.amenity-checkbox input[type="checkbox"]:checked {
+  accent-color: #3b82f6;
+}
+
+.amenity-checkbox input[type="checkbox"]:checked ~ .amenity-name {
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.amenity-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  transition: all 0.2s;
+  flex: 1;
 }
 
 @media (max-width: 768px) {
@@ -103,5 +176,22 @@
 
   .images-preview-grid {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .amenities-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+
+  .amenity-checkbox {
+    padding: 8px 10px;
+  }
+
+  .amenity-icon {
+    font-size: 18px;
+  }
+
+  .amenity-name {
+    font-size: 13px;
   }
 }

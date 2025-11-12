@@ -6,7 +6,7 @@ import './Profile.css';
 
 function Profile() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -182,20 +182,19 @@ function Profile() {
         });
       }
 
-      // Update user in localStorage with data from server
+      // Update user in context and localStorage with data from server
       const updatedUser = {
         ...updatedUserFromServer,
         fullName: `${updatedUserFromServer.profile.firstName || ''} ${updatedUserFromServer.profile.lastName || ''}`.trim() || 'User',
         role: updatedUserFromServer.role === 'host' ? 'owner' : updatedUserFromServer.role === 'guest' ? 'renter' : updatedUserFromServer.role
       };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      updateUser(updatedUser);
 
       setSuccessMessage('Cập nhật thông tin thành công!');
-      
+
       // Redirect to home after 2 seconds
       setTimeout(() => {
         navigate('/');
-        window.location.reload(); // Reload to update header
       }, 2000);
 
     } catch (err) {

@@ -10,7 +10,120 @@ class HomestayController {
    */
   createHomestay = catchAsync(async (req, res) => {
     const homestayData = req.body;
-    
+    console.log('📥 Received homestayData:', Object.keys(homestayData));
+
+    // Transform FormData flat structure to nested objects
+    if (homestayData['location[city]']) {
+      homestayData.location = {
+        city: homestayData['location[city]'],
+        address: homestayData['location[address]'],
+        country: homestayData['location[country]'] || 'Vietnam',
+        coordinates: {
+          type: 'Point',
+          coordinates: [105.8342, 21.0278], // Default to Hanoi
+        },
+      };
+      if (homestayData['location[district]']) {
+        homestayData.location.district = homestayData['location[district]'];
+        delete homestayData['location[district]'];
+      }
+      delete homestayData['location[city]'];
+      delete homestayData['location[address]'];
+      delete homestayData['location[country]'];
+    }
+
+    // Handle capacity - support both flat structure (capacity[maxGuests]) and nested object (capacity.maxGuests)
+    if (homestayData['capacity[guests]'] || homestayData['capacity[maxGuests]']) {
+      // Flat structure from FormData
+      const guests = parseInt(homestayData['capacity[guests]'] || homestayData['capacity[maxGuests]']) || 1;
+      const bedrooms = parseInt(homestayData['capacity[bedrooms]']) || 1;
+      const bathrooms = parseFloat(homestayData['capacity[bathrooms]']) || 1;
+      const beds = parseInt(homestayData['capacity[beds]']) || bedrooms;
+
+      console.log('🔧 Capacity transform (flat):', { guests, bedrooms, bathrooms, beds });
+
+      homestayData.capacity = {
+        guests: guests,
+        bedrooms: bedrooms,
+        beds: beds,
+        bathrooms: bathrooms,
+      };
+      delete homestayData['capacity[maxGuests]'];
+      delete homestayData['capacity[guests]'];
+      delete homestayData['capacity[bedrooms]'];
+      delete homestayData['capacity[beds]'];
+      delete homestayData['capacity[bathrooms]'];
+    } else if (homestayData.capacity && typeof homestayData.capacity === 'object') {
+      // Nested object from express.urlencoded({ extended: true })
+      const guests = parseInt(homestayData.capacity.maxGuests || homestayData.capacity.guests) || 1;
+      const bedrooms = parseInt(homestayData.capacity.bedrooms) || 1;
+      const bathrooms = parseFloat(homestayData.capacity.bathrooms) || 1;
+      const beds = parseInt(homestayData.capacity.beds) || bedrooms;
+
+      console.log('🔧 Capacity transform (nested):', { guests, bedrooms, bathrooms, beds });
+
+      homestayData.capacity = {
+        guests: guests,
+        bedrooms: bedrooms,
+        beds: beds,
+        bathrooms: bathrooms,
+      };
+    }
+
+    console.log('✅ Final homestayData.capacity:', homestayData.capacity);
+
+    // Handle pricing - support both flat structure and nested object
+    if (homestayData['pricing[basePrice]']) {
+      // Flat structure
+      homestayData.pricing = {
+        basePrice: parseFloat(homestayData['pricing[basePrice]']),
+        currency: homestayData['pricing[currency]'] || 'VND',
+      };
+      delete homestayData['pricing[basePrice]'];
+      delete homestayData['pricing[currency]'];
+    } else if (homestayData.pricing && typeof homestayData.pricing === 'object') {
+      // Nested object - ensure basePrice is a number
+      homestayData.pricing = {
+        basePrice: parseFloat(homestayData.pricing.basePrice),
+        currency: homestayData.pricing.currency || 'VND',
+      };
+    }
+
+    // Handle location - support both flat structure and nested object
+    if (!homestayData.location || !homestayData.location.coordinates) {
+      // Ensure coordinates exist
+      if (!homestayData.location) {
+        homestayData.location = {};
+      }
+      if (!homestayData.location.coordinates) {
+        homestayData.location.coordinates = {
+          type: 'Point',
+          coordinates: [105.8342, 21.0278], // Default to Hanoi
+        };
+      }
+      if (!homestayData.location.country) {
+        homestayData.location.country = 'Vietnam';
+      }
+    }
+
+    // Set default propertyType if not provided
+    if (!homestayData.propertyType) {
+      homestayData.propertyType = 'entire_place';
+    }
+
+    // Handle amenities - convert from array of strings to amenityNames
+    if (homestayData.amenities) {
+      if (Array.isArray(homestayData.amenities)) {
+        homestayData.amenityNames = homestayData.amenities;
+      } else if (typeof homestayData.amenities === 'string') {
+        // If sent as comma-separated string
+        homestayData.amenityNames = homestayData.amenities.split(',').map(a => a.trim()).filter(Boolean);
+      }
+      delete homestayData.amenities; // Remove amenities, use amenityNames instead
+    }
+
+    console.log('✅ Final amenityNames:', homestayData.amenityNames);
+
     // Handle file uploads
     if (req.files) {
       if (req.files.coverImage && req.files.coverImage[0]) {
@@ -20,7 +133,7 @@ class HomestayController {
         homestayData.imagesBuffers = req.files.images.map(file => file.buffer);
       }
     }
-    
+
     const homestay = await homestayService.createHomestay(req.user._id, homestayData);
     ApiResponse.created(res, { homestay }, 'Homestay created successfully');
   });
@@ -35,7 +148,7 @@ class HomestayController {
     }
 
     const fileBuffers = req.files.map((file) => file.buffer);
-    const homestay = await homestayService.uploadImages(req.params.id, req.user._id, fileBuffers);
+    const homestay = await homestayService.uploadImages(req.params.id, req.user._id, req.user.role, fileBuffers);
 
     ApiResponse.success(res, { homestay }, 'Images uploaded successfully');
   });
@@ -49,6 +162,7 @@ class HomestayController {
     const homestay = await homestayService.deleteImage(
       req.params.id,
       req.user._id,
+      req.user.role,
       parseInt(imageIndex, 10),
     );
 
@@ -70,7 +184,57 @@ class HomestayController {
    */
   updateHomestay = catchAsync(async (req, res) => {
     const homestayData = req.body;
-    
+
+    // Transform FormData flat structure to nested objects
+    if (homestayData['location[city]']) {
+      homestayData.location = {
+        city: homestayData['location[city]'],
+        address: homestayData['location[address]'],
+        country: homestayData['location[country]'] || 'Vietnam',
+      };
+      delete homestayData['location[city]'];
+      delete homestayData['location[address]'];
+      delete homestayData['location[country]'];
+    }
+
+    if (homestayData['capacity[maxGuests]']) {
+      const maxGuests = parseInt(homestayData['capacity[maxGuests]']);
+      const bedrooms = parseInt(homestayData['capacity[bedrooms]']);
+      const bathrooms = parseFloat(homestayData['capacity[bathrooms]']);
+      const beds = parseInt(homestayData['capacity[beds]']) || bedrooms || 1;
+
+      homestayData.capacity = {
+        guests: maxGuests,
+        bedrooms: bedrooms,
+        beds: beds,
+        bathrooms: bathrooms,
+      };
+      delete homestayData['capacity[maxGuests]'];
+      delete homestayData['capacity[guests]'];
+      delete homestayData['capacity[bedrooms]'];
+      delete homestayData['capacity[beds]'];
+      delete homestayData['capacity[bathrooms]'];
+    }
+
+    if (homestayData['pricing[basePrice]']) {
+      homestayData.pricing = {
+        basePrice: parseFloat(homestayData['pricing[basePrice]']),
+        currency: homestayData['pricing[currency]'] || 'VND',
+      };
+      delete homestayData['pricing[basePrice]'];
+      delete homestayData['pricing[currency]'];
+    }
+
+    // Handle amenities - convert from array of strings to amenityNames
+    if (homestayData.amenities) {
+      if (Array.isArray(homestayData.amenities)) {
+        homestayData.amenityNames = homestayData.amenities;
+      } else if (typeof homestayData.amenities === 'string') {
+        homestayData.amenityNames = homestayData.amenities.split(',').map(a => a.trim()).filter(Boolean);
+      }
+      delete homestayData.amenities;
+    }
+
     // Handle file uploads
     if (req.files) {
       if (req.files.coverImage && req.files.coverImage[0]) {
@@ -80,8 +244,8 @@ class HomestayController {
         homestayData.imagesBuffers = req.files.images.map(file => file.buffer);
       }
     }
-    
-    const homestay = await homestayService.updateHomestay(req.params.id, req.user._id, homestayData);
+
+    const homestay = await homestayService.updateHomestay(req.params.id, req.user._id, req.user.role, homestayData);
     ApiResponse.success(res, { homestay }, 'Homestay updated successfully');
   });
 
@@ -90,7 +254,7 @@ class HomestayController {
    * DELETE /api/v1/homestays/:id
    */
   deleteHomestay = catchAsync(async (req, res) => {
-    await homestayService.deleteHomestay(req.params.id, req.user._id);
+    await homestayService.deleteHomestay(req.params.id, req.user._id, req.user.role);
     ApiResponse.success(res, null, 'Homestay deleted successfully');
   });
 
@@ -116,7 +280,7 @@ class HomestayController {
    * POST /api/v1/homestays/:id/submit
    */
   submitForVerification = catchAsync(async (req, res) => {
-    const homestay = await homestayService.submitForVerification(req.params.id, req.user._id);
+    const homestay = await homestayService.submitForVerification(req.params.id, req.user._id, req.user.role);
     ApiResponse.success(res, { homestay }, 'Homestay submitted for verification');
   });
 
