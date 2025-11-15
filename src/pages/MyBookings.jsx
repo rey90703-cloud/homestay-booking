@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import API_BASE_URL from '../config/api';
 import QRPaymentModal from '../components/QRPaymentModal';
+import CancelBookingModal from '../components/CancelBookingModal';
 import './MyBookings.css';
 
 const MyBookings = () => {
@@ -13,6 +14,12 @@ const MyBookings = () => {
   const [activeTab, setActiveTab] = useState('all'); // all, upcoming, completed, cancelled
   const [showQRModal, setShowQRModal] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
+  
+  // Cancel modal state
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [selectedBookingForCancel, setSelectedBookingForCancel] = useState(null);
+  const [refundPreview, setRefundPreview] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     // Chờ auth loading xong trước khi check authentication
@@ -62,8 +69,12 @@ const MyBookings = () => {
               : 'Việt Nam',
             coverImage: booking.homestayId?.coverImage || '/images/homestay-placeholder.jpg',
           },
+          // Keep ISO format for date calculations
           checkInDate: booking.checkInDate,
           checkOutDate: booking.checkOutDate,
+          // Formatted display dates
+          checkInDateDisplay: new Date(booking.checkInDate).toLocaleDateString('vi-VN'),
+          checkOutDateDisplay: new Date(booking.checkOutDate).toLocaleDateString('vi-VN'),
           guests: booking.numberOfGuests || 1,
           nights: Math.ceil((new Date(booking.checkOutDate) - new Date(booking.checkInDate)) / (1000 * 60 * 60 * 24)),
           totalPrice: booking.pricing?.totalAmount || 0,
@@ -87,12 +98,7 @@ const MyBookings = () => {
 
   // Map backend status to frontend status for display
   const mapBookingStatus = (bookingStatus, paymentStatus, checkOutDate) => {
-    // Nếu chưa thanh toán
-    if (paymentStatus === 'pending') {
-      return 'pending_payment';
-    }
-    
-    // Nếu đã hủy
+    // IMPORTANT: Check cancelled FIRST (before payment status)
     if (bookingStatus === 'cancelled') {
       return 'cancelled';
     }
@@ -112,7 +118,12 @@ const MyBookings = () => {
       return 'completed';
     }
     
-    // confirmed, pending và chưa qua ngày check-out -> upcoming
+    // Nếu chưa thanh toán
+    if (paymentStatus === 'pending') {
+      return 'pending_payment';
+    }
+    
+    // confirmed, paid và chưa qua ngày check-out -> upcoming
     return 'upcoming';
   };
 
@@ -185,6 +196,127 @@ const MyBookings = () => {
       console.error('Error downloading invoice:', error);
       alert(error.message || 'Không thể tải hóa đơn. Vui lòng thử lại sau.');
     }
+  };
+
+  // Handle cancel booking
+  const handleCancelBooking = async (booking) => {
+    try {
+      // Fetch refund preview
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/bookings/${booking._id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Không thể tải thông tin booking');
+      }
+
+      const data = await response.json();
+      const fullBooking = data.data.booking;
+
+      // Calculate refund preview (simulate backend calculation)
+      const now = new Date();
+      const checkIn = new Date(fullBooking.checkInDate);
+      const hoursUntilCheckIn = (checkIn - now) / (1000 * 60 * 60);
+      const daysUntilCheckIn = hoursUntilCheckIn / 24;
+
+      const totalAmount = fullBooking.pricing.totalAmount;
+      const serviceFee = fullBooking.pricing.serviceFee || 0;
+
+      let refundAmount = 0;
+      let refundPercentage = 0;
+      let refundPolicy = 'none';
+      let serviceFeeDeducted = 0;
+
+      if (daysUntilCheckIn > 7) {
+        refundAmount = totalAmount - serviceFee;
+        refundPercentage = 100;
+        refundPolicy = 'full';
+        serviceFeeDeducted = serviceFee;
+      } else if (daysUntilCheckIn >= 3) {
+        refundAmount = Math.round(totalAmount * 0.5);
+        refundPercentage = 50;
+        refundPolicy = 'partial';
+      }
+
+      const refundInfo = {
+        refundAmount,
+        refundPercentage,
+        refundPolicy,
+        serviceFeeDeducted,
+        processTime: '7-14 ngày làm việc',
+        message: refundPolicy === 'full' 
+          ? `Bạn sẽ được hoàn ${refundPercentage}% (trừ phí dịch vụ ${serviceFeeDeducted.toLocaleString('vi-VN')} VND) vì hủy trước ${Math.floor(daysUntilCheckIn)} ngày.`
+          : refundPolicy === 'partial'
+          ? `Bạn sẽ được hoàn ${refundPercentage}% do hủy trong khoảng 3-7 ngày trước check-in.`
+          : `Không được hoàn tiền do hủy trong vòng 3 ngày trước check-in.`
+      };
+
+      setSelectedBookingForCancel(fullBooking);
+      setRefundPreview(refundInfo);
+      setShowCancelModal(true);
+    } catch (error) {
+      console.error('Error loading cancel modal:', error);
+      showToast('Không thể tải thông tin hủy phòng', 'error');
+    }
+  };
+
+  const confirmCancelBooking = async (reason) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/bookings/${selectedBookingForCancel._id}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reason }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'Không thể hủy booking');
+      }
+
+      showToast('Đã hủy đặt phòng thành công', 'success');
+      setShowCancelModal(false);
+      setSelectedBookingForCancel(null);
+      setRefundPreview(null);
+      
+      // Refresh bookings list
+      fetchBookings();
+    } catch (error) {
+      console.error('Error cancelling booking:', error);
+      showToast(error.message || 'Không thể hủy booking. Vui lòng thử lại.', 'error');
+    }
+  };
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const canCancelBooking = (booking) => {
+    // Can cancel if status is upcoming or pending_payment
+    // and more than 24 hours before check-in
+    if (booking.status !== 'upcoming' && booking.status !== 'pending_payment') {
+      console.log(`[Cancel Check] Booking ${booking._id}: status=${booking.status} (not upcoming/pending_payment)`);
+      return false;
+    }
+
+    const now = new Date();
+    const checkIn = new Date(booking.checkInDate);
+    const hoursUntilCheckIn = (checkIn - now) / (1000 * 60 * 60);
+
+    const canCancel = hoursUntilCheckIn > 24;
+    console.log(`[Cancel Check] Booking ${booking._id}: status=${booking.status}, hoursUntilCheckIn=${hoursUntilCheckIn.toFixed(2)}, canCancel=${canCancel}`);
+
+    return canCancel;
   };
 
   // Show loading khi auth đang load hoặc đang fetch bookings
@@ -262,7 +394,7 @@ const MyBookings = () => {
                       </div>
                       <div className="detail-item">
                         <span className="icon">📅</span>
-                        <span>{booking.checkInDate} → {booking.checkOutDate}</span>
+                        <span>{booking.checkInDateDisplay || booking.checkInDate} → {booking.checkOutDateDisplay || booking.checkOutDate}</span>
                       </div>
                       <div className="detail-item">
                         <span className="icon">👥</span>
@@ -291,6 +423,14 @@ const MyBookings = () => {
                             📄 Tải hóa đơn
                           </button>
                         )}
+                        {canCancelBooking(booking) && (
+                          <button
+                            className="btn-cancel-booking"
+                            onClick={() => handleCancelBooking(booking)}
+                          >
+                            Hủy đặt phòng
+                          </button>
+                        )}
                         <button
                           className="btn-view-details"
                           onClick={() => handleViewDetails(booking._id)}
@@ -314,6 +454,34 @@ const MyBookings = () => {
           onSuccess={handlePaymentSuccess}
           onClose={handleCloseQRModal}
         />
+      )}
+
+      {/* Cancel Booking Modal */}
+      {showCancelModal && selectedBookingForCancel && (
+        <CancelBookingModal
+          booking={{
+            ...selectedBookingForCancel,
+            homestay: {
+              title: selectedBookingForCancel.homestayId?.title || 'Homestay',
+              ...selectedBookingForCancel.homestayId
+            },
+            totalPrice: selectedBookingForCancel.pricing?.totalAmount || 0
+          }}
+          refundPreview={refundPreview}
+          onClose={() => {
+            setShowCancelModal(false);
+            setSelectedBookingForCancel(null);
+            setRefundPreview(null);
+          }}
+          onConfirm={confirmCancelBooking}
+        />
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`toast toast-${toast.type}`}>
+          {toast.message}
+        </div>
       )}
     </div>
   );

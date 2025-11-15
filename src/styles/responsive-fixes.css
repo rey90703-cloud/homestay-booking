@@ -1,0 +1,133 @@
+/* Responsive fixes for mobile devices */
+
+/* Ensure all containers are properly contained */
+.container, 
+.header-container,
+.search-container,
+.homestay-section,
+.destinations-section,
+.amenities-section,
+.intro-section,
+.footer-container {
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Fix for very small screens */
+@media (max-width: 375px) {
+  :root {
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 0.75rem;
+    --space-lg: 1rem;
+    --space-xl: 1.5rem;
+    --space-2xl: 2rem;
+  }
+  
+  .header-container,
+  .search-container,
+  .homestay-section,
+  .destinations-section,
+  .amenities-section,
+  .intro-section,
+  .footer-container {
+    padding-left: var(--space-xs);
+    padding-right: var(--space-xs);
+  }
+}
+
+/* Fix for iPhone SE and similar small screens */
+@media (max-width: 320px) {
+  .hero {
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .search-form {
+    margin: 0;
+    border-radius: 12px;
+  }
+  
+  .homestay-grid,
+  .destinations-grid,
+  .amenities-grid {
+    gap: var(--space-xs);
+  }
+  
+  .card-content,
+  .section-card {
+    padding: var(--space-sm);
+  }
+}
+
+/* Ensure buttons are always touchable on mobile */
+@media (max-width: 768px) {
+  button,
+  .btn-primary,
+  .btn-secondary,
+  .btn-search,
+  .filter-option,
+  .page-btn {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+}
+
+/* Fix for landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    min-height: 250px;
+  }
+  
+  .hero-content {
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+  
+  .search-form {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* Prevent zoom on input focus for iOS */
+@media (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+    transform: translateZ(0);
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+}
+
+/* Fix for Safari mobile viewport units */
+@supports (-webkit-touch-callout: none) {
+  .hero {
+    min-height: -webkit-fill-available;
+    min-height: clamp(250px, 50vh, 420px);
+  }
+}
+
+/* Smooth scrolling for all devices */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for sticky elements on mobile */
+@media (max-width: 768px) {
+  .sticky,
+  .filter-sidebar,
+  .detail-right {
+    position: static !important;
+  }
+}

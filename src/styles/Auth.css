@@ -21,7 +21,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 40px;
+  padding: var(--space-2xl) var(--space-xl);
   position: relative;
   overflow: hidden;
 }
@@ -51,8 +51,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 40px;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
 }
 
 .auth-visual-logo img {
@@ -61,7 +61,7 @@
 }
 
 .auth-visual-logo h1 {
-  font-size: 32px;
+  font-size: var(--font-3xl);
   font-weight: 700;
   color: #E11D48;
   margin: 0;
@@ -69,15 +69,15 @@
 }
 
 .auth-visual-title {
-  font-size: 36px;
+  font-size: var(--font-3xl);
   font-weight: 700;
   color: #141217;
-  margin: 0 0 16px 0;
+  margin: 0 0 var(--space-md) 0;
   line-height: 1.2;
 }
 
 .auth-visual-description {
-  font-size: 18px;
+  font-size: var(--font-lg);
   color: #6B5A65;
   line-height: 1.6;
   margin: 0;
@@ -89,7 +89,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 40px;
+  padding: var(--space-2xl) var(--space-xl);
   overflow-y: auto;
   width: 100%;
   max-width: 100%;
@@ -101,19 +101,19 @@
 }
 
 .auth-header {
-  margin-bottom: 40px;
+  margin-bottom: var(--space-xl);
 }
 
 .auth-title {
-  font-size: 32px;
+  font-size: var(--font-3xl);
   font-weight: 700;
   color: #141217;
-  margin: 0 0 12px 0;
+  margin: 0 0 var(--space-sm) 0;
   letter-spacing: -0.02em;
 }
 
 .auth-subtitle {
-  font-size: 16px;
+  font-size: var(--font-base);
   font-weight: 400;
   color: #6B5A65;
   margin: 0;
@@ -123,17 +123,17 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-lg);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-xs);
 }
 
 .form-group label {
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 500;
   color: #141217;
   text-transform: uppercase;
@@ -145,11 +145,12 @@
   background: #FFFFFF;
   border: 1px solid rgba(20, 18, 23, 0.12);
   border-radius: 14px;
-  font-size: 16px;
+  font-size: var(--font-base);
   font-weight: 400;
   color: #141217;
   transition: border-color 0.2s, box-shadow 0.2s;
   width: 100%;
+  min-height: 48px;
 }
 
 .form-group input::placeholder {
@@ -168,7 +169,7 @@
 }
 
 .form-hint {
-  font-size: 13px;
+  font-size: var(--font-xs);
   color: #6B5A65;
   margin-top: -4px;
 }
@@ -343,7 +344,7 @@
   }
 
   .auth-form-section {
-    padding: 40px 24px;
+    padding: var(--space-xl) var(--space-lg);
     min-height: auto;
     width: 100%;
   }
@@ -356,57 +357,90 @@
 
 @media (max-width: 768px) {
   .auth-container {
-    min-height: calc(100vh - 73px); /* Header: 12px padding + 40px logo + 12px padding + 1px border = 65px */
+    min-height: calc(100vh - 73px);
   }
 
   .auth-form-section {
-    padding: 32px 20px;
+    padding: var(--space-lg) var(--space-md);
   }
 
   .auth-title {
-    font-size: 28px;
+    font-size: var(--font-2xl);
   }
 
   .auth-subtitle {
-    font-size: 15px;
+    font-size: var(--font-sm);
+  }
+
+  .auth-header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .auth-form {
+    gap: var(--space-md);
   }
 }
 
 @media (max-width: 640px) {
   .auth-container {
-    min-height: calc(100vh - 67px); /* Header: 10px padding + 36px logo + 10px padding + 1px border = 57px */
+    min-height: calc(100vh - 67px);
   }
 
   .auth-form-section {
-    padding: 24px 16px;
+    padding: var(--space-lg) var(--space-sm);
   }
 
   .auth-title {
-    font-size: 24px;
+    font-size: var(--font-xl);
   }
 
   .auth-subtitle {
-    font-size: 14px;
+    font-size: var(--font-sm);
   }
 
   .form-group input,
   .form-group textarea {
     font-size: 16px; /* Prevent zoom on iOS */
+    padding: 16px;
   }
 
   .btn-primary {
     padding: 16px;
-    font-size: 16px;
+    font-size: var(--font-base);
+    min-height: 52px;
+  }
+
+  .btn-secondary {
+    padding: 14px 16px;
+    min-height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-form-section {
+    padding: var(--space-md) var(--space-xs);
+  }
+
+  .auth-title {
+    font-size: var(--font-lg);
+  }
+
+  .auth-subtitle {
+    font-size: var(--font-xs);
+  }
+
+  .form-group input {
+    padding: 14px 12px;
   }
 }
 
 @media (max-width: 375px) {
   .auth-form-section {
-    padding: 20px 12px;
+    padding: var(--space-sm) var(--space-xs);
   }
 
   .auth-title {
-    font-size: 22px;
+    font-size: var(--font-base);
   }
 
   .otp-inputs input {

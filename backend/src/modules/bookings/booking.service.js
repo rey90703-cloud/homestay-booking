@@ -160,28 +160,84 @@ class BookingService {
     return booking;
   }
 
+  /**
+   * Cancel booking với refund calculation
+   * @param {string} bookingId - ID của booking cần hủy
+   * @param {string} userId - ID của user thực hiện hủy
+   * @param {string} reason - Lý do hủy
+   * @returns {Promise<Object>} { booking, refundInfo }
+   */
   async cancelBooking(bookingId, userId, reason) {
     // Authorization đã được xử lý bởi checkBookingModifyPermission middleware
-    const booking = await Booking.findById(bookingId);
+    const booking = await Booking.findById(bookingId)
+      .populate('homestayId', 'title location')
+      .populate('hostId', 'email profile')
+      .populate('guestId', 'email profile');
 
     if (!booking) {
       throw new NotFoundError('Booking not found');
     }
 
-    if (!booking.canBeCancelled()) {
-      throw new BadRequestError('This booking cannot be cancelled');
+    // Kiểm tra có thể hủy không
+    const cancelCheck = booking.canBeCancelled();
+    if (!cancelCheck.canCancel) {
+      throw new BadRequestError(cancelCheck.reason);
     }
 
+    // Tính toán refund
+    const refundInfo = booking.calculateRefund();
+
+    // Update booking status
     booking.status = BOOKING_STATUS.CANCELLED;
+    
+    // Update payment status nếu đã thanh toán
+    if (booking.payment.status === PAYMENT_STATUS.COMPLETED) {
+      booking.payment.status = PAYMENT_STATUS.REFUNDED;
+      booking.payment.refundAmount = refundInfo.refundAmount;
+      booking.payment.refundedAt = new Date();
+    }
+
+    // Lưu cancellation info
     booking.cancellation = {
       cancelledBy: userId,
       cancelledAt: new Date(),
-      reason,
-      refundAmount: booking.pricing.totalAmount,
+      reason: reason || 'Không có lý do',
+      refundAmount: refundInfo.refundAmount,
+      refundPercentage: refundInfo.refundPercentage,
+      refundPolicy: refundInfo.refundPolicy,
+      hoursUntilCheckIn: refundInfo.hoursUntilCheckIn,
     };
 
     await booking.save();
-    return booking;
+
+    // TODO: Gửi email notification cho guest và host
+    // await this.sendCancellationEmails(booking, refundInfo);
+
+    return {
+      booking,
+      refundInfo: {
+        ...refundInfo,
+        message: this.getRefundMessage(refundInfo),
+        processTime: '7-14 ngày làm việc',
+      },
+    };
+  }
+
+  /**
+   * Tạo message mô tả refund policy
+   * @param {Object} refundInfo - Thông tin refund
+   * @returns {string} Message
+   */
+  getRefundMessage(refundInfo) {
+    const { refundPolicy, refundPercentage, serviceFeeDeducted, daysUntilCheckIn } = refundInfo;
+
+    if (refundPolicy === 'full') {
+      return `Bạn sẽ được hoàn ${refundPercentage}% (trừ phí dịch vụ ${serviceFeeDeducted.toLocaleString('vi-VN')} VND) vì hủy trước ${Math.floor(daysUntilCheckIn)} ngày.`;
+    } else if (refundPolicy === 'partial') {
+      return `Bạn sẽ được hoàn ${refundPercentage}% do hủy trong khoảng 3-7 ngày trước check-in.`;
+    } else {
+      return `Không được hoàn tiền do hủy trong vòng 3 ngày trước check-in.`;
+    }
   }
 
   async getPaymentStatistics() {

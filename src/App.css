@@ -1,4 +1,6 @@
 .app {
   min-height: 100vh;
   background: #FFF1F7;
+  width: 100%;
+  overflow-x: hidden;
 }

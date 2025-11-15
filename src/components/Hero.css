@@ -2,10 +2,10 @@
   position: relative;
   width: 100%;
   max-width: 1152px;
-  margin: 24px auto;
+  margin: var(--space-md) auto;
   border-radius: 16px;
   overflow: hidden;
-  min-height: 420px;
+  min-height: clamp(300px, 50vh, 420px);
 }
 
 .hero-background {
@@ -38,8 +38,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-  padding: 80px 40px;
+  gap: var(--space-lg);
+  padding: var(--space-2xl) var(--space-md);
 }
 
 .hero-badge {
@@ -74,19 +74,22 @@
 
 .search-form {
   display: flex;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--space-sm);
+  padding: var(--space-md);
   background: #FFFFFF;
   border: 1px solid rgba(20, 18, 23, 0.08);
   border-radius: 16px;
   box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(12px);
+  width: 100%;
+  max-width: 800px;
+  flex-wrap: wrap;
 }
 
 .search-field {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-sm);
   padding: 14px 16px;
   background: #FFFFFF;
   border: 1px solid rgba(20, 18, 23, 0.08);
@@ -94,6 +97,8 @@
   min-width: 140px;
   cursor: pointer;
   transition: background 0.2s;
+  flex: 1;
+  min-width: 0;
 }
 
 .search-field:hover {
@@ -104,40 +109,47 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
 .field-label {
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 500;
   color: #6B5A65;
 }
 
 .field-value {
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 600;
   color: #141217;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .field-icon {
   width: auto;
   height: 18px;
+  flex-shrink: 0;
 }
 
 .btn-search {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-xs);
   padding: 12px 16px;
   background: #E11D48;
   border: none;
   border-radius: 14px;
   color: #FFF7FB;
-  font-size: 16px;
+  font-size: var(--font-base);
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
   white-space: nowrap;
   line-height: 1;
+  min-height: 44px;
 }
 
 .btn-search:hover {
@@ -149,5 +161,72 @@
   height: 18px;
   flex-shrink: 0;
   display: block;
+}
+
+/* Responsive styles for Hero */
+@media (max-width: 1024px) {
+  .hero {
+    margin: var(--space-sm) var(--space-sm);
+    border-radius: 12px;
+  }
+  
+  .search-form {
+    max-width: 100%;
+  }
+  
+  .search-field {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    margin: var(--space-xs) var(--space-xs);
+    border-radius: 8px;
+    min-height: clamp(250px, 40vh, 350px);
+  }
+  
+  .hero-content {
+    padding: var(--space-xl) var(--space-sm);
+    gap: var(--space-md);
+  }
+  
+  .search-form {
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+  }
+  
+  .search-field {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .btn-search {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    margin: 0;
+    border-radius: 0;
+    min-height: clamp(200px, 35vh, 300px);
+  }
+  
+  .hero-content {
+    padding: var(--space-lg) var(--space-sm);
+  }
+  
+  .hero-badge span,
+  .hero-badge-bottom span {
+    font-size: var(--font-sm);
+  }
+  
+  .search-form {
+    margin: 0 var(--space-xs);
+  }
 }
 

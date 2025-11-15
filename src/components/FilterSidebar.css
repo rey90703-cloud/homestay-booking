@@ -4,20 +4,21 @@
   border-radius: 16px;
   overflow: hidden;
   position: sticky;
-  top: 20px;
+  top: var(--space-lg);
+  height: fit-content;
 }
 
 .filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: var(--space-md);
   border-bottom: 1px solid rgba(20, 18, 23, 0.08);
 }
 
 .filter-title {
   font-family: 'Roboto Slab', serif;
-  font-size: 18px;
+  font-size: var(--font-lg);
   font-weight: 700;
   color: #141217;
   margin: 0;
@@ -26,17 +27,18 @@
 .filter-reset {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
   background: transparent;
   border: 1px solid rgba(20, 18, 23, 0.12);
   border-radius: 14px;
-  font-size: 15px;
+  font-size: var(--font-sm);
   font-weight: 600;
   color: #141217;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
   line-height: 1;
+  min-height: 36px;
 }
 
 .filter-reset:hover {
@@ -54,22 +56,24 @@
 .filter-sections {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .filter-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--space-sm);
+  padding: var(--space-md);
   background: rgba(225, 29, 72, 0.04);
   border: 1px solid rgba(20, 18, 23, 0.12);
   border-radius: 14px;
 }
 
 .filter-section-title {
-  font-size: 15px;
+  font-size: var(--font-base);
   font-weight: 600;
   color: #141217;
   margin: 0;
@@ -78,33 +82,37 @@
 .filter-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-xs);
 }
 
 .amenities-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: var(--space-xs);
 }
 
 .filter-option {
-  padding: 8px 12px;
+  padding: var(--space-xs) var(--space-sm);
   background: rgba(225, 29, 72, 0.04);
   border: 1px solid rgba(20, 18, 23, 0.12);
   border-radius: 999px;
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 500;
   color: #141217;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
   line-height: 1;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .filter-option.with-icon {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-xs);
 }
 
 .filter-option:hover {
@@ -119,8 +127,8 @@
 }
 
 .amenity-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
   display: block;
   filter: brightness(0);
@@ -130,34 +138,95 @@
   filter: brightness(0) invert(1);
 }
 
+/* Responsive styles */
 @media (max-width: 1024px) {
   .filter-sidebar {
     position: static;
-    margin-bottom: 24px;
+    margin-bottom: var(--space-lg);
   }
 
   .filter-sections {
     flex-direction: row;
     flex-wrap: wrap;
+    max-height: none;
+    overflow-y: visible;
   }
 
   .filter-section {
-    flex: 1 1 calc(50% - 8px);
+    flex: 1 1 calc(50% - var(--space-sm));
     min-width: 250px;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .filter-header {
+    padding: var(--space-sm);
+  }
+
   .filter-sections {
     flex-direction: column;
+    padding: var(--space-sm);
+    gap: var(--space-sm);
   }
 
   .filter-section {
     flex: 1 1 100%;
+    padding: var(--space-sm);
+  }
+
+  .filter-section-title {
+    font-size: var(--font-sm);
   }
 
   .amenities-grid {
     grid-template-columns: 1fr;
+  }
+
+  .filter-option {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-xs);
+    min-height: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .filter-header {
+    flex-direction: column;
+    gap: var(--space-sm);
+    align-items: stretch;
+  }
+
+  .filter-reset {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filter-options {
+    gap: var(--space-xs);
+  }
+
+  .filter-option {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-sidebar {
+    border-radius: 12px;
+    margin: 0 var(--space-xs) var(--space-md);
+  }
+
+  .amenity-icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .filter-option {
+    padding: 6px var(--space-xs);
+    min-height: 32px;
+    font-size: 11px;
   }
 }
 

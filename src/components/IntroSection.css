@@ -1,43 +1,43 @@
 .intro-section {
-  max-width: 1200px;
-  margin: 56px auto;
-  display: flex;
-  gap: 24px;
-  padding: 0 20px;
+  max-width: var(--container-xl);
+  margin: var(--space-2xl) auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  padding: 0 var(--space-md);
 }
 
 .intro-card {
-  flex: 1;
-  padding: 32px;
+  padding: var(--space-xl);
   background: #FFFFFF;
   border: 1px solid rgba(20, 18, 23, 0.08);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .intro-badge {
   display: inline-flex;
   align-self: flex-start;
-  padding: 6px 12px;
+  padding: var(--space-xs) var(--space-sm);
   background: #F9A8D4;
   border: 1px solid rgba(20, 18, 23, 0.08);
   border-radius: 999px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 500;
   color: #4A0E2B;
 }
 
 .intro-title {
-  font-size: 20px;
+  font-size: var(--font-xl);
   font-weight: 700;
   color: #141217;
   margin: 0;
 }
 
 .intro-description {
-  font-size: 16px;
+  font-size: var(--font-base);
   font-weight: 500;
   color: #6B5A65;
   line-height: 1.6;
@@ -45,18 +45,18 @@
 }
 
 .intro-stats {
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
 }
 
 .stat-card {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 16px;
+  gap: var(--space-xs);
+  padding: var(--space-md);
   background: #FFE3EF;
   border: 1px solid rgba(20, 18, 23, 0.08);
   border-radius: 14px;
@@ -65,33 +65,34 @@
 .stat-icon {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
 }
 
 .stat-value {
-  font-size: 18px;
+  font-size: var(--font-lg);
   font-weight: 700;
   color: #141217;
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 500;
   color: #6B5A65;
+  text-align: center;
 }
 
 .features-card {
-  flex: 1;
-  padding: 32px;
+  padding: var(--space-xl);
   background: #FFFFFF;
   border: 1px solid rgba(20, 18, 23, 0.08);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-lg);
 }
 
 .features-title {
-  font-size: 18px;
+  font-size: var(--font-lg);
   font-weight: 700;
   color: #141217;
   margin: 0;
@@ -100,28 +101,102 @@
 .features-grid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 
 .feature-item {
-  padding: 16px;
+  padding: var(--space-md);
   background: #FFE3EF;
   border: 1px solid rgba(20, 18, 23, 0.08);
   border-radius: 14px;
 }
 
 .feature-title {
-  font-size: 16px;
+  font-size: var(--font-base);
   font-weight: 500;
   color: #141217;
-  margin: 0 0 8px 0;
+  margin: 0 0 var(--space-xs) 0;
 }
 
 .feature-description {
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 400;
   color: #6B5A65;
   margin: 0;
   line-height: 1.5;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .intro-section {
+    margin: var(--space-xl) auto;
+    padding: 0 var(--space-sm);
+    gap: var(--space-md);
+  }
+
+  .intro-card,
+  .features-card {
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .intro-section {
+    grid-template-columns: 1fr;
+    margin: var(--space-lg) auto;
+    gap: var(--space-lg);
+  }
+
+  .intro-title,
+  .features-title {
+    font-size: var(--font-lg);
+  }
+
+  .intro-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .intro-section {
+    padding: 0 var(--space-xs);
+  }
+
+  .intro-card,
+  .features-card {
+    padding: var(--space-md);
+  }
+
+  .intro-stats {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+  }
+
+  .stat-card {
+    padding: var(--space-sm);
+  }
+
+  .feature-item {
+    padding: var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .intro-title,
+  .features-title {
+    font-size: var(--font-base);
+  }
+
+  .intro-description {
+    font-size: var(--font-sm);
+  }
+
+  .feature-title {
+    font-size: var(--font-sm);
+  }
+
+  .feature-description {
+    font-size: var(--font-xs);
+  }
 }
 

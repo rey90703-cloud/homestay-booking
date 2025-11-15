@@ -57,6 +57,9 @@ const PaymentSuccess = () => {
       // Transform API data to match component structure
       setBookingData({
         bookingCode: booking.payment?.reference || booking._id?.slice(-8) || 'N/A',
+        status: booking.status,
+        paymentStatus: booking.payment?.status,
+        cancellation: booking.cancellation,
         homestay: {
           title: booking.homestayId?.title || 'Homestay',
           location: booking.homestayId?.location || 'Việt Nam',
@@ -336,30 +339,101 @@ const PaymentSuccess = () => {
 
         {/* Right Column */}
         <div className="success-right">
-          {/* Success Badge */}
+          {/* Status Badge - Dynamic based on booking status */}
           <div className="success-badge-card">
-            <div className="success-badge">
-              <div className="check-icon">✓</div>
-              <div>
-                <h3>Thanh toán thành công</h3>
-                <p>Mã đặt chỗ: {bookingData.bookingCode}</p>
-              </div>
-            </div>
-
-            <div className="divider"></div>
-
-            <div className="download-section">
-              <div className="download-info">
-                <span className="icon">📄</span>
-                <div>
-                  <h4>Tải hóa đơn PDF</h4>
-                  <p>Lưu về thiết bị của bạn</p>
+            {bookingData.status === 'cancelled' ? (
+              <>
+                <div className="success-badge cancelled">
+                  <div className="check-icon cancelled-icon">✕</div>
+                  <div>
+                    <h3>Đặt chỗ đã bị hủy</h3>
+                    <p>Mã đặt chỗ: {bookingData.bookingCode}</p>
+                  </div>
                 </div>
-              </div>
-              <button className="btn-download" onClick={handleDownloadInvoice}>
-                Tải xuống
-              </button>
-            </div>
+
+                {bookingData.cancellation && (
+                  <>
+                    <div className="divider"></div>
+                    <div className="cancellation-info">
+                      <div className="info-row">
+                        <span>Thời gian hủy:</span>
+                        <span>{new Date(bookingData.cancellation.cancelledAt).toLocaleString('vi-VN')}</span>
+                      </div>
+                      {bookingData.cancellation.reason && (
+                        <div className="info-row">
+                          <span>Lý do:</span>
+                          <span>{bookingData.cancellation.reason}</span>
+                        </div>
+                      )}
+                      {bookingData.cancellation.refundAmount !== undefined && (
+                        <>
+                          <div className="divider"></div>
+                          <div className="refund-info">
+                            <h4>Thông tin hoàn tiền</h4>
+                            <div className="info-row">
+                              <span>Số tiền hoàn lại:</span>
+                              <span className="refund-amount">
+                                {bookingData.cancellation.refundAmount.toLocaleString('vi-VN')}đ
+                              </span>
+                            </div>
+                            {bookingData.cancellation.refundPercentage !== undefined && (
+                              <div className="info-row">
+                                <span>Tỷ lệ hoàn tiền:</span>
+                                <span>{bookingData.cancellation.refundPercentage}%</span>
+                              </div>
+                            )}
+                            <p className="refund-note">
+                              {bookingData.cancellation.refundAmount > 0 
+                                ? 'Số tiền sẽ được hoàn lại trong 5-7 ngày làm việc'
+                                : 'Không được hoàn tiền do hủy quá gần ngày nhận phòng'}
+                            </p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </>
+                )}
+              </>
+            ) : bookingData.paymentStatus !== 'completed' ? (
+              <>
+                <div className="success-badge pending">
+                  <div className="check-icon pending-icon">⏳</div>
+                  <div>
+                    <h3>Chờ thanh toán</h3>
+                    <p>Mã đặt chỗ: {bookingData.bookingCode}</p>
+                  </div>
+                </div>
+                <div className="divider"></div>
+                <div className="payment-pending-info">
+                  <p>Vui lòng hoàn tất thanh toán để xác nhận đặt phòng của bạn.</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="success-badge">
+                  <div className="check-icon">✓</div>
+                  <div>
+                    <h3>Thanh toán thành công</h3>
+                    <p>Mã đặt chỗ: {bookingData.bookingCode}</p>
+                  </div>
+                </div>
+
+                <div className="divider"></div>
+
+                <div className="download-section">
+                  <div className="download-info">
+                    <span className="icon">📄</span>
+                    <div>
+                      <h4>Tải hóa đơn PDF</h4>
+                      <p>Lưu về thiết bị của bạn</p>
+                    </div>
+                  </div>
+                  <button className="btn-download" onClick={handleDownloadInvoice}>
+                    Tải xuống
+                  </button>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Host Contact Card */}

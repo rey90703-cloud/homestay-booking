@@ -257,8 +257,30 @@ const bookingSchema = new mongoose.Schema(
         ref: 'User',
       },
       cancelledAt: Date,
-      reason: String,
-      refundAmount: Number,
+      reason: {
+        type: String,
+        trim: true,
+        maxlength: [500, 'Cancellation reason không được vượt quá 500 ký tự'],
+      },
+      refundAmount: {
+        type: Number,
+        default: 0,
+        min: [0, 'Refund amount không được âm'],
+      },
+      refundPercentage: {
+        type: Number,
+        enum: [0, 50, 100],
+        default: 0,
+      },
+      refundPolicy: {
+        type: String,
+        enum: ['none', 'partial', 'full'],
+        default: 'none',
+      },
+      hoursUntilCheckIn: {
+        type: Number,
+        min: 0,
+      },
     },
 
     // Special requests
@@ -320,19 +342,90 @@ bookingSchema.virtual('duration').get(function () {
   return 0;
 });
 
-// Method to check if booking can be cancelled
+/**
+ * Kiểm tra xem booking có thể hủy không
+ * @returns {Object} { canCancel: boolean, reason: string, hoursUntilCheckIn: number }
+ */
 bookingSchema.methods.canBeCancelled = function () {
   const now = new Date();
   const checkIn = new Date(this.checkInDate);
   const hoursUntilCheckIn = (checkIn - now) / (1000 * 60 * 60);
 
-  // Can cancel if more than 24 hours before check-in and not already cancelled/completed
-  return (
-    hoursUntilCheckIn > 24 &&
-    ![BOOKING_STATUS.CANCELLED, BOOKING_STATUS.COMPLETED, BOOKING_STATUS.CHECKED_OUT].includes(
-      this.status,
-    )
-  );
+  // Đã bị hủy, hoàn thành hoặc đã checkout
+  if ([BOOKING_STATUS.CANCELLED, BOOKING_STATUS.COMPLETED, BOOKING_STATUS.CHECKED_OUT].includes(this.status)) {
+    return {
+      canCancel: false,
+      reason: 'Booking đã bị hủy hoặc đã hoàn thành',
+      hoursUntilCheckIn,
+    };
+  }
+
+  // Phải hủy trước ít nhất 24 giờ
+  if (hoursUntilCheckIn <= 24) {
+    return {
+      canCancel: false,
+      reason: 'Không thể hủy booking trong vòng 24 giờ trước check-in',
+      hoursUntilCheckIn,
+    };
+  }
+
+  return {
+    canCancel: true,
+    reason: 'Booking có thể hủy',
+    hoursUntilCheckIn,
+  };
+};
+
+/**
+ * Tính toán refund theo MODERATE policy
+ * > 7 ngày: Hoàn 100% (trừ service fee)
+ * 3-7 ngày: Hoàn 50%
+ * < 3 ngày: Không hoàn
+ * 
+ * @returns {Object} { refundAmount, refundPercentage, refundPolicy, serviceFeeDeducted }
+ */
+bookingSchema.methods.calculateRefund = function () {
+  const now = new Date();
+  const checkIn = new Date(this.checkInDate);
+  const hoursUntilCheckIn = (checkIn - now) / (1000 * 60 * 60);
+  const daysUntilCheckIn = hoursUntilCheckIn / 24;
+
+  const totalAmount = this.pricing.totalAmount;
+  const serviceFee = this.pricing.serviceFee;
+
+  let refundAmount = 0;
+  let refundPercentage = 0;
+  let refundPolicy = 'none';
+  let serviceFeeDeducted = 0;
+
+  if (daysUntilCheckIn > 7) {
+    // > 7 ngày: Hoàn 100% trừ service fee
+    refundAmount = totalAmount - serviceFee;
+    refundPercentage = 100;
+    refundPolicy = 'full';
+    serviceFeeDeducted = serviceFee;
+  } else if (daysUntilCheckIn >= 3) {
+    // 3-7 ngày: Hoàn 50%
+    refundAmount = Math.round(totalAmount * 0.5);
+    refundPercentage = 50;
+    refundPolicy = 'partial';
+    serviceFeeDeducted = 0;
+  } else {
+    // < 3 ngày: Không hoàn
+    refundAmount = 0;
+    refundPercentage = 0;
+    refundPolicy = 'none';
+    serviceFeeDeducted = 0;
+  }
+
+  return {
+    refundAmount,
+    refundPercentage,
+    refundPolicy,
+    serviceFeeDeducted,
+    hoursUntilCheckIn,
+    daysUntilCheckIn: Math.round(daysUntilCheckIn * 10) / 10, // Round to 1 decimal
+  };
 };
 
 /**

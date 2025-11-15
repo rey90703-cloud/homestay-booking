@@ -23,6 +23,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import HostHomestays from './pages/host/HostHomestays';
 import AddHomestay from './pages/AddHomestay';
 import './App.css';
+import './styles/responsive-fixes.css';
 
 function App() {
   return (

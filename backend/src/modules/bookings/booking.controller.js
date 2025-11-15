@@ -104,12 +104,20 @@ class BookingController {
    */
   cancelBooking = catchAsync(async (req, res) => {
     const { reason } = req.body;
-    const booking = await bookingService.cancelBooking(
+    const result = await bookingService.cancelBooking(
       req.params.id,
       req.user._id,
       reason,
     );
-    ApiResponse.success(res, { booking }, 'Booking cancelled successfully');
+    
+    ApiResponse.success(
+      res,
+      {
+        booking: result.booking,
+        refundInfo: result.refundInfo,
+      },
+      'Booking đã được hủy thành công',
+    );
   });
 
   /**

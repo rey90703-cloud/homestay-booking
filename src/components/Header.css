@@ -3,36 +3,40 @@
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(20, 18, 23, 0.08);
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.12);
-  padding: 16px 0;
+  padding: var(--space-md) 0;
   position: relative;
   z-index: 100;
+  width: 100%;
 }
 
 .header-container {
-  max-width: 1200px;
+  max-width: var(--container-xl);
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding: 0 20px;
+  gap: var(--space-lg);
+  padding: 0 var(--space-md);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .logo {
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-sm);
+  flex-shrink: 0;
 }
 
 .logo-image {
-  width: 58px;
-  height: 58px;
+  width: clamp(36px, 8vw, 58px);
+  height: clamp(36px, 8vw, 58px);
   object-fit: contain;
 }
 
 .logo-text {
-  font-size: 22px;
+  font-size: clamp(16px, 4vw, 22px);
   font-weight: 700;
   color: #141217;
   letter-spacing: -0.02em;
@@ -124,10 +128,10 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background: #E11D48;
+  background: #E11D48 !important;
   border: none;
   border-radius: 14px;
-  color: #FFF7FB;
+  color: #FFF7FB !important;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -136,7 +140,26 @@
 }
 
 .btn-primary:hover {
-  background: #BE123C;
+  background: #BE123C !important;
+}
+
+/* Specific styling for "Đăng homestay" button */
+.desktop-btn.btn-primary {
+  background: #E11D48 !important;
+  color: #FFF7FB !important;
+}
+
+.desktop-btn.btn-primary:hover {
+  background: #BE123C !important;
+}
+
+.mobile-btn.btn-primary {
+  background: #E11D48 !important;
+  color: #FFF7FB !important;
+}
+
+.mobile-btn.btn-primary:hover {
+  background: #BE123C !important;
 }
 
 .btn-icon {
@@ -175,43 +198,38 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .header-container {
-    padding: 0 16px;
-    gap: 16px;
+    padding: 0 var(--space-md);
+    gap: var(--space-md);
   }
 
   .nav-links {
-    gap: 16px;
+    gap: var(--space-md);
   }
 
   .nav-link {
-    font-size: 15px;
+    font-size: var(--font-sm);
   }
 }
 
 @media (max-width: 768px) {
   .header {
-    padding: 12px 0;
+    padding: var(--space-sm) 0;
   }
 
   .header-container {
-    padding: 0 12px;
-    gap: 12px;
+    padding: 0 var(--space-sm);
+    gap: var(--space-sm);
     position: relative;
-  }
-
-  .logo-image {
-    width: 40px;
-    height: 40px;
-  }
-
-  .logo-text {
-    font-size: 18px;
   }
 
   /* Show hamburger menu */
   .hamburger-menu {
     display: flex;
     order: 3;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    align-items: center;
   }
 
   /* Hide desktop button on mobile */
@@ -225,11 +243,11 @@
     top: 0;
     right: -100%;
     height: 100vh;
-    width: 280px;
+    width: min(280px, 80vw);
     background: white;
     flex-direction: column;
     align-items: flex-start;
-    padding: 80px 24px 24px;
+    padding: 80px var(--space-lg) var(--space-lg);
     gap: 0;
     box-shadow: -2px 0 10px rgba(0,0,0,0.1);
     transition: right 0.3s ease;
@@ -243,18 +261,22 @@
 
   .nav-link {
     width: 100%;
-    padding: 16px 0;
+    padding: var(--space-md) 0;
     border-bottom: 1px solid #f0f0f0;
-    font-size: 16px;
+    font-size: var(--font-base);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   /* Show button inside mobile menu */
   .nav-links .mobile-btn {
     display: flex;
     width: 100%;
-    margin-top: 16px;
-    padding: 14px;
+    margin-top: var(--space-md);
+    padding: var(--space-sm);
     justify-content: center;
+    min-height: 44px;
   }
 
   .user-dropdown {
@@ -263,54 +285,52 @@
   }
 
   .user-dropdown .user-name {
-    padding: 16px 0;
+    padding: var(--space-md) 0;
     width: 100%;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   .dropdown-menu {
     position: static;
     box-shadow: none;
     background: #f9f9f9;
-    margin-top: 8px;
+    margin-top: var(--space-xs);
   }
 }
 
 @media (max-width: 640px) {
   .header {
-    padding: 10px 0;
+    padding: var(--space-xs) 0;
   }
 
   .header-container {
-    padding: 0 12px;
-  }
-
-  .logo-image {
-    width: 36px;
-    height: 36px;
-  }
-
-  .logo-text {
-    font-size: 16px;
+    padding: 0 var(--space-sm);
   }
 
   .nav-links {
-    width: 260px;
-    padding: 70px 20px 24px;
+    width: min(260px, 75vw);
+    padding: 70px var(--space-md) var(--space-md);
   }
 
   .nav-link {
-    font-size: 15px;
-    padding: 14px 0;
+    font-size: var(--font-sm);
+    padding: var(--space-sm) 0;
   }
 }
 
 @media (max-width: 480px) {
+  .header-container {
+    padding: 0 var(--space-xs);
+  }
+
   .logo-text {
     display: none;
   }
 
   .nav-links {
-    width: 240px;
+    width: min(240px, 70vw);
   }
 }
 
