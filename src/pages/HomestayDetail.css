@@ -299,6 +299,8 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  z-index: 100;
+  height: fit-content;
 }
 
 /* Booking Card */
@@ -308,13 +310,25 @@
   border-radius: 16px;
   border: 1px solid rgba(20, 18, 23, 0.12);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 10;
+  overflow: visible;
+  isolation: isolate;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  grid-template-columns: unset !important;
 }
 
 .booking-price {
   display: flex;
   align-items: baseline;
   gap: 6px;
-  margin-bottom: 24px;
+  flex-shrink: 0;
+  height: auto !important;
+  min-height: auto !important;
 }
 
 .price-amount {
@@ -333,12 +347,18 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
 }
 
 .date-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  width: 100%;
+}
+
+.date-inputs > * {
+  min-width: 0;
 }
 
 .date-input-group,
@@ -346,6 +366,8 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+  width: 100%;
 }
 
 .date-input-group label,
@@ -364,6 +386,8 @@
   color: #141217;
   background: white;
   transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .date-input-group input:focus,

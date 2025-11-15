@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import API_BASE_URL from '../config/api';
+import QRPaymentModal from '../components/QRPaymentModal';
 import './BookingCheckout.css';
 
 const BookingCheckout = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [homestay, setHomestay] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [createdBookingId, setCreatedBookingId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   // Get booking data from location state
   const bookingInfo = location.state || {
@@ -20,7 +24,7 @@ const BookingCheckout = () => {
   };
 
   const [formData, setFormData] = useState({
-    fullName: user?.profile?.firstName + ' ' + user?.profile?.lastName || '',
+    fullName: user?.fullName || '',
     email: user?.email || '',
     phone: user?.profile?.phone || '',
     note: '',
@@ -32,12 +36,17 @@ const BookingCheckout = () => {
   });
 
   useEffect(() => {
+    // Chờ auth loading xong trước khi check authentication
+    if (authLoading) {
+      return;
+    }
+    
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
       return;
     }
     fetchHomestayDetail();
-  }, [id, isAuthenticated]);
+  }, [id, isAuthenticated, authLoading]);
 
   const fetchHomestayDetail = async () => {
     try {
@@ -69,13 +78,12 @@ const BookingCheckout = () => {
     const nights = calculateNights();
     if (nights > 0 && homestay) {
       const subtotal = homestay.pricing.basePrice * nights;
-      const discount = subtotal * 0.1;
       const cleaningFee = homestay.pricing.cleaningFee || 0;
       const serviceFee = homestay.pricing.serviceFee || 0;
-      const total = subtotal - discount + cleaningFee + serviceFee;
-      return { nights, subtotal, discount, cleaningFee, serviceFee, total };
+      const total = subtotal + cleaningFee + serviceFee;
+      return { nights, subtotal, cleaningFee, serviceFee, total };
     }
-    return { nights: 0, subtotal: 0, discount: 0, cleaningFee: 0, serviceFee: 0, total: 0 };
+    return { nights: 0, subtotal: 0, cleaningFee: 0, serviceFee: 0, total: 0 };
   };
 
   const handleInputChange = (e) => {
@@ -92,22 +100,56 @@ const BookingCheckout = () => {
       return;
     }
 
-    // TODO: Call API to create booking and get MoMo payment URL
-    const bookingData = {
-      homestayId: id,
-      ...bookingInfo,
-      ...formData,
-    };
+    try {
+      setSubmitting(true);
 
-    console.log('Booking submitted:', bookingData);
+      // Call API to create booking
+      const token = localStorage.getItem('token');
+      const bookingData = {
+        homestayId: id,
+        checkInDate: bookingInfo.checkInDate,
+        checkOutDate: bookingInfo.checkOutDate,
+        numberOfGuests: bookingInfo.guests,
+        guestDetails: {
+          firstName: formData.fullName.split(' ')[0] || formData.fullName,
+          lastName: formData.fullName.split(' ').slice(1).join(' ') || '',
+          email: formData.email,
+          phone: formData.phone,
+        },
+        specialRequests: formData.specialRequests,
+      };
 
-    // Simulate successful booking (thanh toán giả lập)
-    const mockBookingId = 'HS-9X72K';
+      const response = await fetch(`${API_BASE_URL}/bookings`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData),
+      });
 
-    // Navigate to success page immediately
-    navigate(`/payment-success/${mockBookingId}`, {
+      const data = await response.json();
+
+      if (data.success) {
+        // Save booking ID and show QR modal
+        setCreatedBookingId(data.data.booking._id);
+        setShowQRModal(true);
+      } else {
+        alert(data.message || 'Không thể tạo booking. Vui lòng thử lại.');
+      }
+    } catch (err) {
+      console.error('Error creating booking:', err);
+      alert('Lỗi kết nối. Vui lòng thử lại.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handlePaymentSuccess = (paymentData) => {
+    // Navigate to success page
+    navigate(`/payment-success/${createdBookingId}`, {
       state: {
-        bookingCode: mockBookingId,
+        bookingCode: createdBookingId,
         homestay: homestay,
         checkInDate: bookingInfo.checkInDate,
         checkOutDate: bookingInfo.checkOutDate,
@@ -120,17 +162,18 @@ const BookingCheckout = () => {
           email: formData.email,
           specialRequests: formData.specialRequests || 'Không',
         },
-        payment: {
-          method: 'MoMo',
-          cardLast4: '',
-          expiryDate: '',
-        },
+        payment: paymentData,
         host: homestay.owner,
       }
     });
   };
 
-  if (loading) {
+  const handleCloseQRModal = () => {
+    setShowQRModal(false);
+  };
+
+  // Show loading khi auth đang load hoặc đang fetch homestay
+  if (authLoading || loading) {
     return (
       <div className="checkout-loading">
         <div className="spinner"></div>
@@ -278,19 +321,19 @@ const BookingCheckout = () => {
           <div className="checkout-card">
             <h3>Phương thức thanh toán</h3>
             <div className="form-grid">
-              <div className="payment-method-momo">
-                <div className="momo-logo">
-                  <img src="https://developers.momo.vn/v3/img/logo.svg" alt="MoMo" />
+              <div className="payment-method-vietqr">
+                <div className="vietqr-logo">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/VietQR_Logo.svg" alt="VietQR" />
                 </div>
                 <div>
-                  <label>Ví điện tử MoMo</label>
-                  <p>Thanh toán nhanh chóng & an toàn</p>
+                  <label>Chuyển khoản VietQR</label>
+                  <p>Thanh toán nhanh chóng & an toàn qua mã QR</p>
                 </div>
               </div>
 
-              <div className="momo-info">
+              <div className="vietqr-info">
                 <p className="info-text">
-                  💡 Bạn sẽ được chuyển đến ứng dụng MoMo để hoàn tất thanh toán sau khi nhấn "Xác nhận đặt phòng"
+                  💡 Bạn sẽ nhận được mã QR để quét và thanh toán qua ứng dụng ngân hàng sau khi nhấn "Xác nhận đặt phòng"
                 </p>
               </div>
 
@@ -321,10 +364,6 @@ const BookingCheckout = () => {
                 <span>Phí vệ sinh</span>
                 <span>{pricing.cleaningFee.toLocaleString('vi-VN')}đ</span>
               </div>
-              <div className="pricing-row discount">
-                <span>Ưu đãi -10%</span>
-                <span>-{pricing.discount.toLocaleString('vi-VN')}đ</span>
-              </div>
               <div className="pricing-row">
                 <span>Phí dịch vụ</span>
                 <span>{pricing.serviceFee.toLocaleString('vi-VN')}đ</span>
@@ -336,8 +375,12 @@ const BookingCheckout = () => {
               </div>
             </div>
 
-            <button className="btn-confirm" onClick={handleSubmit}>
-              Xác nhận đặt phòng
+            <button 
+              className="btn-confirm" 
+              onClick={handleSubmit}
+              disabled={submitting}
+            >
+              {submitting ? 'Đang xử lý...' : 'Xác nhận đặt phòng'}
             </button>
 
             <p className="disclaimer">
@@ -364,6 +407,15 @@ const BookingCheckout = () => {
           </div>
         </div>
       </div>
+
+      {/* QR Payment Modal */}
+      {showQRModal && createdBookingId && (
+        <QRPaymentModal
+          bookingId={createdBookingId}
+          onSuccess={handlePaymentSuccess}
+          onClose={handleCloseQRModal}
+        />
+      )}
     </div>
   );
 };

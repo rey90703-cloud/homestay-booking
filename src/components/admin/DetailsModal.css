@@ -1,0 +1,178 @@
+.details-modal {
+  max-width: 1000px;
+  width: 90vw;
+  max-height: 85vh;
+}
+
+.details-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.details-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 20px;
+  height: 100%;
+}
+
+.details-section.full-width {
+  grid-column: span 2;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-item.full-width {
+  grid-column: span 1;
+}
+
+.detail-item.highlight {
+  grid-column: span 1;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 2px solid #3b82f6;
+}
+
+.detail-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 14px;
+  color: #1e293b;
+  word-break: break-word;
+}
+
+.detail-value.code {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: #3b82f6;
+  background: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.detail-value.price-large {
+  font-size: 24px;
+  font-weight: 700;
+  color: #059669;
+}
+
+.detail-value.price-host {
+  font-size: 16px;
+  font-weight: 600;
+  color: #059669;
+}
+
+.detail-value.price-commission {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.detail-value.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.detail-value.badge-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.detail-value.badge-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.detail-value.badge-processing {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.detail-value.badge-failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.detail-value.badge-refunded {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+@media (max-width: 900px) {
+  .details-content {
+    grid-template-columns: 1fr;
+  }
+
+  .details-section.full-width {
+    grid-column: span 1;
+  }
+
+  .details-modal {
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .details-modal {
+    max-width: 100%;
+    width: 100vw;
+    max-height: 95vh;
+    border-radius: 0;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-item.full-width,
+  .detail-item.highlight {
+    grid-column: span 1;
+  }
+
+  .detail-value.price-large {
+    font-size: 20px;
+  }
+
+  .detail-value.price-host,
+  .detail-value.price-commission {
+    font-size: 14px;
+  }
+
+  .details-section {
+    padding: 16px;
+  }
+}

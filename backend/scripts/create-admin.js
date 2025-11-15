@@ -45,7 +45,7 @@ const createAdmin = async () => {
     await adminUser.save();
 
     console.log('✅ Admin account created successfully!');
-    console.log('\n📧 Login credentials:');
+    console.log('\nLogin credentials:');
     console.log('   Email: admin@homestay.com');
     console.log('   Password: Admin@123456');
     console.log('\n🔒 Please change the password after first login');

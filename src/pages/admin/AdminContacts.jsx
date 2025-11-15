@@ -60,8 +60,15 @@ const AdminContacts = () => {
       const data = await response.json();
       if (data.success) {
         setContacts(data.data || []);
-        if (data.meta?.pagination) {
-          setPagination(data.meta.pagination);
+        // Support both meta.pagination and metadata.pagination
+        const paginationData = data.meta?.pagination || data.metadata?.pagination;
+        if (paginationData) {
+          setPagination({
+            currentPage: paginationData.page || paginationData.currentPage || 1,
+            totalPages: paginationData.pages || paginationData.totalPages || 1,
+            totalContacts: paginationData.total || paginationData.totalContacts || 0,
+            limit: paginationData.limit || 20,
+          });
         }
       }
     } catch (error) {

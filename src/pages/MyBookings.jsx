@@ -1,61 +1,120 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import API_BASE_URL from '../config/api';
+import QRPaymentModal from '../components/QRPaymentModal';
 import './MyBookings.css';
 
 const MyBookings = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all'); // all, upcoming, completed, cancelled
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
 
   useEffect(() => {
+    // Chờ auth loading xong trước khi check authentication
+    if (authLoading) {
+      return;
+    }
+    
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
 
-    // TODO: Fetch bookings from API
-    // Mock data for now
-    const mockBookings = [
-      {
-        _id: '1',
-        bookingCode: 'HS-9X72K',
-        homestay: {
-          title: 'The Chill House – Tây Hồ',
-          location: 'Hà Nội, Việt Nam',
-          coverImage: '/images/homestay-placeholder.jpg',
-        },
-        checkInDate: '2025-11-10',
-        checkOutDate: '2025-11-12',
-        guests: 2,
-        nights: 2,
-        totalPrice: 1170000,
-        status: 'upcoming', // upcoming, completed, cancelled
-        createdAt: '2025-11-05',
-      },
-      {
-        _id: '2',
-        bookingCode: 'HS-8K3LM',
-        homestay: {
-          title: 'Cozy Mountain View',
-          location: 'Lào Cai, Việt Nam',
-          coverImage: '/images/homestay-placeholder.jpg',
-        },
-        checkInDate: '2025-10-15',
-        checkOutDate: '2025-10-17',
-        guests: 3,
-        nights: 2,
-        totalPrice: 980000,
-        status: 'completed',
-        createdAt: '2025-10-10',
-      },
-    ];
+    fetchBookings();
+  }, [isAuthenticated, authLoading, navigate]);
 
-    setBookings(mockBookings);
-    setLoading(false);
-  }, [isAuthenticated, navigate]);
+  const fetchBookings = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch(`${API_BASE_URL}/bookings/my-bookings`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      console.log('My bookings API response:', data);
+      console.log('Response status:', response.status);
+      if (!response.ok) {
+        console.error('API Error Details:', data.error);
+      }
+
+      if (data.success) {
+        // Map backend booking data to frontend format
+        const formattedBookings = data.data.bookings.map(booking => ({
+          _id: booking._id,
+          bookingCode: booking.bookingReference || booking._id.substring(0, 8).toUpperCase(),
+          homestay: {
+            _id: booking.homestayId?._id,
+            title: booking.homestayId?.title || 'Homestay',
+            location: booking.homestayId?.location 
+              ? `${booking.homestayId.location.city}, ${booking.homestayId.location.country}`
+              : 'Việt Nam',
+            coverImage: booking.homestayId?.coverImage || '/images/homestay-placeholder.jpg',
+          },
+          checkInDate: booking.checkInDate,
+          checkOutDate: booking.checkOutDate,
+          guests: booking.numberOfGuests || 1,
+          nights: Math.ceil((new Date(booking.checkOutDate) - new Date(booking.checkInDate)) / (1000 * 60 * 60 * 24)),
+          totalPrice: booking.pricing?.totalAmount || 0,
+          status: mapBookingStatus(booking.status, booking.payment?.status, booking.checkOutDate),
+          paymentStatus: booking.payment?.status,
+          createdAt: booking.createdAt,
+        }));
+
+        setBookings(formattedBookings);
+      } else {
+        console.error('Failed to fetch bookings:', data.message);
+        setBookings([]);
+      }
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      setBookings([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Map backend status to frontend status for display
+  const mapBookingStatus = (bookingStatus, paymentStatus, checkOutDate) => {
+    // Nếu chưa thanh toán
+    if (paymentStatus === 'pending') {
+      return 'pending_payment';
+    }
+    
+    // Nếu đã hủy
+    if (bookingStatus === 'cancelled') {
+      return 'cancelled';
+    }
+    
+    // Nếu backend đã đánh dấu completed hoặc checked_out
+    if (bookingStatus === 'completed' || bookingStatus === 'checked_out') {
+      return 'completed';
+    }
+    
+    // Kiểm tra ngày check-out đã qua chưa
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkOut = new Date(checkOutDate);
+    checkOut.setHours(0, 0, 0, 0);
+    
+    if (checkOut < today) {
+      return 'completed';
+    }
+    
+    // confirmed, pending và chưa qua ngày check-out -> upcoming
+    return 'upcoming';
+  };
 
   const filteredBookings = bookings.filter(booking => {
     if (activeTab === 'all') return true;
@@ -67,6 +126,7 @@ const MyBookings = () => {
       upcoming: { text: 'Sắp tới', className: 'status-upcoming' },
       completed: { text: 'Hoàn thành', className: 'status-completed' },
       cancelled: { text: 'Đã hủy', className: 'status-cancelled' },
+      pending_payment: { text: 'Chờ thanh toán', className: 'status-pending' },
     };
     return badges[status] || badges.upcoming;
   };
@@ -75,7 +135,60 @@ const MyBookings = () => {
     navigate(`/payment-success/${bookingId}`);
   };
 
-  if (loading) {
+  const handleViewQR = (bookingId) => {
+    setSelectedBookingId(bookingId);
+    setShowQRModal(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    setShowQRModal(false);
+    // Refresh bookings list
+    fetchBookings();
+  };
+
+  const handleCloseQRModal = () => {
+    setShowQRModal(false);
+    setSelectedBookingId(null);
+  };
+
+  const handleDownloadInvoice = async (bookingId, bookingCode) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/invoice`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Không thể tải hóa đơn');
+      }
+
+      // Get the blob from response
+      const blob = await response.blob();
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `invoice-${bookingCode || bookingId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading invoice:', error);
+      alert(error.message || 'Không thể tải hóa đơn. Vui lòng thử lại sau.');
+    }
+  };
+
+  // Show loading khi auth đang load hoặc đang fetch bookings
+  if (authLoading || loading) {
     return (
       <div className="my-bookings-loading">
         <div className="spinner"></div>
@@ -161,12 +274,30 @@ const MyBookings = () => {
                         <span className="price-label">Tổng tiền:</span>
                         <span className="price-value">{booking.totalPrice.toLocaleString('vi-VN')}đ</span>
                       </div>
-                      <button
-                        className="btn-view-details"
-                        onClick={() => handleViewDetails(booking._id)}
-                      >
-                        Xem chi tiết
-                      </button>
+                      <div className="booking-actions">
+                        {booking.status === 'pending_payment' && (
+                          <button
+                            className="btn-view-qr"
+                            onClick={() => handleViewQR(booking._id)}
+                          >
+                            Xem QR thanh toán
+                          </button>
+                        )}
+                        {booking.status === 'completed' && (
+                          <button
+                            className="btn-download-invoice"
+                            onClick={() => handleDownloadInvoice(booking._id, booking.bookingCode)}
+                          >
+                            📄 Tải hóa đơn
+                          </button>
+                        )}
+                        <button
+                          className="btn-view-details"
+                          onClick={() => handleViewDetails(booking._id)}
+                        >
+                          Xem chi tiết
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -175,6 +306,15 @@ const MyBookings = () => {
           )}
         </div>
       </div>
+
+      {/* QR Payment Modal */}
+      {showQRModal && selectedBookingId && (
+        <QRPaymentModal
+          bookingId={selectedBookingId}
+          onSuccess={handlePaymentSuccess}
+          onClose={handleCloseQRModal}
+        />
+      )}
     </div>
   );
 };

@@ -27,7 +27,7 @@ const setUserAdmin = async () => {
       process.exit(1);
     }
 
-    console.log('\n📧 Found user:');
+    console.log('\nFound user:');
     console.log('   Email:', user.email);
     console.log('   Current Role:', user.role);
     console.log('   Name:', user.fullName || `${user.profile?.firstName || ''} ${user.profile?.lastName || ''}`.trim());

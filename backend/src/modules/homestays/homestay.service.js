@@ -247,7 +247,8 @@ class HomestayService {
     }
 
     // Save all data including images
-    await homestay.save();
+    // Only validate modified fields to allow partial updates
+    await homestay.save({ validateModifiedOnly: true });
     logger.info(`Homestay updated successfully: ${homestayId}`);
 
     logger.info(`Homestay updated: ${homestayId}`);

@@ -284,14 +284,25 @@ const AdminHomestays = () => {
     console.log('Form data before submit:', formData);
 
     const formDataToSend = new FormData();
+    
+    // Luôn gửi đầy đủ thông tin cơ bản (bắt buộc)
     formDataToSend.append('title', formData.title);
     formDataToSend.append('description', formData.description);
+    formDataToSend.append('propertyType', 'entire_place'); // Default property type
+    
+    // Location
     formDataToSend.append('location[city]', formData.city);
     formDataToSend.append('location[address]', formData.address);
     formDataToSend.append('location[country]', 'Vietnam');
+    
+    // Pricing
     formDataToSend.append('pricing[basePrice]', formData.basePrice);
-    formDataToSend.append('capacity[maxGuests]', formData.maxGuests);
+    formDataToSend.append('pricing[currency]', 'VND');
+    
+    // Capacity
+    formDataToSend.append('capacity[guests]', formData.maxGuests);
     formDataToSend.append('capacity[bedrooms]', formData.bedrooms);
+    formDataToSend.append('capacity[beds]', formData.bedrooms); // Default: beds = bedrooms
     formDataToSend.append('capacity[bathrooms]', formData.bathrooms);
 
     // Thêm amenities
@@ -330,7 +341,16 @@ const AdminHomestays = () => {
           fetchHomestays();
           closeModal();
         } else {
-          alert(data.error?.message || 'Có lỗi xảy ra');
+          // Hiển thị lỗi chi tiết từ backend
+          let errorMessage = data.error?.message || 'Có lỗi xảy ra';
+          
+          // Nếu có validation errors, hiển thị chi tiết
+          if (data.error?.details && Array.isArray(data.error.details)) {
+            const detailMessages = data.error.details.map(d => d.message).join('\n');
+            errorMessage = `${errorMessage}\n\nChi tiết:\n${detailMessages}`;
+          }
+          
+          alert(errorMessage);
         }
       } else {
         const response = await fetch(
@@ -352,7 +372,16 @@ const AdminHomestays = () => {
           fetchHomestays();
           closeModal();
         } else {
-          alert(data.error?.message || 'Có lỗi xảy ra');
+          // Hiển thị lỗi chi tiết từ backend
+          let errorMessage = data.error?.message || 'Có lỗi xảy ra';
+          
+          // Nếu có validation errors, hiển thị chi tiết
+          if (data.error?.details && Array.isArray(data.error.details)) {
+            const detailMessages = data.error.details.map(d => d.message).join('\n');
+            errorMessage = `${errorMessage}\n\nChi tiết:\n${detailMessages}`;
+          }
+          
+          alert(errorMessage);
         }
       }
     } catch (error) {

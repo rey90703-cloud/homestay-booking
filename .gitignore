@@ -14,6 +14,7 @@ dist-ssr
 
 # Environment variables
 .env
+.env.example
 .env.local
 .env.development
 .env.production
@@ -21,6 +22,7 @@ backend/.env
 
 # Tool config
 .cunzhi-memory/
+.kiro/
 
 # Editor directories and files
 .vscode/*

@@ -72,8 +72,7 @@ const HomestayDetail = () => {
     const nights = calculateNights();
     if (nights > 0 && homestay) {
       const subtotal = homestay.pricing.basePrice * nights;
-      const discount = subtotal * 0.1;
-      return subtotal - discount;
+      return subtotal;
     }
     return 0;
   };
@@ -98,8 +97,7 @@ const HomestayDetail = () => {
 
   const nights = calculateNights();
   const subtotal = nights > 0 ? homestay.pricing.basePrice * nights : 0;
-  const discount = subtotal * 0.1;
-  const total = subtotal - discount;
+  const total = subtotal;
 
   const amenityLabels = {
     'wifi': 'WiFi tốc độ cao',
@@ -249,10 +247,6 @@ const HomestayDetail = () => {
 
                 {nights > 0 && (
                   <div className="pricing-breakdown">
-                    <div className="pricing-row">
-                      <span>Ưu đãi -10%</span>
-                      <span className="discount">-{discount.toLocaleString('vi-VN')}đ</span>
-                    </div>
                     <div className="pricing-row">
                       <span>Tạm tính ({nights} đêm)</span>
                       <span>{subtotal.toLocaleString('vi-VN')}đ</span>

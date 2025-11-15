@@ -203,14 +203,24 @@ function HostHomestays() {
       const token = localStorage.getItem('token');
       const formDataToSend = new FormData();
 
+      // Luôn gửi đầy đủ thông tin cơ bản (bắt buộc)
       formDataToSend.append('title', formData.title);
       formDataToSend.append('description', formData.description);
+      formDataToSend.append('propertyType', 'entire_place'); // Default property type
+      
+      // Location
       formDataToSend.append('location[city]', formData.city);
       formDataToSend.append('location[address]', formData.address);
       formDataToSend.append('location[country]', 'Vietnam');
+      
+      // Pricing
       formDataToSend.append('pricing[basePrice]', formData.basePrice);
-      formDataToSend.append('capacity[maxGuests]', formData.maxGuests);
+      formDataToSend.append('pricing[currency]', 'VND');
+      
+      // Capacity
+      formDataToSend.append('capacity[guests]', formData.maxGuests);
       formDataToSend.append('capacity[bedrooms]', formData.bedrooms);
+      formDataToSend.append('capacity[beds]', formData.bedrooms); // Default: beds = bedrooms
       formDataToSend.append('capacity[bathrooms]', formData.bathrooms);
 
       // Thêm amenities
@@ -248,7 +258,16 @@ function HostHomestays() {
         setShowModal(false);
         fetchHomestays();
       } else {
-        alert(data.error?.message || 'Có lỗi xảy ra');
+        // Hiển thị lỗi chi tiết từ backend
+        let errorMessage = data.error?.message || 'Có lỗi xảy ra';
+        
+        // Nếu có validation errors, hiển thị chi tiết
+        if (data.error?.details && Array.isArray(data.error.details)) {
+          const detailMessages = data.error.details.map(d => d.message).join('\n');
+          errorMessage = `${errorMessage}\n\nChi tiết:\n${detailMessages}`;
+        }
+        
+        alert(errorMessage);
       }
     } catch (err) {
       alert('Có lỗi xảy ra khi lưu homestay');
@@ -291,13 +310,15 @@ function HostHomestays() {
                   className="homestay-image"
                 />
                 <div className="homestay-info">
-                  <h3>{homestay.title}</h3>
-                  <p className="homestay-location">
-                    {homestay.location?.city}, {homestay.location?.district}
-                  </p>
-                  <p className="homestay-price">
-                    {homestay.pricing?.basePrice?.toLocaleString('vi-VN')} VNĐ/đêm
-                  </p>
+                  <h3 className="homestay-title">{homestay.title}</h3>
+                  <div className="homestay-meta">
+                    <p className="homestay-price">
+                      {homestay.pricing?.basePrice?.toLocaleString('vi-VN')} VNĐ/đêm
+                    </p>
+                    <p className="homestay-location">
+                      {homestay.location?.city}
+                    </p>
+                  </div>
                   <div className="homestay-actions">
                     <button className="btn-edit" onClick={() => handleEdit(homestay)}>
                       Sửa

@@ -25,6 +25,7 @@ module.exports = {
     FAILED: 'failed',
     REFUNDED: 'refunded',
     PARTIALLY_REFUNDED: 'partially_refunded',
+    EXPIRED: 'expired', // QR code expired
   },
 
   // Homestay status

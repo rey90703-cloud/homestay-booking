@@ -109,6 +109,58 @@ app.get('/', (req, res) => {
 });
 
 /**
+ * Health Check Route
+ */
+app.get('/health', (req, res) => {
+  res.json({
+    success: true,
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+  });
+});
+
+/**
+ * Payment Poller Health Check Route
+ */
+app.get('/health/payment-poller', (req, res) => {
+  const paymentPoller = require('./services/payment-poller.service');
+  const status = paymentPoller.getStatus();
+  
+  res.json({
+    success: true,
+    poller: {
+      isRunning: status.isRunning,
+      isPolling: status.isPolling,
+      lastPollTime: status.lastPollTime,
+      pollCount: status.pollCount,
+      stats: status.stats,
+      config: status.config,
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
+/**
+ * Payment Reminder Health Check Route
+ */
+app.get('/health/payment-reminder', (req, res) => {
+  const paymentReminder = require('./services/payment-reminder.service');
+  const status = paymentReminder.getStatus();
+  
+  res.json({
+    success: true,
+    reminder: {
+      isRunning: status.isRunning,
+      lastRunTime: status.lastRunTime,
+      stats: status.stats,
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
+/**
  * 404 Handler
  */
 app.use(notFound);

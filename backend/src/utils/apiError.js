@@ -50,6 +50,12 @@ class BadRequestError extends ApiError {
   }
 }
 
+class TooManyRequestsError extends ApiError {
+  constructor(message = 'Too many requests') {
+    super(429, message);
+  }
+}
+
 module.exports = {
   ApiError,
   ValidationError,
@@ -58,4 +64,5 @@ module.exports = {
   ForbiddenError,
   ConflictError,
   BadRequestError,
+  TooManyRequestsError,
 };

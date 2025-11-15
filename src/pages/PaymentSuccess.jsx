@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './PaymentSuccess.css';
@@ -7,76 +7,134 @@ const PaymentSuccess = () => {
   const { bookingId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   
-  // Default booking data
-  const defaultData = {
-    bookingCode: 'HS-9X72K',
-    homestay: {
-      title: 'The Chill House – Tây Hồ',
-      location: 'Hà Nội, Việt Nam',
-      coverImage: '/images/homestay-placeholder.jpg',
-    },
-    checkInDate: '2025-11-10',
-    checkOutDate: '2025-11-12',
-    guests: 2,
-    nights: 2,
-    pricing: {
-      basePrice: 650000,
-      discount: 130000,
-      cleaningFee: 0,
-      serviceFee: 0,
-      total: 1170000,
-    },
-    guest: {
-      name: 'Nguyễn Văn A',
-      phone: '+84 912 345 678',
-      email: 'email@domain.com',
-      specialRequests: 'Không',
-    },
-    payment: {
-      method: 'MoMo',
-      cardLast4: '',
-      expiryDate: '',
-    },
-    host: {
-      name: 'Lan Trần',
-      avatar: '/images/host-avatar.jpg',
-      verified: true,
-      responseTime: '~1h',
-    },
-  };
-
-  const [bookingData, setBookingData] = useState(defaultData);
+  const [bookingData, setBookingData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Chờ auth loading xong trước khi check authentication
+    if (authLoading) {
+      return;
+    }
+    
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
       return;
     }
 
-    // Get booking data from location state or use default
-    if (location.state) {
-      setBookingData({
-        ...defaultData,
-        ...location.state,
-        homestay: { ...defaultData.homestay, ...(location.state.homestay || {}) },
-        pricing: { ...defaultData.pricing, ...(location.state.pricing || {}) },
-        guest: { ...defaultData.guest, ...(location.state.guest || {}) },
-        payment: { ...defaultData.payment, ...(location.state.payment || {}) },
-        host: { ...defaultData.host, ...(location.state.host || {}) },
-      });
-    }
-  }, [bookingId, isAuthenticated, location.state, navigate]);
+    // Fetch booking data from API
+    fetchBookingData();
+  }, [bookingId, isAuthenticated, authLoading, navigate]);
 
-  const handleDownloadInvoice = () => {
-    console.log('Download invoice');
-    // TODO: Implement PDF download
+  const fetchBookingData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem('token');
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api/v1';
+      
+      const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Không thể tải thông tin đặt phòng');
+      }
+
+      const data = await response.json();
+      
+      if (!data.success || !data.data || !data.data.booking) {
+        throw new Error('Dữ liệu đặt phòng không hợp lệ');
+      }
+
+      const booking = data.data.booking;
+      
+      // Transform API data to match component structure
+      setBookingData({
+        bookingCode: booking.payment?.reference || booking._id?.slice(-8) || 'N/A',
+        homestay: {
+          title: booking.homestayId?.title || 'Homestay',
+          location: booking.homestayId?.location || 'Việt Nam',
+          coverImage: booking.homestayId?.coverImage || '/images/homestay-placeholder.jpg',
+        },
+        checkInDate: booking.checkInDate,
+        checkOutDate: booking.checkOutDate,
+        guests: booking.numberOfGuests || booking.capacity?.guests || 1,
+        nights: booking.numberOfNights || 1,
+        pricing: {
+          basePrice: (booking.pricing?.basePrice || 0) * (booking.numberOfNights || 1),
+          cleaningFee: booking.pricing?.cleaningFee || 0,
+          serviceFee: booking.pricing?.serviceFee || 0,
+          total: booking.pricing?.totalAmount || 0,
+        },
+        guest: {
+          name: booking.guestDetails?.firstName && booking.guestDetails?.lastName 
+            ? `${booking.guestDetails.firstName} ${booking.guestDetails.lastName}`
+            : booking.guestId?.fullName || 'Khách',
+          phone: booking.guestDetails?.phone || booking.guestId?.profile?.phone || 'N/A',
+          email: booking.guestDetails?.email || booking.guestId?.email || 'N/A',
+          specialRequests: booking.specialRequests || 'Không',
+        },
+        payment: {
+          method: 'VietQR',
+          cardLast4: '',
+          expiryDate: '',
+        },
+        host: {
+          name: booking.hostId?.fullName || booking.hostId?.profile?.firstName || 'Chủ nhà',
+          avatar: booking.hostId?.profile?.avatar || '/images/host-avatar.jpg',
+          verified: true,
+          responseTime: '~1h',
+        },
+      });
+    } catch (err) {
+      console.error('Error fetching booking data:', err);
+      setError(err.message || 'Không thể tải thông tin đặt phòng');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDownloadTicket = () => {
-    console.log('Download ticket');
-    // TODO: Implement ticket download
+  const handleDownloadInvoice = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api/v1';
+      
+      const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/invoice`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Không thể tải hóa đơn');
+      }
+
+      // Get the blob from response
+      const blob = await response.blob();
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `invoice-${bookingData.bookingCode || bookingId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading invoice:', error);
+      alert(error.message || 'Không thể tải hóa đơn. Vui lòng thử lại sau.');
+    }
   };
 
   const handleContactHost = (method) => {
@@ -84,7 +142,52 @@ const PaymentSuccess = () => {
     // TODO: Implement contact functionality
   };
 
+  if (loading) {
+    return (
+      <div className="payment-success">
+        <div className="success-container">
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Đang tải thông tin đặt phòng...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
+  if (error) {
+    return (
+      <div className="payment-success">
+        <div className="success-container">
+          <div className="error-state">
+            <div className="error-icon">⚠️</div>
+            <h3>Có lỗi xảy ra</h3>
+            <p>{error}</p>
+            <button className="btn-primary" onClick={() => navigate('/bookings')}>
+              Quay lại danh sách đặt phòng
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!bookingData) {
+    return (
+      <div className="payment-success">
+        <div className="success-container">
+          <div className="error-state">
+            <div className="error-icon">❌</div>
+            <h3>Không tìm thấy thông tin đặt phòng</h3>
+            <p>Vui lòng kiểm tra lại mã đặt phòng</p>
+            <button className="btn-primary" onClick={() => navigate('/bookings')}>
+              Quay lại danh sách đặt phòng
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="payment-success">
@@ -181,10 +284,6 @@ const PaymentSuccess = () => {
                 <div className="pricing-row">
                   <span>Giá gốc ({bookingData.nights} đêm)</span>
                   <span>{bookingData.pricing.basePrice.toLocaleString('vi-VN')}đ</span>
-                </div>
-                <div className="pricing-row discount">
-                  <span>Ưu đãi 10%</span>
-                  <span>-{bookingData.pricing.discount.toLocaleString('vi-VN')}đ</span>
                 </div>
                 <div className="pricing-row">
                   <span>Phí dọn phòng</span>

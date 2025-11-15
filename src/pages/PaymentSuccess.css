@@ -509,3 +509,82 @@
   }
 }
 
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.loading-state .spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff385c;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  font-size: 16px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Error State */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.error-state .error-icon {
+  font-size: 64px;
+}
+
+.error-state h3 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #141217;
+  margin: 0;
+}
+
+.error-state p {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
+  max-width: 400px;
+}
+
+.error-state .btn-primary {
+  padding: 12px 24px;
+  background: #e11d48;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.error-state .btn-primary:hover {
+  background: #be123c;
+  transform: translateY(-1px);
+}
