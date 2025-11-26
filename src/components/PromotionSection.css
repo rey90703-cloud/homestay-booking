@@ -1,0 +1,107 @@
+.promotion-section {
+  max-width: 1200px;
+  margin: 56px auto;
+  padding: 0 20px;
+}
+
+.promotion-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #FFE3EF;
+  border: 1px solid rgba(20, 18, 23, 0.12);
+  border-radius: 16px;
+}
+
+.promotion-badge {
+  display: inline-flex;
+  padding: 6px 10px;
+  background: #F9A8D4;
+  border-radius: 999px;
+}
+
+.promotion-badge span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4A0E2B;
+  white-space: nowrap;
+}
+
+.promotion-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.promotion-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #141217;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.promotion-description {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6B5A65;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.promotion-action {
+  display: flex;
+  align-items: flex-end;
+  padding-left: 579px;
+}
+
+.btn-promotion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 15px;
+  background: #E11D48;
+  border: none;
+  border-radius: 14px;
+  color: #FFF7FB;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-promotion:hover {
+  background: #BE123C;
+}
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 1024px) {
+  .promotion-action {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .promotion-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .promotion-action {
+    width: 100%;
+    padding-left: 0;
+  }
+
+  .btn-promotion {
+    width: 100%;
+  }
+}
+

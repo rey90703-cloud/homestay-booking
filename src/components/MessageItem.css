@@ -1,0 +1,211 @@
+/* MessageItem Component Styles */
+
+.message-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  padding: 0;
+  animation: messageSlideIn 0.2s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Own messages - align right */
+.message-item.message-own {
+  align-items: flex-end;
+}
+
+/* Other messages - align left */
+.message-item.message-other {
+  align-items: flex-start;
+}
+
+/* Sender name (for group chats) */
+.message-sender-name {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  padding: 0 8px;
+}
+
+/* Message bubble container */
+.message-bubble {
+  max-width: 70%;
+  min-width: 100px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  word-wrap: break-word;
+  word-break: break-word;
+  position: relative;
+}
+
+/* Own message bubble - blue background */
+.message-own .message-bubble {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+/* Other message bubble - gray background */
+.message-other .message-bubble {
+  background-color: #f1f3f5;
+  color: #212529;
+  border-bottom-left-radius: 4px;
+}
+
+/* Message content */
+.message-content {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* Message metadata container */
+.message-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+/* Message timestamp */
+.message-time {
+  opacity: 0.7;
+}
+
+.message-own .message-time {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.message-other .message-time {
+  color: #868e96;
+}
+
+/* Read status indicator */
+.message-read-status {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.message-read-status.read {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.message-read-status.unread {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .message-bubble {
+    max-width: 85%;
+  }
+
+  .message-content {
+    font-size: 13px;
+  }
+
+  .message-item {
+    padding: 0;
+    margin-bottom: 10px;
+  }
+}
+
+/* Hover effects */
+.message-item:hover .message-bubble {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading state */
+.message-item.loading {
+  opacity: 0.6;
+}
+
+/* Error state */
+.message-item.error .message-bubble {
+  border: 1px solid #ff6b6b;
+  background-color: #ffe0e0;
+}
+
+.message-item.error .message-content {
+  color: #c92a2a;
+}
+
+/* Message status styles */
+.message-status {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.message-status--error {
+  color: #ff6b6b;
+}
+
+.message-own .message-status {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.message-other .message-status {
+  color: #868e96;
+}
+
+/* Failed message styles */
+.message-bubble.message-failed {
+  border: 1px solid #ff6b6b;
+  opacity: 0.9;
+}
+
+.message-own .message-bubble.message-failed {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+}
+
+.message-failed-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.message-retry-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.message-retry-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.message-retry-btn:active {
+  transform: translateY(0);
+}
+
+/* Sending state */
+.message-bubble.message-sending {
+  opacity: 0.7;
+}
+
+/* Queued state */
+.message-bubble.message-queued {
+  opacity: 0.6;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+}

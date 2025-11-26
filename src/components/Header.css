@@ -1,0 +1,387 @@
+.header {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(20, 18, 23, 0.08);
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.12);
+  padding: var(--space-md) 0;
+  position: relative;
+  z-index: 999999 !important;
+  width: 100%;
+}
+
+.header-container {
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding: 0 var(--space-md);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.logo {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.logo-image {
+  width: clamp(36px, 8vw, 58px);
+  height: clamp(36px, 8vw, 58px);
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: clamp(16px, 4vw, 22px);
+  font-weight: 700;
+  color: #141217;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 16px;
+  font-weight: 500;
+  color: #141217;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-link.active {
+  color: #E11D48;
+}
+
+.nav-link:hover {
+  color: #E11D48;
+}
+
+.nav-link.user-name {
+  font-weight: 600;
+  color: #E11D48;
+  cursor: pointer;
+  user-select: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.nav-link.user-name:hover {
+  background-color: rgba(225, 29, 72, 0.1);
+}
+
+.user-dropdown {
+  position: relative;
+  display: inline-block;
+  z-index: 9999999 !important;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  min-width: 220px;
+  z-index: 99999999 !important;
+  animation: dropdownFadeIn 0.2s ease-out;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  color: #141217;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-item span {
+  font-size: 18px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #E11D48 !important;
+  border: none;
+  border-radius: 14px;
+  color: #FFF7FB !important;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  line-height: 1;
+}
+
+.btn-primary:hover {
+  background: #BE123C !important;
+}
+
+/* Specific styling for "Đăng homestay" button */
+.desktop-btn.btn-primary {
+  background: #E11D48 !important;
+  color: #FFF7FB !important;
+}
+
+.desktop-btn.btn-primary:hover {
+  background: #BE123C !important;
+}
+
+.mobile-btn.btn-primary {
+  background: #E11D48 !important;
+  color: #FFF7FB !important;
+}
+
+.mobile-btn.btn-primary:hover {
+  background: #BE123C !important;
+}
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Hide mobile button on desktop */
+.mobile-btn {
+  display: none;
+}
+
+/* Hamburger Menu - Hidden on desktop */
+.hamburger-menu {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+}
+
+.hamburger-menu span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: #141217;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .header-container {
+    padding: 0 var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .nav-links {
+    gap: var(--space-md);
+  }
+
+  .nav-link {
+    font-size: var(--font-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: var(--space-sm) 0;
+  }
+
+  .header-container {
+    padding: 0 var(--space-sm);
+    gap: var(--space-sm);
+    position: relative;
+  }
+
+  /* Show hamburger menu */
+  .hamburger-menu {
+    display: flex;
+    order: 3;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Hide desktop button on mobile */
+  .header-container > .desktop-btn {
+    display: none;
+  }
+
+  /* Mobile menu styles */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: min(280px, 80vw);
+    background: white;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px var(--space-lg) var(--space-lg);
+    gap: 0;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+
+  .nav-links.mobile-open {
+    right: 0;
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: var(--font-base);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Show button inside mobile menu */
+  .nav-links .mobile-btn {
+    display: flex;
+    width: 100%;
+    margin-top: var(--space-md);
+    padding: var(--space-sm);
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .user-dropdown {
+    width: 100%;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .user-dropdown .user-name {
+    padding: var(--space-md) 0;
+    width: 100%;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    background: #f9f9f9;
+    margin-top: var(--space-xs);
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: var(--space-xs) 0;
+  }
+
+  .header-container {
+    padding: 0 var(--space-sm);
+  }
+
+  .nav-links {
+    width: min(260px, 75vw);
+    padding: 70px var(--space-md) var(--space-md);
+  }
+
+  .nav-link {
+    font-size: var(--font-sm);
+    padding: var(--space-sm) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0 var(--space-xs);
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .nav-links {
+    width: min(240px, 70vw);
+  }
+}
+
+
+/* Force dropdown visibility - Debug */
+.user-dropdown .dropdown-menu {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure dropdown is above other elements */
+.header {
+  z-index: 999999 !important;
+}
+
+.user-dropdown {
+  z-index: 9999999 !important;
+}
+
+.dropdown-menu {
+  z-index: 99999999 !important;
+}
+/
+* Ultimate dropdown fix - highest possible z-index */
+.user-dropdown .dropdown-menu {
+  z-index: 2147483647 !important;
+  position: fixed !important;
+  top: 60px !important;
+  right: 20px !important;
+}
+
+/* Make sure header container doesn't clip dropdown */
+.header-container {
+  overflow: visible !important;
+}
+
+.nav-links {
+  overflow: visible !important;
+}

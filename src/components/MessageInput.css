@@ -1,0 +1,135 @@
+.message-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.message-input-error {
+  padding: 8px 12px;
+  background: #fee;
+  color: #c00;
+  border-radius: 6px;
+  font-size: 14px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-input-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.message-input-textarea {
+  flex: 1;
+  min-height: 40px;
+  max-height: 150px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: none;
+  overflow-y: auto;
+  transition: border-color 0.2s;
+}
+
+.message-input-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.message-input-textarea:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.message-input-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.message-input-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.message-input-char-count {
+  font-size: 12px;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.message-input-char-count.warning {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.message-input-send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.message-input-send-btn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+}
+
+.message-input-send-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.message-input-send-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.message-input-send-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .message-input-container {
+    padding: 10px;
+  }
+
+  .message-input-textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}

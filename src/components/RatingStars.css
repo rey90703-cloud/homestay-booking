@@ -1,0 +1,81 @@
+/* Rating Stars Component */
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stars-container {
+  display: flex;
+  gap: 2px;
+}
+
+.star-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.star-wrapper.interactive {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.star-wrapper.interactive:hover {
+  transform: scale(1.1);
+}
+
+.star {
+  transition: color 0.2s ease;
+}
+
+.star.empty {
+  color: #d1d5db;
+}
+
+.star.filled {
+  color: #fbbf24;
+}
+
+.star.half-filled {
+  color: #fbbf24;
+}
+
+/* Star Sizes */
+.star.small {
+  font-size: 0.75rem;
+}
+
+.star.medium {
+  font-size: 1rem;
+}
+
+.star.large {
+  font-size: 1.25rem;
+}
+
+.star.extra-large {
+  font-size: 1.5rem;
+}
+
+.rating-number {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.875rem;
+}
+
+/* Interactive hover effects */
+.star-wrapper.interactive:hover .star.empty {
+  color: #fbbf24;
+  opacity: 0.7;
+}
+
+/* Animation for rating changes */
+@keyframes star-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.star-wrapper.interactive .star.filled {
+  animation: star-pop 0.3s ease;
+}

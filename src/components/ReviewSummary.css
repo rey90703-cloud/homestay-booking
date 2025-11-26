@@ -1,0 +1,75 @@
+/* Review Summary Component */
+.review-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-summary-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.review-count {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* No Reviews State */
+.no-reviews {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.no-reviews h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.no-reviews p {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Recent Reviews */
+.recent-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.review-preview {
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.review-preview:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.review-preview-header {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.reviewer-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;\n  overflow: hidden;\n  background: linear-gradient(135deg, #3b82f6, #1d4ed8);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 0.875rem;\n  font-weight: 600;\n  color: white;\n  flex-shrink: 0;\n}\n\n.reviewer-avatar img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.reviewer-info {\n  flex: 1;\n  min-width: 0;\n}\n\n.reviewer-name {\n  font-size: 0.875rem;\n  font-weight: 600;\n  color: #1f2937;\n  margin: 0 0 0.25rem 0;\n}\n\n.review-meta {\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n}\n\n.review-date {\n  font-size: 0.75rem;\n  color: #6b7280;\n}\n\n.review-preview-content {\n  margin-left: 0;\n}\n\n.review-title {\n  font-size: 0.875rem;\n  font-weight: 600;\n  color: #374151;\n  margin: 0 0 0.5rem 0;\n}\n\n.review-excerpt {\n  font-size: 0.875rem;\n  line-height: 1.5;\n  color: #4b5563;\n  margin: 0;\n}\n\n/* View All Button */\n.view-all-reviews-btn {\n  width: 100%;\n  padding: 0.75rem 1rem;\n  margin-top: 1.5rem;\n  background: white;\n  border: 1px solid #3b82f6;\n  border-radius: 8px;\n  color: #3b82f6;\n  font-size: 0.875rem;\n  font-weight: 600;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n\n.view-all-reviews-btn:hover {\n  background: #3b82f6;\n  color: white;\n  transform: translateY(-1px);\n  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);\n}\n\n.view-all-reviews-btn:active {\n  transform: translateY(0);\n}\n\n/* Responsive */\n@media (max-width: 768px) {\n  .review-summary {\n    padding: 1rem;\n  }\n  \n  .section-title {\n    font-size: 1.125rem;\n    flex-direction: column;\n    align-items: flex-start;\n    gap: 0.25rem;\n  }\n  \n  .review-preview {\n    padding: 0.75rem;\n  }\n  \n  .review-preview-header {\n    gap: 0.5rem;\n  }\n  \n  .reviewer-avatar {\n    width: 32px;\n    height: 32px;\n    font-size: 0.75rem;\n  }\n  \n  .reviewer-name {\n    font-size: 0.8125rem;\n  }\n  \n  .review-meta {\n    flex-direction: column;\n    align-items: flex-start;\n    gap: 0.25rem;\n  }\n}\n\n@media (max-width: 480px) {\n  .recent-reviews {\n    gap: 1rem;\n  }\n  \n  .review-preview-header {\n    flex-direction: column;\n    gap: 0.5rem;\n  }\n  \n  .reviewer-info {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n  }\n  \n  .review-meta {\n    flex-direction: row;\n    gap: 0.5rem;\n  }\n}"

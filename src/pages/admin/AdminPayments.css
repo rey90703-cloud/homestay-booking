@@ -1,0 +1,295 @@
+.admin-payments {
+  width: 100%;
+}
+
+/* Tabs */
+.payment-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  margin-bottom: -2px;
+}
+
+.tab-button:hover {
+  color: #3b82f6;
+  background: #f8fafc;
+}
+
+.tab-button.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+  background: #eff6ff;
+}
+
+
+
+.tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+}
+
+/* Statistics moved to PaymentStatistics.css */
+
+.booking-id {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.price-cell {
+  font-weight: 600;
+  text-align: right;
+}
+
+.host-amount {
+  color: #059669;
+}
+
+.commission-amount {
+  color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+  .payment-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-button {
+    white-space: nowrap;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Table Container */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar cho table */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead {
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.data-table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s;
+}
+
+.data-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.data-table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.price-cell {
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.host-amount {
+  color: #059669;
+}
+
+.commission-amount {
+  color: #3b82f6;
+}
+
+.booking-id {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-secondary {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  min-width: 75px;
+  height: 32px;
+  text-align: center;
+}
+
+.btn-action.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-action.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-action.btn-success {
+  background: #10b981;
+  color: white;
+}
+
+.btn-action.btn-success:hover {
+  background: #059669;
+}
+
+.btn-action.btn-info {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.btn-action.btn-info:hover {
+  background: #e2e8f0;
+}
+
+@media (max-width: 1024px) {
+  .data-table {
+    font-size: 13px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .data-table {
+    min-width: 1000px;
+  }
+}
+
+@media (max-width: 768px) {
+  .data-table {
+    min-width: 900px;
+  }
+  
+  .data-table th,
+  .data-table td {
+    font-size: 12px;
+    padding: 10px;
+  }
+}

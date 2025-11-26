@@ -1,0 +1,170 @@
+.review-stats {
+  background: white;
+  border: 1px solid #ebebeb;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stats-summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.average-rating {
+  text-align: center;
+}
+
+.average-rating h2 {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: #222;
+}
+
+.stars-large {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.stars-large .star {
+  font-size: 24px;
+  opacity: 0.3;
+}
+
+.stars-large .star.filled {
+  opacity: 1;
+}
+
+.average-rating p {
+  margin: 0;
+  font-size: 14px;
+  color: #717171;
+}
+
+.rating-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rating-bar {
+  display: grid;
+  grid-template-columns: 50px 1fr 40px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rating-label {
+  font-size: 14px;
+  color: #222;
+  font-weight: 500;
+}
+
+.bar-container {
+  height: 8px;
+  background: #ebebeb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #ff385c;
+  transition: width 0.3s ease;
+}
+
+.rating-count {
+  font-size: 14px;
+  color: #717171;
+  text-align: right;
+}
+
+.category-averages {
+  margin-top: 2rem;
+}
+
+.category-averages h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 1.5rem;
+  color: #222;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.category-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f7f7f7;
+  border-radius: 8px;
+}
+
+.category-label {
+  font-size: 14px;
+  color: #222;
+  font-weight: 500;
+}
+
+.category-rating-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-rating-value .rating-number {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+}
+
+.mini-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.mini-stars .mini-star {
+  font-size: 12px;
+  opacity: 0.3;
+}
+
+.mini-stars .mini-star.filled {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .review-stats {
+    padding: 1.5rem;
+  }
+
+  .stats-summary {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .average-rating h2 {
+    font-size: 36px;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .rating-bar {
+    grid-template-columns: 40px 1fr 30px;
+    gap: 0.5rem;
+  }
+}
