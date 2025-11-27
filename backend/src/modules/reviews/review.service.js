@@ -11,30 +11,10 @@ class ReviewService {
   async createReview(guestId, homestayId, reviewData) {
     const { bookingId, rating, categories, title, comment, images } = reviewData;
 
-    // Verify booking exists and belongs to guest
-    const booking = await Booking.findById(bookingId);
-    if (!booking) {
-      throw new NotFoundError('Booking not found');
-    }
-
-    if (booking.guestId.toString() !== guestId.toString()) {
-      throw new ForbiddenError('You can only review your own bookings');
-    }
-
-    if (booking.homestayId.toString() !== homestayId.toString()) {
-      throw new BadRequestError('Booking does not match homestay');
-    }
-
-    // Check if booking is paid or completed
-    const validStatuses = [BOOKING_STATUS.PAID, BOOKING_STATUS.CONFIRMED, BOOKING_STATUS.CHECKED_IN, BOOKING_STATUS.CHECKED_OUT, BOOKING_STATUS.COMPLETED];
-    if (!validStatuses.includes(booking.status)) {
-      throw new BadRequestError('Bạn chỉ có thể đánh giá booking đã thanh toán');
-    }
-
-    // Check if review already exists
-    const existingReview = await Review.findOne({ bookingId });
+    // Check if review already exists for this user and homestay
+    const existingReview = await Review.findOne({ guestId, homestayId });
     if (existingReview) {
-      throw new BadRequestError('You have already reviewed this booking');
+      throw new BadRequestError('Bạn đã đánh giá homestay này rồi');
     }
 
     // Get homestay to get hostId
@@ -46,7 +26,7 @@ class ReviewService {
     // Create review
     const review = await Review.create({
       homestayId,
-      bookingId,
+      bookingId: bookingId || null,
       guestId,
       hostId: homestay.hostId,
       rating,
@@ -59,7 +39,10 @@ class ReviewService {
     // Update homestay stats
     await this.updateHomestayStats(homestayId);
 
-    return review.populate(['guestId', 'homestayId']);
+    return review.populate([
+      { path: 'guestId', select: 'fullName profile email avatar' },
+      { path: 'homestayId' }
+    ]);
   }
 
   /**
@@ -97,7 +80,7 @@ class ReviewService {
     const skip = (page - 1) * limit;
 
     const reviews = await Review.find(query)
-      .populate('guestId', 'profile email')
+      .populate('guestId', 'fullName profile email avatar')
       .sort(sortOption)
       .skip(skip)
       .limit(Number(limit));
@@ -339,20 +322,6 @@ class ReviewService {
    * Check if user can review a homestay
    */
   async canUserReview(guestId, homestayId) {
-    // Find bookings that are paid or completed for this guest and homestay
-    const eligibleBookings = await Booking.find({
-      guestId,
-      homestayId,
-      status: { $in: [BOOKING_STATUS.PAID, BOOKING_STATUS.CONFIRMED, BOOKING_STATUS.CHECKED_IN, BOOKING_STATUS.CHECKED_OUT, BOOKING_STATUS.COMPLETED] },
-    });
-
-    if (eligibleBookings.length === 0) {
-      return {
-        canReview: false,
-        reason: 'Bạn cần có booking đã thanh toán để đánh giá',
-      };
-    }
-
     // Check if already reviewed
     const existingReview = await Review.findOne({ guestId, homestayId });
     if (existingReview) {
@@ -365,7 +334,7 @@ class ReviewService {
 
     return {
       canReview: true,
-      bookingId: eligibleBookings[0]._id,
+      bookingId: null, // No booking required
     };
   }
 }

@@ -11,7 +11,7 @@ const reviewSchema = new mongoose.Schema(
     bookingId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Booking',
-      required: true,
+      required: false,
     },
     guestId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -143,7 +143,7 @@ const reviewSchema = new mongoose.Schema(
 // Indexes
 reviewSchema.index({ homestayId: 1, status: 1, createdAt: -1 });
 reviewSchema.index({ guestId: 1, homestayId: 1 }, { unique: true }); // One review per guest per homestay
-reviewSchema.index({ bookingId: 1 }, { unique: true }); // One review per booking
+reviewSchema.index({ bookingId: 1 }); // Regular index for performance (not unique to allow multiple reviews without booking)
 reviewSchema.index({ rating: 1 });
 
 // Virtual for average category rating

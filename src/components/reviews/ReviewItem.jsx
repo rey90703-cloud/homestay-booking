@@ -69,12 +69,20 @@ const ReviewItem = ({ review, onUpdate }) => {
               <img src={review.guestId.profile.avatar} alt={review.guestId.profile.name} />
             ) : (
               <div className="avatar-placeholder">
-                {review.guestId?.profile?.name?.charAt(0)?.toUpperCase() || 'U'}
+                {(review.guestId?.fullName?.charAt(0) || 
+                  review.guestId?.profile?.firstName?.charAt(0) || 
+                  review.guestId?.profile?.lastName?.charAt(0) || 
+                  'U').toUpperCase()}
               </div>
             )}
           </div>
           <div className="reviewer-details">
-            <h4>{review.guestId?.profile?.name || 'Anonymous'}</h4>
+            <h4>
+              {review.guestId?.fullName || 
+               (review.guestId?.profile?.firstName && review.guestId?.profile?.lastName 
+                 ? `${review.guestId.profile.firstName} ${review.guestId.profile.lastName}`.trim()
+                 : review.guestId?.profile?.firstName || review.guestId?.profile?.lastName || 'Anonymous')}
+            </h4>
             <p className="review-date">{formatDate(review.createdAt)}</p>
           </div>
         </div>
