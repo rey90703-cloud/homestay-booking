@@ -209,8 +209,8 @@ const ChatWindow = ({ onBack }) => {
       {/* Input Area with MessageInput component */}
       <div className="chat-window-input">
         <MessageInput 
-          chatroomId={activeChatRoom._id}
-          disabled={!isConnected}
+          chatroomId={activeChatRoom._id || 'new'}
+          disabled={false}
         />
       </div>
 

@@ -10,11 +10,64 @@ import './ChatRoomItem.css';
  * Requirements: 4.2, 4.3, 8.4
  */
 const ChatRoomItem = ({ chatRoom, currentUserId, onlineUsers, onClick }) => {
-  // Get the other participant (not current user)
-  const otherParticipant = chatRoom.participants?.find(p => p.userId !== currentUserId);
+  // Get the other participant (not current user) - SAME LOGIC AS ChatWindow
+  const getOtherParticipant = () => {
+    return chatRoom.participants?.find(p => {
+      const participantId = typeof p.userId === 'object' ? p.userId._id : p.userId;
+      return participantId?.toString() !== currentUserId?.toString();
+    });
+  };
   
-  // Get participant name
-  const participantName = otherParticipant?.name || chatRoom.metadata?.hostName || 'User';
+  // Get participant name - SAME LOGIC AS ChatWindow
+  const getParticipantName = () => {
+    const otherParticipant = getOtherParticipant();
+    
+    if (!otherParticipant) {
+      return 'User';
+    }
+    
+    // Ưu tiên lấy tên từ userId đã được populate
+    if (otherParticipant.userId?.fullName) {
+      return otherParticipant.userId.fullName;
+    }
+    
+    // Lấy từ profile.firstName + profile.lastName
+    if (otherParticipant.userId?.profile) {
+      const { firstName, lastName } = otherParticipant.userId.profile;
+      if (firstName || lastName) {
+        return `${firstName || ''} ${lastName || ''}`.trim();
+      }
+    }
+    
+    // Fallback về name/fullName trực tiếp trong participant object
+    if (otherParticipant.fullName || otherParticipant.name) {
+      return otherParticipant.fullName || otherParticipant.name;
+    }
+    
+    // Fallback cuối cùng dựa vào role
+    if (otherParticipant.role === 'host') {
+      return chatRoom?.metadata?.hostName || 'Host';
+    }
+    
+    return 'Guest';
+  };
+  
+  const otherParticipant = getOtherParticipant();
+  const participantName = getParticipantName();
+  
+  // Debug: Log để kiểm tra
+  if (chatRoom._id) {
+    console.log('=== ChatRoomItem Debug ===');
+    console.log('ChatRoom ID:', chatRoom._id);
+    console.log('Current User ID:', currentUserId);
+    console.log('Participants:', chatRoom.participants?.map(p => ({
+      userId: typeof p.userId === 'object' ? p.userId._id : p.userId,
+      name: typeof p.userId === 'object' ? (p.userId.fullName || `${p.userId.profile?.firstName} ${p.userId.profile?.lastName}`) : 'N/A'
+    })));
+    console.log('Other Participant:', otherParticipant);
+    console.log('Display Name:', participantName);
+    console.log('========================');
+  }
   
   // Get unread count for current user
   const unreadCount = chatRoom.unreadCount?.[currentUserId] || 0;
@@ -81,16 +134,18 @@ const ChatRoomItem = ({ chatRoom, currentUserId, onlineUsers, onClick }) => {
       <div className="chat-room-info">
         <div className="chat-room-header">
           <h4 className="chat-room-name" data-testid="homestay-name">
-            {chatRoom.metadata?.homestayName || 'Homestay'}
+            {participantName}
           </h4>
           <span className="chat-room-time" data-testid="timestamp">
             {formatTime(chatRoom.lastMessage?.createdAt)}
           </span>
         </div>
         
-        <div className="chat-room-participant" data-testid="participant-name">
-          {participantName}
-        </div>
+        {chatRoom.metadata?.homestayName && (
+          <div className="chat-room-participant" data-testid="participant-name">
+            {chatRoom.metadata.homestayName}
+          </div>
+        )}
         
         <div className="chat-room-last-message-container">
           <p className="chat-room-last-message" data-testid="last-message">

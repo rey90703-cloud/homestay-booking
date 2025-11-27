@@ -329,10 +329,13 @@ export const ChatProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
+      // Clear messages immediately when switching chat rooms
+      setMessages([]);
+
       // If tempChatRoom is provided, it's a new conversation
       if (tempChatRoom) {
         setActiveChatRoom(tempChatRoom);
-        setMessages([]);
+        activeChatRoomRef.current = tempChatRoom;
         setLoading(false);
         return tempChatRoom;
       }
@@ -356,6 +359,7 @@ export const ChatProvider = ({ children }) => {
       const room = data.data?.chatRoom || data.data;
 
       setActiveChatRoom(room);
+      activeChatRoomRef.current = room;
       chatRoomsRef.current = chatRoomsRef.current.map(r => r._id === room._id ? room : r);
 
       // Join socket room
@@ -403,14 +407,17 @@ export const ChatProvider = ({ children }) => {
       const data = await response.json();
       const newMessages = data.data?.messages || data.data || [];
 
-      if (page === 1) {
-        setMessages(newMessages);
-      } else {
-        setMessages(prev => [...newMessages, ...prev]);
-      }
+      // Only update messages if this chatroom is still active
+      if (activeChatRoomRef.current?._id === chatroomId) {
+        if (page === 1) {
+          setMessages(newMessages);
+        } else {
+          setMessages(prev => [...newMessages, ...prev]);
+        }
 
-      messagesPageRef.current = page;
-      hasMoreMessagesRef.current = newMessages.length === limit;
+        messagesPageRef.current = page;
+        hasMoreMessagesRef.current = newMessages.length === limit;
+      }
 
       return newMessages;
     } catch (err) {

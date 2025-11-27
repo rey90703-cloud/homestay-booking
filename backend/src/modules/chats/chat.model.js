@@ -51,7 +51,9 @@ const chatRoomSchema = new mongoose.Schema(
 );
 
 // Indexes for performance
-chatRoomSchema.index({ bookingId: 1 }, { unique: true });
+// Regular index on bookingId (not unique to allow multiple direct chats with null bookingId)
+// Uniqueness is enforced in the service layer
+chatRoomSchema.index({ bookingId: 1 });
 chatRoomSchema.index({ 'participants.userId': 1 });
 chatRoomSchema.index({ 'lastMessage.createdAt': -1 });
 

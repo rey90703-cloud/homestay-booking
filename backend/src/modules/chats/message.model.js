@@ -4,12 +4,12 @@ const messageSchema = new mongoose.Schema(
   {
     roomId: {
       type: String,
-      required: true,
+      required: false, // Optional - sử dụng chatroomId thay thế
     },
     bookingId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Booking',
-      required: true,
+      required: false, // Optional - cho phép chat trực tiếp không qua booking
     },
     senderId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -19,7 +19,7 @@ const messageSchema = new mongoose.Schema(
     senderRole: {
       type: String,
       enum: ['guest', 'host'],
-      required: true,
+      required: false, // Optional
     },
     content: {
       type: String,

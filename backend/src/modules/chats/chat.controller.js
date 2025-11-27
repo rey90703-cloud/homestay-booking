@@ -22,6 +22,27 @@ exports.createChatRoom = catchAsync(async (req, res) => {
       participantId,
       message
     );
+    
+    // Emit tin nhắn qua socket nếu có
+    if (message && chatRoom.lastMessage) {
+      const io = req.app.get('io');
+      if (io) {
+        // Emit tin nhắn mới đến tất cả participants
+        io.to(chatRoom._id.toString()).emit('new_message', {
+          message: {
+            _id: chatRoom.lastMessage._id,
+            chatroomId: chatRoom._id,
+            senderId: currentUserId,
+            content: message,
+            type: 'text',
+            createdAt: chatRoom.lastMessage.createdAt
+          },
+          chatRoom: chatRoom
+        });
+        
+        console.log('Emitted new_message to room:', chatRoom._id.toString());
+      }
+    }
   } else {
     // Tạo chat từ booking
     console.log('Creating chat from booking:', bookingId);

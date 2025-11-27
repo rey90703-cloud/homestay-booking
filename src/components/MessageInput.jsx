@@ -29,7 +29,7 @@ const MessageInput = ({ chatroomId, disabled }) => {
 
   // Restore draft from localStorage on mount or when chatroomId changes
   useEffect(() => {
-    if (chatroomId) {
+    if (chatroomId && chatroomId !== 'new') {
       const draft = localStorage.getItem(DRAFT_KEY);
       if (draft) {
         setContent(draft);
@@ -47,7 +47,7 @@ const MessageInput = ({ chatroomId, disabled }) => {
 
   // Save draft to localStorage whenever content changes
   useEffect(() => {
-    if (chatroomId) {
+    if (chatroomId && chatroomId !== 'new') {
       if (content.trim()) {
         localStorage.setItem(DRAFT_KEY, content);
       } else {
@@ -67,7 +67,7 @@ const MessageInput = ({ chatroomId, disabled }) => {
 
   // Emit typing indicator with debouncing
   const emitTypingIndicator = useCallback(() => {
-    if (!socket || !isConnected || !chatroomId) return;
+    if (!socket || !isConnected || !chatroomId || chatroomId === 'new') return;
 
     // Clear existing timeout
     if (typingTimeoutRef.current) {
@@ -184,13 +184,13 @@ const MessageInput = ({ chatroomId, disabled }) => {
         clearTimeout(typingTimeoutRef.current);
       }
       // Stop typing indicator on unmount
-      if (isTypingRef.current && socket && isConnected && chatroomId) {
+      if (isTypingRef.current && socket && isConnected && chatroomId && chatroomId !== 'new') {
         socket.emit('typing_stop', chatroomId);
       }
     };
   }, [socket, isConnected, chatroomId]);
 
-  const isDisabled = disabled || !isConnected;
+  const isDisabled = disabled;
   const remainingChars = MAX_LENGTH - content.length;
   const showCharCount = content.length > MAX_LENGTH * 0.8; // Show when 80% full
 
@@ -250,11 +250,12 @@ const MessageInput = ({ chatroomId, disabled }) => {
 };
 
 MessageInput.propTypes = {
-  chatroomId: PropTypes.string.isRequired,
+  chatroomId: PropTypes.string,
   disabled: PropTypes.bool
 };
 
 MessageInput.defaultProps = {
+  chatroomId: null,
   disabled: false
 };
 

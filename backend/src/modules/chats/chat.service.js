@@ -23,15 +23,21 @@ class ChatService {
     if (existingRoom) {
       // Nếu có tin nhắn đầu tiên, gửi luôn
       if (initialMessage) {
+        const roomId = `chatroom:${existingRoom._id}`;
         const message = await Message.create({
-          chatroomId: existingRoom._id,
+          roomId,
+          bookingId: null,
           senderId: userId1,
           content: initialMessage,
           type: 'text'
         });
 
+        // Populate sender info
+        await message.populate('senderId', 'fullName email profile.firstName profile.lastName profile.avatar');
+
         // Update last message
         existingRoom.lastMessage = {
+          _id: message._id,
           content: message.content,
           senderId: message.senderId,
           createdAt: message.createdAt
@@ -61,15 +67,21 @@ class ChatService {
 
     // Nếu có tin nhắn đầu tiên, gửi luôn
     if (initialMessage) {
+      const roomId = `chatroom:${chatRoom._id}`;
       const message = await Message.create({
-        chatroomId: chatRoom._id,
+        roomId,
+        bookingId: null,
         senderId: userId1,
         content: initialMessage,
         type: 'text'
       });
 
+      // Populate sender info
+      await message.populate('senderId', 'fullName email profile.firstName profile.lastName profile.avatar');
+
       // Update last message
       chatRoom.lastMessage = {
+        _id: message._id,
         content: message.content,
         senderId: message.senderId,
         createdAt: message.createdAt
@@ -197,7 +209,8 @@ class ChatService {
     const chatRoom = await this.getChatRoomById(chatroomId, userId);
 
     const skip = (page - 1) * limit;
-    const roomId = `booking:${chatRoom.bookingId}`;
+    // Use chatroomId for direct chats, bookingId for booking-based chats
+    const roomId = chatRoom.bookingId ? `booking:${chatRoom.bookingId}` : `chatroom:${chatroomId}`;
 
     const messages = await Message.find({ roomId })
       .sort({ createdAt: -1 })
@@ -251,7 +264,8 @@ class ChatService {
       throw new ApiError(403, 'Access denied to this chatroom');
     }
 
-    const roomId = `booking:${chatRoom.bookingId}`;
+    // Use chatroomId for direct chats, bookingId for booking-based chats
+    const roomId = chatRoom.bookingId ? `booking:${chatRoom.bookingId}` : `chatroom:${chatroomId}`;
 
     // Create message
     const message = await Message.create({

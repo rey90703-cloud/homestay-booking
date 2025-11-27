@@ -175,7 +175,7 @@ const ChatRoomList = ({ onSelectChatRoom }) => {
               <ChatRoomItem
                 key={chatRoom._id}
                 chatRoom={chatRoom}
-                currentUserId={user?._id}
+                currentUserId={user?._id || user?.id}
                 onlineUsers={onlineUsers}
                 onClick={() => handleSelectChatRoom(chatRoom)}
               />
