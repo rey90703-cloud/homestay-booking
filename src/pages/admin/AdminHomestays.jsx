@@ -21,6 +21,7 @@ const AdminHomestays = () => {
     limit: 100, // Tăng limit để admin có thể thấy nhiều homestay hơn
   });
   const [showModal, setShowModal] = useState(false);
+  const [showGuideModal, setShowGuideModal] = useState(false);
   const [modalMode, setModalMode] = useState('create');
   const [selectedHomestay, setSelectedHomestay] = useState(null);
   const [formData, setFormData] = useState({
@@ -780,7 +781,22 @@ const AdminHomestays = () => {
                   autoComplete="off"
                 />
                 <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
-                  📍 Bạn có thể dán link hoặc iframe embed code. Hệ thống sẽ tự động trích xuất URL.
+                  📍 Bạn có thể dán link hoặc iframe embed code. 
+                  <button 
+                    type="button"
+                    onClick={() => setShowGuideModal(true)}
+                    style={{ 
+                      background: 'none', 
+                      border: 'none', 
+                      color: '#e91e63', 
+                      textDecoration: 'underline', 
+                      cursor: 'pointer',
+                      padding: '0 4px',
+                      fontSize: '12px'
+                    }}
+                  >
+                    Xem hướng dẫn
+                  </button>
                 </small>
               </div>
 
@@ -909,6 +925,60 @@ const AdminHomestays = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Guide Modal */}
+      {showGuideModal && (
+        <div className="modal-overlay" onClick={() => setShowGuideModal(false)}>
+          <div className="modal-content guide-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '700px' }}>
+            <div className="modal-header">
+              <h2>📍 Hướng dẫn lấy link nhúng Google Maps</h2>
+              <button className="btn-close" onClick={() => setShowGuideModal(false)}>×</button>
+            </div>
+            
+            <div className="guide-content" style={{ padding: '24px' }}>
+              <div className="guide-step">
+                <h3 style={{ color: '#e91e63', marginBottom: '12px' }}>Bước 1: Mở Google Maps</h3>
+                <p style={{ marginBottom: '8px' }}>Truy cập <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" style={{ color: '#e91e63' }}>Google Maps</a> và tìm kiếm địa chỉ homestay.</p>
+              </div>
+
+              <div className="guide-step" style={{ marginTop: '20px' }}>
+                <h3 style={{ color: '#e91e63', marginBottom: '12px' }}>Bước 2: Nhấn nút "Chia sẻ"</h3>
+                <p style={{ marginBottom: '8px' }}>Sau khi tìm thấy địa chỉ, nhấn vào nút <strong>"Chia sẻ"</strong> hoặc <strong>"Share"</strong>.</p>
+              </div>
+
+              <div className="guide-step" style={{ marginTop: '20px' }}>
+                <h3 style={{ color: '#e91e63', marginBottom: '12px' }}>Bước 3: Chọn tab "Nhúng bản đồ"</h3>
+                <p style={{ marginBottom: '8px' }}>Trong popup hiện ra, chọn tab <strong>"Nhúng bản đồ"</strong> hoặc <strong>"Embed a map"</strong>.</p>
+              </div>
+
+              <div className="guide-step" style={{ marginTop: '20px' }}>
+                <h3 style={{ color: '#e91e63', marginBottom: '12px' }}>Bước 4: Sao chép mã nhúng</h3>
+                <p style={{ marginBottom: '8px' }}>Nhấn nút <strong>"SAO CHÉP HTML"</strong> để copy toàn bộ iframe code.</p>
+                <div style={{ background: '#f8f9fa', padding: '12px', borderRadius: '8px', marginTop: '8px', fontSize: '13px', fontFamily: 'monospace', overflowX: 'auto' }}>
+                  <code style={{ color: '#666' }}>
+                    &lt;iframe src="https://www.google.com/maps/embed?pb=..."...&gt;&lt;/iframe&gt;
+                  </code>
+                </div>
+              </div>
+
+              <div className="guide-step" style={{ marginTop: '20px' }}>
+                <h3 style={{ color: '#e91e63', marginBottom: '12px' }}>Bước 5: Dán vào form</h3>
+                <p style={{ marginBottom: '8px' }}>Dán toàn bộ mã iframe vào ô <strong>"Link Google Maps hoặc Iframe Embed"</strong>.</p>
+              </div>
+
+              <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                <button 
+                  className="btn-save"
+                  onClick={() => setShowGuideModal(false)}
+                  style={{ padding: '12px 32px' }}
+                >
+                  Đã hiểu
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
