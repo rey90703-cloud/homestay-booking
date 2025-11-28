@@ -77,6 +77,8 @@ const HomestayDetail = () => {
       
       if (data.success) {
         const homestayData = data.data.homestay;
+        console.log('🏠 Homestay data:', homestayData);
+        console.log('🎯 Amenities:', homestayData.amenities);
         setHomestay(homestayData);
         
         // Use custom Google Maps URL if provided
@@ -269,37 +271,64 @@ const HomestayDetail = () => {
   const total = subtotal;
 
   const AMENITIES_CONFIG = {
-    'wifi': { icon: FaWifi, color: '#4285F4' },
-    'tv': { icon: FaTv, color: '#FF6B6B' },
-    'kitchen': { icon: FaKitchenSet, color: '#4ECDC4' },
-    'bếp': { icon: FaKitchenSet, color: '#4ECDC4' },
-    'washing_machine': { icon: MdLocalLaundryService, color: '#45B7D1' },
-    'washing-machine': { icon: MdLocalLaundryService, color: '#45B7D1' },
-    'máy-giặt': { icon: MdLocalLaundryService, color: '#45B7D1' },
-    'air_conditioning': { icon: FaSnowflake, color: '#74C0FC' },
-    'air-conditioning': { icon: FaSnowflake, color: '#74C0FC' },
-    'điều-hòa': { icon: FaSnowflake, color: '#74C0FC' },
-    'heating': { icon: FaFire, color: '#FF8E53' },
-    'sưởi-ấm': { icon: FaFire, color: '#FF8E53' },
-    'workspace': { icon: FaBriefcase, color: '#6C5CE7' },
-    'không-gian-làm-việc': { icon: FaBriefcase, color: '#6C5CE7' },
-    'pool': { icon: FaPersonSwimming, color: '#00B894' },
-    'hồ-bơi': { icon: FaPersonSwimming, color: '#00B894' },
-    'gym': { icon: FaDumbbell, color: '#E17055' },
-    'phòng-gym': { icon: FaDumbbell, color: '#E17055' },
-    'parking': { icon: FaSquareParking, color: '#636E72' },
-    'free-parking': { icon: FaSquareParking, color: '#636E72' },
-    'đỗ-xe-miễn-phí': { icon: FaSquareParking, color: '#636E72' },
-    'balcony': { icon: FaBuilding, color: '#A29BFE' },
-    'ban-công': { icon: FaBuilding, color: '#A29BFE' },
-    'garden': { icon: FaSeedling, color: '#00B894' },
-    'vườn': { icon: FaSeedling, color: '#00B894' },
+    'wifi': { icon: FaWifi, color: '#4285F4', name: 'WiFi' },
+    'tv': { icon: FaTv, color: '#FF6B6B', name: 'TV' },
+    'kitchen': { icon: FaKitchenSet, color: '#4ECDC4', name: 'Bếp' },
+    'bếp': { icon: FaKitchenSet, color: '#4ECDC4', name: 'Bếp' },
+    'washing_machine': { icon: MdLocalLaundryService, color: '#45B7D1', name: 'Máy giặt' },
+    'washing-machine': { icon: MdLocalLaundryService, color: '#45B7D1', name: 'Máy giặt' },
+    'máy-giặt': { icon: MdLocalLaundryService, color: '#45B7D1', name: 'Máy giặt' },
+    'máy_giặt': { icon: MdLocalLaundryService, color: '#45B7D1', name: 'Máy giặt' },
+    'air_conditioning': { icon: FaSnowflake, color: '#74C0FC', name: 'Điều hòa' },
+    'air-conditioning': { icon: FaSnowflake, color: '#74C0FC', name: 'Điều hòa' },
+    'điều-hòa': { icon: FaSnowflake, color: '#74C0FC', name: 'Điều hòa' },
+    'điều_hòa': { icon: FaSnowflake, color: '#74C0FC', name: 'Điều hòa' },
+    'heating': { icon: FaFire, color: '#FF8E53', name: 'Sưởi ấm' },
+    'sưởi-ấm': { icon: FaFire, color: '#FF8E53', name: 'Sưởi ấm' },
+    'sưởi_ấm': { icon: FaFire, color: '#FF8E53', name: 'Sưởi ấm' },
+    'workspace': { icon: FaBriefcase, color: '#6C5CE7', name: 'Không gian làm việc' },
+    'không-gian-làm-việc': { icon: FaBriefcase, color: '#6C5CE7', name: 'Không gian làm việc' },
+    'không_gian_làm_việc': { icon: FaBriefcase, color: '#6C5CE7', name: 'Không gian làm việc' },
+    'pool': { icon: FaPersonSwimming, color: '#00B894', name: 'Hồ bơi' },
+    'hồ-bơi': { icon: FaPersonSwimming, color: '#00B894', name: 'Hồ bơi' },
+    'hồ_bơi': { icon: FaPersonSwimming, color: '#00B894', name: 'Hồ bơi' },
+    'gym': { icon: FaDumbbell, color: '#E17055', name: 'Phòng gym' },
+    'phòng-gym': { icon: FaDumbbell, color: '#E17055', name: 'Phòng gym' },
+    'phòng_gym': { icon: FaDumbbell, color: '#E17055', name: 'Phòng gym' },
+    'parking': { icon: FaSquareParking, color: '#636E72', name: 'Đỗ xe miễn phí' },
+    'free-parking': { icon: FaSquareParking, color: '#636E72', name: 'Đỗ xe miễn phí' },
+    'free_parking': { icon: FaSquareParking, color: '#636E72', name: 'Đỗ xe miễn phí' },
+    'đỗ-xe-miễn-phí': { icon: FaSquareParking, color: '#636E72', name: 'Đỗ xe miễn phí' },
+    'đỗ_xe_miễn_phí': { icon: FaSquareParking, color: '#636E72', name: 'Đỗ xe miễn phí' },
+    'balcony': { icon: FaBuilding, color: '#A29BFE', name: 'Ban công' },
+    'ban-công': { icon: FaBuilding, color: '#A29BFE', name: 'Ban công' },
+    'ban_công': { icon: FaBuilding, color: '#A29BFE', name: 'Ban công' },
+    'garden': { icon: FaSeedling, color: '#00B894', name: 'Vườn' },
+    'vườn': { icon: FaSeedling, color: '#00B894', name: 'Vườn' },
   };
 
   const getAmenityIcon = (slug) => {
     if (!slug) return null;
-    const normalizedSlug = slug.toLowerCase();
-    const config = AMENITIES_CONFIG[normalizedSlug];
+    
+    // Normalize slug: lowercase and replace spaces with underscores or hyphens
+    let normalizedSlug = slug.toLowerCase().trim();
+    normalizedSlug = normalizedSlug.replace(/\s+/g, '_');
+    
+    // Try exact match first
+    let config = AMENITIES_CONFIG[normalizedSlug];
+    
+    // If not found, try with hyphens
+    if (!config) {
+      normalizedSlug = normalizedSlug.replace(/_/g, '-');
+      config = AMENITIES_CONFIG[normalizedSlug];
+    }
+    
+    // If still not found, try without underscores/hyphens
+    if (!config) {
+      normalizedSlug = normalizedSlug.replace(/[-_]/g, '');
+      config = AMENITIES_CONFIG[normalizedSlug];
+    }
+    
     if (!config) return null;
     
     const IconComponent = config.icon;
@@ -352,16 +381,101 @@ const HomestayDetail = () => {
             </div>
 
             {/* Amenities Section */}
-            {homestay.amenities && homestay.amenities.length > 0 && (
+            {((homestay.amenities && homestay.amenities.length > 0) || (homestay.amenityNames && homestay.amenityNames.length > 0)) && (
               <div className="section-card">
                 <h3 className="section-title">Tiện nghi</h3>
                 <div className="amenities-pills">
-                  {homestay.amenities.map((amenity) => (
-                    <div key={amenity._id || amenity} className="amenity-pill">
-                      {amenity.slug && getAmenityIcon(amenity.slug)}
-                      <span>{amenity.name || amenity}</span>
-                    </div>
-                  ))}
+                  {(() => {
+                    // Prioritize amenityNames over amenities to avoid duplicates
+                    const amenitiesList = homestay.amenityNames && homestay.amenityNames.length > 0 
+                      ? homestay.amenityNames 
+                      : homestay.amenities || [];
+                    
+                    // Remove duplicates by normalizing slugs
+                    const uniqueAmenities = [];
+                    const seenSlugs = new Set();
+                    
+                    amenitiesList.forEach((amenity) => {
+                      const amenitySlug = typeof amenity === 'string' 
+                        ? amenity.toLowerCase().replace(/\s+/g, '_') 
+                        : amenity.slug?.toLowerCase().replace(/\s+/g, '_');
+                      
+                      if (amenitySlug && !seenSlugs.has(amenitySlug)) {
+                        seenSlugs.add(amenitySlug);
+                        uniqueAmenities.push(amenity);
+                      }
+                    });
+                    
+                    return uniqueAmenities.map((amenity, index) => {
+                      const amenitySlug = typeof amenity === 'string' 
+                        ? amenity.toLowerCase().replace(/\s+/g, '_') 
+                        : amenity.slug;
+                      
+                      // Get icon config for color and Vietnamese name
+                      let normalizedSlug = amenitySlug.toLowerCase().trim().replace(/\s+/g, '_');
+                      let config = AMENITIES_CONFIG[normalizedSlug];
+                      if (!config) {
+                        normalizedSlug = normalizedSlug.replace(/_/g, '-');
+                        config = AMENITIES_CONFIG[normalizedSlug];
+                      }
+                      
+                      // Use Vietnamese name from config, fallback to original name
+                      const displayName = config?.name || (typeof amenity === 'string' ? amenity : (amenity.name || amenity));
+                      
+                      return (
+                        <div 
+                          key={index} 
+                          className="amenity-pill"
+                          style={{
+                            '--amenity-color': config?.color || '#94a3b8'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (config) {
+                              e.currentTarget.style.borderColor = config.color;
+                              e.currentTarget.style.color = config.color;
+                              const iconWrapper = e.currentTarget.querySelector('.amenity-icon-wrapper');
+                              const iconSvg = iconWrapper?.querySelector('svg');
+                              if (iconWrapper) {
+                                iconWrapper.style.backgroundColor = config.color;
+                              }
+                              if (iconSvg) {
+                                iconSvg.style.color = 'white';
+                              }
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = '#e2e8f0';
+                            e.currentTarget.style.color = '#334155';
+                            const iconWrapper = e.currentTarget.querySelector('.amenity-icon-wrapper');
+                            const iconSvg = iconWrapper?.querySelector('svg');
+                            if (iconWrapper && config) {
+                              iconWrapper.style.backgroundColor = `${config.color}20`;
+                            }
+                            if (iconSvg && config) {
+                              iconSvg.style.color = config.color;
+                            }
+                          }}
+                        >
+                          <div 
+                            className="amenity-icon-wrapper"
+                            style={{ 
+                              width: '48px', 
+                              height: '48px', 
+                              borderRadius: '50%', 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center',
+                              backgroundColor: config ? `${config.color}20` : '#f3f4f6',
+                              transition: 'all 0.2s'
+                            }}
+                          >
+                            {getAmenityIcon(amenitySlug)}
+                          </div>
+                          <span>{displayName}</span>
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
               </div>
             )}
