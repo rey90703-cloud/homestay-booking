@@ -121,10 +121,12 @@ const Header = () => {
                   <button className="dropdown-item" onClick={handleProfile}>
                     Thông tin cá nhân
                   </button>
-                  <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/my-bookings'); }}>
-                    Lịch sử đặt phòng
-                  </button>
-                  {(user?.role === 'owner' || user?.role === 'host' || user?.role === 'admin') && (
+                  {user?.role !== 'admin' && (
+                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/my-bookings'); }}>
+                      Lịch sử đặt phòng
+                    </button>
+                  )}
+                  {(user?.role === 'owner' || user?.role === 'host') && (
                     <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/host/dashboard'); }}>
                       Dashboard
                     </button>
