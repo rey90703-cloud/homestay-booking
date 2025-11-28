@@ -16,6 +16,7 @@ const ChatWidget = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState('list'); // 'list' or 'chat'
+  const chatWidgetRef = useRef(null);
 
   // Load chat rooms when widget opens
   useEffect(() => {
@@ -142,13 +143,27 @@ const ChatWidget = () => {
     setView('list');
   };
 
+  // Handle click outside to close chat widget
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (chatWidgetRef.current && !chatWidgetRef.current.contains(event.target) && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   // Don't render if not authenticated
   if (!isAuthenticated) {
     return null;
   }
 
   return (
-    <div className="chat-widget">
+    <div className="chat-widget" ref={chatWidgetRef}>
       {/* Chat Window */}
       <div className={`chat-window ${isOpen ? 'open' : ''}`}>
         {/* Header */}

@@ -21,7 +21,7 @@ import './AddHomestay.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
 
-function AddHomestay() {
+function AddHomestay({ onSuccess, hideLayout = false }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
@@ -169,7 +169,11 @@ function AddHomestay() {
       const data = await response.json();
       if (data.success) {
         alert('Đăng homestay thành công! Homestay của bạn đang chờ phê duyệt.');
-        navigate('/host/homestays');
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigate('/host/dashboard');
+        }
       } else {
         alert(data.error?.message || 'Có lỗi xảy ra');
       }
@@ -407,7 +411,7 @@ function AddHomestay() {
 
   return (
     <>
-      <Header />
+      {!hideLayout && <Header />}
       <div className="add-homestay-page">
         <div className="add-homestay-container">
         <div className="progress-bar">
@@ -451,7 +455,7 @@ function AddHomestay() {
         </form>
         </div>
       </div>
-      <Footer />
+      {!hideLayout && <Footer />}
     </>
   );
 }

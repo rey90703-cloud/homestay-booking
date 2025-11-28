@@ -323,17 +323,9 @@ class HomestayService {
 
     verifyHomestayOwnership(homestay, hostId, userRole);
 
-    // Admin can hard delete, host can only soft delete
-    if (userRole === ROLES.ADMIN) {
-      // Hard delete - remove from database completely
-      await Homestay.findByIdAndDelete(homestayId);
-      logger.info(`Homestay hard deleted by admin: ${homestayId}`);
-    } else {
-      // Soft delete by changing status
-      homestay.status = HOMESTAY_STATUS.DELETED;
-      await homestay.save();
-      logger.info(`Homestay soft deleted by host: ${homestayId}`);
-    }
+    // Hard delete - remove from database completely
+    await Homestay.findByIdAndDelete(homestayId);
+    logger.info(`Homestay permanently deleted: ${homestayId} by ${userRole}`);
 
     return true;
   }

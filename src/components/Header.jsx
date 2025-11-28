@@ -124,9 +124,9 @@ const Header = () => {
                   <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/my-bookings'); }}>
                     Lịch sử đặt phòng
                   </button>
-                  {user?.role === 'owner' && (
-                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/host/homestays'); }}>
-                      Quản lý homestay
+                  {(user?.role === 'owner' || user?.role === 'host' || user?.role === 'admin') && (
+                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/host/dashboard'); }}>
+                      Dashboard
                     </button>
                   )}
                   {user?.role === 'admin' && (

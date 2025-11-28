@@ -22,6 +22,7 @@ import HomestayHanoi from './pages/HomestayHanoi';
 import HomestayLaoCai from './pages/HomestayLaoCai';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import HostDashboard from './pages/host/HostDashboard';
 import HostHomestays from './pages/host/HostHomestays';
 import AddHomestay from './pages/AddHomestay';
 import ChatWidget from './components/ChatWidget';
@@ -105,6 +106,7 @@ function App() {
               </>
             } />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/host/dashboard" element={<HostDashboard />} />
             <Route path="/homestay/:id" element={
               <>
                 <Header />
@@ -147,7 +149,9 @@ function App() {
                 <Footer />
               </>
             } />
-            <Route path="/add-homestay" element={<AddHomestay />} />
+            <Route path="/add-homestay" element={
+              <AddHomestay onSuccess={() => window.location.href = '/host/dashboard'} />
+            } />
             <Route path="/profile" element={
               <>
                 <Header />

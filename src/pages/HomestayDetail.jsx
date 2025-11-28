@@ -4,6 +4,20 @@ import { useAuth } from '../contexts/AuthContext';
 import API_BASE_URL from '../config/api';
 import GoogleMap from '../components/GoogleMap';
 import { ReviewList, ReviewForm } from '../components/reviews';
+import { 
+  FaWifi, 
+  FaTv, 
+  FaKitchenSet, 
+  FaSnowflake, 
+  FaFire, 
+  FaBriefcase, 
+  FaPersonSwimming, 
+  FaDumbbell, 
+  FaSquareParking, 
+  FaBuilding, 
+  FaSeedling 
+} from "react-icons/fa6";
+import { MdLocalLaundryService } from "react-icons/md";
 import './HomestayDetail.css';
 
 const HomestayDetail = () => {
@@ -220,19 +234,42 @@ const HomestayDetail = () => {
   const subtotal = nights > 0 ? homestay.pricing.basePrice * nights : 0;
   const total = subtotal;
 
-  const amenityLabels = {
-    'wifi': 'WiFi tốc độ cao',
-    'kitchen': 'Bếp riêng',
-    'balcony': 'View hồ',
-    'parking': 'Chỗ đỗ xe',
-    'tv': 'TV',
-    'washing_machine': 'Máy giặt',
-    'air_conditioning': 'Điều hòa',
-    'heating': 'Sưởi ấm',
-    'workspace': 'Không gian làm việc',
-    'pool': 'Hồ bơi',
-    'gym': 'Phòng gym',
-    'garden': 'Vườn',
+  const AMENITIES_CONFIG = {
+    'wifi': { icon: FaWifi, color: '#4285F4' },
+    'tv': { icon: FaTv, color: '#FF6B6B' },
+    'kitchen': { icon: FaKitchenSet, color: '#4ECDC4' },
+    'bếp': { icon: FaKitchenSet, color: '#4ECDC4' },
+    'washing_machine': { icon: MdLocalLaundryService, color: '#45B7D1' },
+    'washing-machine': { icon: MdLocalLaundryService, color: '#45B7D1' },
+    'máy-giặt': { icon: MdLocalLaundryService, color: '#45B7D1' },
+    'air_conditioning': { icon: FaSnowflake, color: '#74C0FC' },
+    'air-conditioning': { icon: FaSnowflake, color: '#74C0FC' },
+    'điều-hòa': { icon: FaSnowflake, color: '#74C0FC' },
+    'heating': { icon: FaFire, color: '#FF8E53' },
+    'sưởi-ấm': { icon: FaFire, color: '#FF8E53' },
+    'workspace': { icon: FaBriefcase, color: '#6C5CE7' },
+    'không-gian-làm-việc': { icon: FaBriefcase, color: '#6C5CE7' },
+    'pool': { icon: FaPersonSwimming, color: '#00B894' },
+    'hồ-bơi': { icon: FaPersonSwimming, color: '#00B894' },
+    'gym': { icon: FaDumbbell, color: '#E17055' },
+    'phòng-gym': { icon: FaDumbbell, color: '#E17055' },
+    'parking': { icon: FaSquareParking, color: '#636E72' },
+    'free-parking': { icon: FaSquareParking, color: '#636E72' },
+    'đỗ-xe-miễn-phí': { icon: FaSquareParking, color: '#636E72' },
+    'balcony': { icon: FaBuilding, color: '#A29BFE' },
+    'ban-công': { icon: FaBuilding, color: '#A29BFE' },
+    'garden': { icon: FaSeedling, color: '#00B894' },
+    'vườn': { icon: FaSeedling, color: '#00B894' },
+  };
+
+  const getAmenityIcon = (slug) => {
+    if (!slug) return null;
+    const normalizedSlug = slug.toLowerCase();
+    const config = AMENITIES_CONFIG[normalizedSlug];
+    if (!config) return null;
+    
+    const IconComponent = config.icon;
+    return <IconComponent style={{ color: config.color }} />;
   };
 
   return (
@@ -278,14 +315,22 @@ const HomestayDetail = () => {
             <div className="section-card">
               <h3 className="section-title">Giới thiệu</h3>
               <p className="description-text">{homestay.description}</p>
-              <div className="amenities-pills">
-                {homestay.amenityNames?.slice(0, 4).map((amenity, index) => (
-                  <div key={index} className="amenity-pill">
-                    <span>{amenityLabels[amenity] || amenity}</span>
-                  </div>
-                ))}
-              </div>
             </div>
+
+            {/* Amenities Section */}
+            {homestay.amenities && homestay.amenities.length > 0 && (
+              <div className="section-card">
+                <h3 className="section-title">Tiện nghi</h3>
+                <div className="amenities-pills">
+                  {homestay.amenities.map((amenity) => (
+                    <div key={amenity._id || amenity} className="amenity-pill">
+                      {amenity.slug && getAmenityIcon(amenity.slug)}
+                      <span>{amenity.name || amenity}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Location Section */}
             <div className="section-card">

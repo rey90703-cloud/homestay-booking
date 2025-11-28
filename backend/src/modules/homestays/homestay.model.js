@@ -14,15 +14,13 @@ const homestaySchema = new mongoose.Schema(
       type: String,
       required: [true, 'Title is required'],
       trim: true,
-      minlength: [10, 'Title must be at least 10 characters'],
-      maxlength: [100, 'Title cannot exceed 100 characters'],
+      maxlength: [200, 'Title cannot exceed 200 characters'],
       index: 'text',
     },
     description: {
       type: String,
       required: [true, 'Description is required'],
-      minlength: [50, 'Description must be at least 50 characters'],
-      maxlength: [2000, 'Description cannot exceed 2000 characters'],
+      maxlength: [5000, 'Description cannot exceed 5000 characters'],
       index: 'text',
     },
     propertyType: {
