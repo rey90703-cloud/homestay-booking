@@ -79,8 +79,42 @@ const HomestayDetail = () => {
         const homestayData = data.data.homestay;
         setHomestay(homestayData);
         
-        // Fetch map URLs if coordinates exist
-        if (homestayData.location?.coordinates?.coordinates) {
+        // Use custom Google Maps URL if provided
+        if (homestayData.location?.googleMapsUrl) {
+          const customUrl = homestayData.location.googleMapsUrl;
+          
+          // Use the embed URL directly for iframe
+          setMapEmbedUrl(customUrl);
+          
+          // For directions and view buttons, convert embed URL to regular Google Maps URL
+          let directionsUrl = customUrl;
+          let viewUrl = customUrl;
+          
+          // If it's an embed URL, extract coordinates for regular URLs
+          if (customUrl.includes('google.com/maps/embed')) {
+            // Extract latitude and longitude from embed URL
+            // Format: !2d{lng}...!3d{lat} or !3d{lat}...!4d{lng}
+            const latMatch = customUrl.match(/!3d([-\d.]+)/);
+            const lngMatch = customUrl.match(/!2d([-\d.]+)/);
+            
+            if (latMatch && lngMatch) {
+              const lat = latMatch[1];
+              const lng = lngMatch[1];
+              directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+              viewUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+            }
+          } else if (customUrl.includes('maps.app.goo.gl') || customUrl.includes('google.com/maps/place')) {
+            // If it's a regular Google Maps link, use it directly
+            directionsUrl = customUrl;
+            viewUrl = customUrl;
+          }
+          
+          setMapUrls({
+            directionsUrl: directionsUrl,
+            viewUrl: viewUrl
+          });
+        } else if (homestayData.location?.coordinates?.coordinates) {
+          // Only fetch map URLs from backend if no custom googleMapsUrl
           const [lng, lat] = homestayData.location.coordinates.coordinates;
           const placeId = homestayData.location?.placeId;
           await fetchMapUrls(lat, lng, placeId);

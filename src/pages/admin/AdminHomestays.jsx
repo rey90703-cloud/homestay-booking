@@ -28,6 +28,7 @@ const AdminHomestays = () => {
     description: '',
     city: '',
     address: '',
+    googleMapsUrl: '',
     basePrice: '',
     maxGuests: '',
     bedrooms: '',
@@ -196,6 +197,7 @@ const AdminHomestays = () => {
       description: homestay.description || '',
       city: homestay.location?.city || '',
       address: homestay.location?.address || '',
+      googleMapsUrl: homestay.location?.googleMapsUrl || '',
       basePrice: homestay.pricing?.basePrice || '',
       maxGuests: homestay.capacity?.guests || homestay.capacity?.maxGuests || '',
       bedrooms: homestay.capacity?.bedrooms || '',
@@ -217,6 +219,7 @@ const AdminHomestays = () => {
       description: '',
       city: '',
       address: '',
+      googleMapsUrl: '',
       basePrice: '',
       maxGuests: '',
       bedrooms: '',
@@ -230,10 +233,30 @@ const AdminHomestays = () => {
   };
 
   const handleFormChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    
+    // If it's googleMapsUrl, extract URL from iframe if needed
+    if (name === 'googleMapsUrl') {
+      let extractedUrl = value;
+      
+      // Check if user pasted iframe code
+      if (value.includes('<iframe') && value.includes('src=')) {
+        const srcMatch = value.match(/src=["']([^"']+)["']/);
+        if (srcMatch && srcMatch[1]) {
+          extractedUrl = srcMatch[1];
+        }
+      }
+      
+      setFormData({
+        ...formData,
+        [name]: extractedUrl,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleAmenityToggle = (amenityId) => {
@@ -296,6 +319,9 @@ const AdminHomestays = () => {
     // Location
     formDataToSend.append('location[city]', formData.city);
     formDataToSend.append('location[address]', formData.address);
+    if (formData.googleMapsUrl) {
+      formDataToSend.append('location[googleMapsUrl]', formData.googleMapsUrl);
+    }
     formDataToSend.append('location[country]', 'Vietnam');
     
     // Pricing
@@ -741,6 +767,21 @@ const AdminHomestays = () => {
                   required
                   autoComplete="off"
                 />
+              </div>
+
+              <div className="form-group">
+                <label>Link Google Maps hoặc Iframe Embed</label>
+                <textarea
+                  name="googleMapsUrl"
+                  value={formData.googleMapsUrl}
+                  onChange={handleFormChange}
+                  placeholder="Dán link Google Maps hoặc toàn bộ iframe embed code từ Google Maps"
+                  rows="3"
+                  autoComplete="off"
+                />
+                <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                  📍 Bạn có thể dán link hoặc iframe embed code. Hệ thống sẽ tự động trích xuất URL.
+                </small>
               </div>
 
               <div className="form-row">

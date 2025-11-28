@@ -30,6 +30,7 @@ function AddHomestay({ onSuccess, hideLayout = false }) {
     description: '',
     city: '',
     address: '',
+    googleMapsUrl: '',
     contactPhone: '',
     maxGuests: '',
     bedrooms: '',
@@ -65,7 +66,24 @@ function AddHomestay({ onSuccess, hideLayout = false }) {
   }, [user, navigate]);
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    // If it's googleMapsUrl, extract URL from iframe if needed
+    if (name === 'googleMapsUrl') {
+      let extractedUrl = value;
+      
+      // Check if user pasted iframe code
+      if (value.includes('<iframe') && value.includes('src=')) {
+        const srcMatch = value.match(/src=["']([^"']+)["']/);
+        if (srcMatch && srcMatch[1]) {
+          extractedUrl = srcMatch[1];
+        }
+      }
+      
+      setFormData({ ...formData, [name]: extractedUrl });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleAmenityToggle = (amenityId) => {
@@ -135,6 +153,9 @@ function AddHomestay({ onSuccess, hideLayout = false }) {
       formDataToSend.append('location[city]', formData.city);
       formDataToSend.append('location[address]', formData.address);
       formDataToSend.append('location[country]', 'Việt Nam'); // Default country
+      if (formData.googleMapsUrl) {
+        formDataToSend.append('location[googleMapsUrl]', formData.googleMapsUrl);
+      }
       formDataToSend.append('capacity[guests]', formData.maxGuests);
       formDataToSend.append('capacity[bedrooms]', formData.bedrooms);
       formDataToSend.append('capacity[beds]', formData.bedrooms); // Default beds = bedrooms
@@ -239,6 +260,20 @@ function AddHomestay({ onSuccess, hideLayout = false }) {
                   required
                 />
               </div>
+            </div>
+
+            <div className="form-group">
+              <label>Link Google Maps hoặc Iframe Embed</label>
+              <textarea
+                name="googleMapsUrl"
+                value={formData.googleMapsUrl}
+                onChange={handleInputChange}
+                placeholder="Dán link Google Maps hoặc toàn bộ iframe embed code từ Google Maps"
+                rows="3"
+              />
+              <small className="form-hint">
+                📍 Bạn có thể dán link Google Maps hoặc iframe embed code (bắt đầu bằng &lt;iframe...). Hệ thống sẽ tự động trích xuất URL.
+              </small>
             </div>
 
             <div className="form-group">

@@ -57,6 +57,7 @@ const homestaySchema = new mongoose.Schema(
       },
       zipCode: String,
       placeId: String, // Google Maps Place ID for direct linking
+      googleMapsUrl: String, // Full Google Maps URL for easy sharing
       coordinates: {
         type: {
           type: String,
