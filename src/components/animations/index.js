@@ -40,5 +40,8 @@ export {
   RadialIcon 
 } from './RadialSocials/RadialSocials';
 
+// Masonry - Grid layout with blur-to-focus animation
+export { default as Masonry } from './Masonry/Masonry';
+
 // Note: All animation components are now exported
 // Tree-shaking ensures only used components are bundled

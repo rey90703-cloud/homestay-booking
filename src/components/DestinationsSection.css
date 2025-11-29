@@ -10,7 +10,11 @@
   font-weight: 700;
   color: #141217;
   text-align: center;
-  margin: 0;
+  margin: 0 0 var(--space-lg) 0;
+}
+
+.destinations-masonry-container {
+  width: 100%;
 }
 
 .destinations-grid {

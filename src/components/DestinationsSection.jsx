@@ -1,45 +1,87 @@
 import React from 'react';
+import { Masonry } from './animations';
 import './DestinationsSection.css';
 
 function DestinationsSection() {
   const destinations = [
     {
-      name: 'Hà Nội',
-      image: '/images/dest-hn-28e1f0.png',
-      icon: '/images/icon-location-hn.svg'
+      id: '1',
+      title: 'Hà Nội',
+      img: '/images/dest-hn-28e1f0.png',
+      url: '/search?location=hanoi',
+      height: 400
     },
     {
-      name: 'Sa Pa',
-      image: '/images/dest-sp-331ab8.png',
-      icon: '/images/icon-location-sp.svg'
+      id: '2',
+      title: 'Sa Pa',
+      img: '/images/dest-sp-331ab8.png',
+      url: '/search?location=sapa',
+      height: 500
     },
     {
-      name: 'Hạ Long',
-      image: '/images/dest-hl-2b6399.png',
-      icon: '/images/icon-location-hl.svg'
+      id: '3',
+      title: 'Hạ Long',
+      img: '/images/dest-hl-2b6399.png',
+      url: '/search?location=halong',
+      height: 350
+    },
+    {
+      id: '4',
+      title: 'Đà Nẵng',
+      img: '/images/dest-danang.png',
+      url: '/search?location=danang',
+      height: 450
+    },
+    {
+      id: '5',
+      title: 'Hội An',
+      img: '/images/dest-hoian.png',
+      url: '/search?location=hoian',
+      height: 380
+    },
+    {
+      id: '6',
+      title: 'Nha Trang',
+      img: '/images/dest-nhatrang.png',
+      url: '/search?location=nhatrang',
+      height: 550
+    },
+    {
+      id: '7',
+      title: 'Phú Quốc',
+      img: '/images/dest-phuquoc.png',
+      url: '/search?location=phuquoc',
+      height: 420
+    },
+    {
+      id: '8',
+      title: 'Đà Lạt',
+      img: '/images/dest-dalat.png',
+      url: '/search?location=dalat',
+      height: 480
     }
   ];
 
   return (
     <section className="destinations-section">
       <h2 className="section-title">Điểm đến phổ biến</h2>
-      <div className="destinations-grid">
-        {destinations.map((destination, index) => (
-          <div key={index} className="destination-card">
-            <div className="destination-image-wrapper">
-              <img src={destination.image} alt={destination.name} className="destination-image" />
-              <div className="destination-gradient"></div>
-              <div className="destination-badge">
-                <img src={destination.icon} alt="" className="destination-icon" />
-                <span>{destination.name}</span>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="destinations-masonry-container">
+        <Masonry
+          items={destinations}
+          ease="power3.out"
+          duration={0.6}
+          stagger={0.08}
+          animateFrom="bottom"
+          scaleOnHover={true}
+          hoverScale={0.95}
+          blurToFocus={true}
+          colorShiftOnHover={false}
+          columns={[4, 4, 3, 2]}
+          showOverlay={true}
+        />
       </div>
     </section>
   );
 }
 
 export default DestinationsSection;
-
