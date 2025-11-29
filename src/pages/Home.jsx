@@ -21,10 +21,10 @@ function Home() {
     try {
       setLoading(true);
       
-      const hanoiResponse = await fetch(`${API_BASE_URL}/homestays?city=Hà Nội&limit=4&status=active`);
+      const hanoiResponse = await fetch(`${API_BASE_URL}/homestays?city=Hà Nội&limit=6&status=active`);
       const hanoiData = await hanoiResponse.json();
       
-      const laoCaiResponse = await fetch(`${API_BASE_URL}/homestays?city=Lào Cai&limit=4&status=active`);
+      const laoCaiResponse = await fetch(`${API_BASE_URL}/homestays?city=Lào Cai&limit=6&status=active`);
       const laoCaiData = await laoCaiResponse.json();
       
       if (hanoiData.success) {
@@ -57,8 +57,16 @@ function Home() {
     <>
       <Hero />
       <IntroSection />
-      <HomestaySection title="Homestay nổi bật tại Hà Nội" homestays={hanoiHomestays} />
-      <HomestaySection title="Homestay đẹp tại Lào Cai (Sa Pa)" homestays={laoCaiHomestays} />
+      <HomestaySection 
+        title="Homestay nổi bật tại Hà Nội" 
+        homestays={hanoiHomestays} 
+        useExpandableView={true}
+      />
+      <HomestaySection 
+        title="Homestay đẹp tại Lào Cai (Sa Pa)" 
+        homestays={laoCaiHomestays} 
+        useExpandableView={true}
+      />
       <DestinationsSection />
       <AmenitiesSection />
       <PromotionSection />

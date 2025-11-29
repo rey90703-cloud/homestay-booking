@@ -245,3 +245,125 @@
   }
 }
 
+/* Expandable Cards View Styles */
+.homestay-expandable-wrapper {
+  height: 400px;
+  width: 100%;
+  margin-bottom: var(--space-lg);
+  user-select: none;
+}
+
+.expandable-homestay-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+
+.expandable-homestay-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.expandable-homestay-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-sm);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6) 0%,
+    transparent 40%,
+    transparent 80%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  pointer-events: none;
+}
+
+.expandable-homestay-badge {
+  align-self: flex-start;
+  padding: 4px 8px;
+  background: #F9A8D4;
+  border-radius: 999px;
+  font-size: var(--font-xs);
+  font-weight: 500;
+  color: #4A0E2B;
+}
+
+.expandable-homestay-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.expandable-homestay-title {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.expandable-homestay-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.expandable-homestay-price {
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.expandable-homestay-rating {
+  font-size: var(--font-xs);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive for expandable view */
+@media (max-width: 768px) {
+  .homestay-expandable-wrapper {
+    height: 280px;
+  }
+  
+  .expandable-homestay-overlay {
+    padding: var(--space-xs);
+  }
+  
+  .expandable-homestay-badge {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  
+  .expandable-homestay-title {
+    font-size: var(--font-xs);
+  }
+  
+  .expandable-homestay-price,
+  .expandable-homestay-rating {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homestay-expandable-wrapper {
+    height: 220px;
+  }
+}
+

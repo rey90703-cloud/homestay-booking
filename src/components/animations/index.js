@@ -24,7 +24,7 @@ export { default as TypeAnimation } from './TypeAnimation/TypeAnimation';
 export { default as AnimatedTestimonials } from './AnimatedTestimonials/AnimatedTestimonials';
 
 // ExpandableCards - Cards with hover expansion effect
-// export { ExpandableCards } from './ExpandableCards/ExpandableCards';
+export { default as ExpandableCards } from './ExpandableCards/ExpandableCards';
 
 // LogoLoop - Infinite logo scroll animation
 // export { LogoLoop } from './LogoLoop/LogoLoop';
