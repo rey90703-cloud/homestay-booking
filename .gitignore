@@ -23,7 +23,7 @@ backend/.env
 # Tool config
 .cunzhi-memory/
 .kiro/
-.docs/
+docs/
 
 # Editor directories and files
 .vscode/*
