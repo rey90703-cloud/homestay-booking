@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import ThemeSwitch from './ThemeSwitch/ThemeSwitch';
 import Toast from './Toast';
 import './Header.css';
 
@@ -151,6 +152,12 @@ const Header = () => {
             <span>Đăng homestay</span>
           </button>
         )}
+
+        <ThemeSwitch 
+          modes={['light', 'dark', 'system']} 
+          showInactiveIcons="all"
+          variant="icon-click"
+        />
         </div>
       </header>
     </>

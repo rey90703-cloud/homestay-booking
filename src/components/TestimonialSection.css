@@ -8,7 +8,7 @@
   font-family: 'Roboto Slab', serif;
   font-size: 32px;
   font-weight: 700;
-  color: #141217;
+  color: var(--text-primary, #141217);
   text-align: center;
   margin: 0;
 }
@@ -24,9 +24,10 @@
   display: flex;
   gap: 12px;
   padding: 17px;
-  background: #FFFFFF;
-  border: 1px solid rgba(20, 18, 23, 0.08);
+  background: var(--card-bg, #FFFFFF);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
   border-radius: 16px;
+  transition: background-color 0.3s ease;
 }
 
 .testimonial-avatar {
@@ -46,14 +47,14 @@
 .testimonial-name {
   font-size: 16px;
   font-weight: 600;
-  color: #141217;
+  color: var(--text-primary, #141217);
   margin: 0;
 }
 
 .testimonial-text {
   font-size: 14px;
   font-weight: 400;
-  color: #6B5A65;
+  color: var(--text-secondary, #6B5A65);
   margin: 0;
   line-height: 1.5;
 }

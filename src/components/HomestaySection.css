@@ -4,11 +4,11 @@
   padding: 0 var(--space-md);
 }
 
-.section-title {
+.homestay-section .section-title {
   font-family: 'Roboto Slab', serif;
   font-size: 32px;
   font-weight: 700;
-  color: #141217;
+  color: var(--section-title-color, #E91E63);
   margin: 0 0 var(--space-xl) 0;
   text-align: center;
 }
@@ -28,12 +28,12 @@
 }
 
 .homestay-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(20, 18, 23, 0.08);
+  background: var(--card-bg, #FFFFFF);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--card-shadow, 0px 4px 16px rgba(0, 0, 0, 0.08));
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
   cursor: pointer;
   height: 100%;
   display: flex;
@@ -116,7 +116,7 @@
 .card-title {
   font-size: var(--font-base);
   font-weight: 600;
-  color: #141217;
+  color: var(--text-primary, #141217);
   margin: 0;
   line-height: 1.4;
   display: -webkit-box;
@@ -136,13 +136,13 @@
 .card-price {
   font-size: var(--font-base);
   font-weight: 700;
-  color: #141217;
+  color: var(--text-primary, #141217);
 }
 
 .card-rating {
   font-size: var(--font-sm);
   font-weight: 400;
-  color: #6B5A65;
+  color: var(--text-secondary, #6B5A65);
 }
 
 .section-action {
@@ -154,19 +154,19 @@
 .btn-view-all {
   padding: 12px 20px;
   background: transparent;
-  border: 1px solid rgba(20, 18, 23, 0.08);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
   border-radius: 14px;
-  color: #141217;
+  color: var(--text-primary, #141217);
   font-size: var(--font-base);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.3s;
   min-height: 44px;
 }
 
 .btn-view-all:hover {
-  background: rgba(20, 18, 23, 0.05);
-  border-color: rgba(20, 18, 23, 0.16);
+  background: var(--bg-tertiary, rgba(20, 18, 23, 0.05));
+  border-color: var(--border-color);
 }
 
 /* Responsive styles */
@@ -187,7 +187,7 @@
     margin: var(--space-lg) auto;
   }
   
-  .section-title {
+  .homestay-section .section-title {
     font-size: 28px;
     margin-bottom: var(--space-lg);
   }
@@ -218,7 +218,7 @@
     padding: 0 var(--space-xs);
   }
   
-  .section-title {
+  .homestay-section .section-title {
     font-size: 24px;
   }
   

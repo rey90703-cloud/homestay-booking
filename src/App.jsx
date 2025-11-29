@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ChatProvider } from './contexts/ChatContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -63,9 +64,10 @@ function ScrollRestoration() {
 
 function App() {
   return (
-    <AuthProvider>
-      <ChatProvider>
-        <Router>
+    <ThemeProvider>
+      <AuthProvider>
+        <ChatProvider>
+          <Router>
           <ScrollRestoration />
           <div className="app">
           <Routes>
@@ -186,9 +188,10 @@ function App() {
           {/* Chat Widget - Available on all pages */}
           <ChatWidget />
         </div>
-      </Router>
-      </ChatProvider>
-    </AuthProvider>
+        </Router>
+        </ChatProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

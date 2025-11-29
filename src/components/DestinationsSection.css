@@ -8,7 +8,7 @@
   font-family: 'Roboto Slab', serif;
   font-size: 32px;
   font-weight: 700;
-  color: #141217;
+  color: var(--text-primary, #141217);
   text-align: center;
   margin: 0 0 var(--space-lg) 0;
 }
@@ -25,12 +25,12 @@
 }
 
 .destination-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(20, 18, 23, 0.08);
+  background: var(--card-bg, #FFFFFF);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--card-shadow, 0px 4px 16px rgba(0, 0, 0, 0.08));
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
   cursor: pointer;
 }
 
@@ -75,8 +75,8 @@
   align-items: center;
   gap: var(--space-xs);
   padding: var(--space-sm) var(--space-md);
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(20, 18, 23, 0.08);
+  background: var(--card-bg, rgba(255, 255, 255, 0.92));
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
   border-radius: 999px;
   backdrop-filter: blur(8px);
 }
@@ -91,7 +91,7 @@
 .destination-badge span {
   font-size: var(--font-base);
   font-weight: 500;
-  color: #141217;
+  color: var(--text-primary, #141217);
   white-space: nowrap;
 }
 

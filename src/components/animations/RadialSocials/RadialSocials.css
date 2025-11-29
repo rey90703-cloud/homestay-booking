@@ -83,11 +83,13 @@
 }
 
 /* Dark theme */
-.dark .radial-circle-line {
+.dark .radial-circle-line,
+[data-theme="dark"] .radial-circle-line {
   border-color: rgba(255, 255, 255, 0.15);
 }
 
-.dark .radial-icon-inner {
+.dark .radial-icon-inner,
+[data-theme="dark"] .radial-icon-inner {
   background: rgba(30, 30, 30, 0.95);
   border-color: rgba(255, 255, 255, 0.1);
 }

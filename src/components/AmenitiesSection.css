@@ -21,14 +21,14 @@
   font-family: 'Roboto Slab', serif;
   font-size: 32px;
   font-weight: 700;
-  color: #141217;
+  color: var(--text-primary, #141217);
   margin: 0 0 var(--space-md) 0;
   line-height: 1.2;
 }
 
 .amenities-desc {
   font-size: var(--font-base);
-  color: #6B5A65;
+  color: var(--text-secondary, #6B5A65);
   line-height: 1.6;
   margin: 0;
 }

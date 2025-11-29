@@ -110,7 +110,7 @@
 .animated-testimonials__quote {
   font-size: 20px;
   font-weight: 400;
-  color: #141217 !important;
+  color: var(--text-primary, #141217) !important;
   line-height: 1.7;
   margin: 0;
   position: relative;
@@ -143,13 +143,13 @@
 .animated-testimonials__name {
   font-size: 18px;
   font-weight: 600;
-  color: #141217 !important;
+  color: var(--text-primary, #141217) !important;
 }
 
 .animated-testimonials__handle {
   font-size: 14px;
   font-weight: 400;
-  color: #6B5A65 !important;
+  color: var(--text-secondary, #6B5A65) !important;
 }
 
 /* Navigation Buttons */
@@ -166,14 +166,14 @@
   height: 48px;
   border: none;
   border-radius: 50%;
-  background: #f3f4f6;
-  color: #1a1a2e;
+  background: var(--bg-tertiary, #f3f4f6);
+  color: var(--text-primary, #1a1a2e);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animated-testimonials__nav-btn:hover {
-  background: #e5e7eb;
+  background: var(--border-color, #e5e7eb);
   transform: scale(1.05);
 }
 
@@ -191,9 +191,9 @@
   height: 20px;
 }
 
-/* Text colors - ensure visibility on light backgrounds */
+/* Text colors - ensure visibility on backgrounds */
 .animated-testimonials__text-content {
-  color: #141217;
+  color: var(--text-primary, #141217);
 }
 
 /* Reduced Motion Support */

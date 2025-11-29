@@ -2,8 +2,8 @@
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  background: #FFFFFF;
-  border: 1px solid rgba(20, 18, 23, 0.12);
+  background: var(--card-bg, #FFFFFF);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.12));
   border-radius: 16px;
   padding: 16px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -36,7 +36,7 @@
 .search-label {
   font-size: 14px;
   font-weight: 500;
-  color: #6B5A65;
+  color: var(--text-secondary, #6B5A65);
 }
 
 .search-bar-sticky .search-label {
@@ -45,12 +45,12 @@
 
 .search-input {
   padding: 12px 14px;
-  background: #FFFFFF;
-  border: 1px solid rgba(20, 18, 23, 0.12);
+  background: var(--card-bg, #FFFFFF);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.12));
   border-radius: 12px;
   font-size: 16px;
   font-weight: 500;
-  color: #141217;
+  color: var(--text-primary, #141217);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .search-input::placeholder {
-  color: #6B5A65;
+  color: var(--text-secondary, #6B5A65);
   font-weight: 400;
 }
 
@@ -202,10 +202,10 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
-  border: 1px solid rgba(20, 18, 23, 0.12);
+  background: var(--card-bg, white);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.12));
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow, 0 4px 12px rgba(0, 0, 0, 0.1));
   z-index: 1000;
   max-height: 200px;
   overflow-y: auto;
@@ -227,7 +227,7 @@
 }
 
 .suggestion-item:hover {
-  background: #f8f9fa;
+  background: var(--bg-tertiary, #f8f9fa);
 }
 
 .suggestion-icon {
@@ -239,7 +239,7 @@
 
 .suggestion-item span {
   font-size: 14px;
-  color: #141217;
+  color: var(--text-primary, #141217);
 }
 
 /* Error states */
@@ -326,12 +326,12 @@
 .search-select option {
   padding: 8px 12px;
   font-size: 14px;
-  color: #141217;
-  background: white;
+  color: var(--text-primary, #141217);
+  background: var(--card-bg, white);
 }
 
 .search-select option:hover {
-  background: #f8f9fa;
+  background: var(--bg-tertiary, #f8f9fa);
 }
 
 /* Mobile select styling */

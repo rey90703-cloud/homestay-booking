@@ -1,6 +1,7 @@
 .app {
   min-height: 100vh;
-  background: #FFF1F7;
+  background: var(--bg-primary, #FFF1F7);
   width: 100%;
   overflow-x: hidden;
+  transition: background-color 0.3s ease;
 }

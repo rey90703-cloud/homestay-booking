@@ -1,0 +1,98 @@
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  background: var(--theme-switch-bg, rgba(0, 0, 0, 0.08));
+  border-radius: 9999px;
+  padding: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+[data-theme="dark"] .theme-switch {
+  --theme-switch-bg: rgba(255, 255, 255, 0.1);
+}
+
+.theme-switch:hover {
+  background: var(--theme-switch-hover-bg, rgba(0, 0, 0, 0.12));
+}
+
+[data-theme="dark"] .theme-switch:hover {
+  --theme-switch-hover-bg: rgba(255, 255, 255, 0.15);
+}
+
+.theme-switch:focus-visible {
+  outline: 2px solid var(--primary-color, #E91E63);
+  outline-offset: 2px;
+}
+
+.theme-switch-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 32px;
+  height: 32px;
+  background: var(--theme-switch-indicator-bg, #ffffff);
+  border-radius: 9999px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 0;
+}
+
+[data-theme="dark"] .theme-switch-indicator {
+  --theme-switch-indicator-bg: #374151;
+}
+
+.theme-switch-button {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--theme-switch-icon-color, #6b7280);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  border-radius: 9999px;
+}
+
+[data-theme="dark"] .theme-switch-button {
+  --theme-switch-icon-color: #9ca3af;
+}
+
+.theme-switch-button:hover {
+  color: var(--theme-switch-icon-hover-color, #374151);
+}
+
+[data-theme="dark"] .theme-switch-button:hover {
+  --theme-switch-icon-hover-color: #e5e7eb;
+}
+
+.theme-switch-button.active {
+  color: var(--theme-switch-icon-active-color, #E91E63);
+}
+
+[data-theme="dark"] .theme-switch-button.active {
+  --theme-switch-icon-active-color: #F472B6;
+}
+
+.theme-switch-button:focus-visible {
+  outline: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .theme-switch-button {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .theme-switch-button svg {
+    width: 14px;
+    height: 14px;
+  }
+}
