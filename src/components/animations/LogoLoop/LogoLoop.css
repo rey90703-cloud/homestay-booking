@@ -46,10 +46,11 @@
   padding: 0;
 }
 
-/* Individual logo item */
+/* Individual logo item - fixed width container for consistent spacing */
 .logoloop__item {
   flex: 0 0 auto;
-  margin-right: var(--logoloop-gap);
+  width: calc(var(--logoloop-logoHeight) + var(--logoloop-gap));
+  min-width: calc(var(--logoloop-logoHeight) + var(--logoloop-gap));
   font-size: var(--logoloop-logoHeight);
   line-height: 1;
   display: flex;
@@ -57,9 +58,9 @@
   justify-content: center;
 }
 
-/* Ensure last item also has gap for seamless loop */
+/* All items have same width for seamless loop */
 .logoloop__item:last-child {
-  margin-right: var(--logoloop-gap);
+  width: calc(var(--logoloop-logoHeight) + var(--logoloop-gap));
 }
 
 /* Node wrapper (for icon components) */
@@ -74,12 +75,10 @@
   color: rgba(255, 255, 255, 1);
 }
 
-/* Logo images - fixed width and height for consistent sizing */
+/* Logo images - fixed square size for consistent spacing */
 .logoloop__item img {
   height: var(--logoloop-logoHeight);
   width: var(--logoloop-logoHeight);
-  min-width: var(--logoloop-logoHeight);
-  max-width: var(--logoloop-logoHeight);
   display: block;
   object-fit: contain;
   image-rendering: -webkit-optimize-contrast;
@@ -169,19 +168,43 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .logoloop {
-    --logoloop-gap: 24px;
-    --logoloop-logoHeight: 24px;
+    --logoloop-gap: 40px !important;
+    --logoloop-logoHeight: 40px !important;
   }
 
   .logoloop--fade::before,
   .logoloop--fade::after {
     width: clamp(24px, 8%, 60px);
   }
+
+  .logoloop__item:hover img {
+    transform: none;
+  }
 }
 
 @media (max-width: 480px) {
   .logoloop {
-    --logoloop-gap: 16px;
-    --logoloop-logoHeight: 20px;
+    --logoloop-gap: 40px !important;
+    --logoloop-logoHeight: 32px !important;
+  }
+
+  .logoloop__item img {
+    max-width: 60px;
+  }
+
+  .logoloop--fade::before,
+  .logoloop--fade::after {
+    width: 16px;
+  }
+}
+
+@media (max-width: 375px) {
+  .logoloop {
+    --logoloop-gap: 32px !important;
+    --logoloop-logoHeight: 28px !important;
+  }
+
+  .logoloop__item img {
+    max-width: 50px;
   }
 }

@@ -43,7 +43,7 @@ const PartnersSection = () => {
         speed={40}
         direction="left"
         logoHeight={48}
-        gap={56}
+        gap={90}
         pauseOnHover={true}
         fadeOut={false}
         ariaLabel="Đối tác thanh toán của HomestayBooking"
