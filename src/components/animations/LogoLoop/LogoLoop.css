@@ -1,0 +1,187 @@
+/**
+ * LogoLoop Component Styles
+ * 
+ * Styles for infinite logo scroll animation with:
+ * - Seamless horizontal loop
+ * - Fade effects at edges
+ * - Hover interactions
+ * - Reduced motion support
+ * 
+ * Requirements: 5.5 - Maintain consistent logo heights and spacing
+ */
+
+/* CSS Custom Properties */
+.logoloop {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+
+  /* Default values - can be overridden via inline styles */
+  --logoloop-gap: 40px;
+  --logoloop-logoHeight: 32px;
+  --logoloop-fadeColorAuto: #1a1a2e;
+}
+
+/* Horizontal layout (default) */
+.logoloop--horizontal {
+  display: block;
+}
+
+/* Animation track - uses GPU-accelerated transform */
+.logoloop__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  user-select: none;
+  position: relative;
+  z-index: 0;
+}
+
+/* Logo list container */
+.logoloop__list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Individual logo item */
+.logoloop__item {
+  flex: 0 0 auto;
+  margin-right: var(--logoloop-gap);
+  font-size: var(--logoloop-logoHeight);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure last item also has gap for seamless loop */
+.logoloop__item:last-child {
+  margin-right: var(--logoloop-gap);
+}
+
+/* Node wrapper (for icon components) */
+.logoloop__node {
+  display: inline-flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.logoloop__node:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+/* Logo images - fixed width and height for consistent sizing */
+.logoloop__item img {
+  height: var(--logoloop-logoHeight);
+  width: var(--logoloop-logoHeight);
+  min-width: var(--logoloop-logoHeight);
+  max-width: var(--logoloop-logoHeight);
+  display: block;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  opacity: 0.7;
+  filter: grayscale(30%);
+  transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+}
+
+.logoloop__item:hover img {
+  opacity: 1;
+  filter: grayscale(0%);
+  transform: scale(1.05);
+}
+
+/* Link wrapper */
+.logoloop__link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.logoloop__link:hover {
+  opacity: 1;
+}
+
+.logoloop__link:focus-visible {
+  outline: 2px solid var(--primary-color, #3b82f6);
+  outline-offset: 4px;
+}
+
+/* Fade effect at edges */
+.logoloop--fade::before,
+.logoloop--fade::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(40px, 10%, 120px);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.logoloop--fade::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+    transparent 100%
+  );
+}
+
+.logoloop--fade::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+    transparent 100%
+  );
+}
+
+/* Reduced motion support - disable animations */
+.logoloop--reduced-motion .logoloop__track {
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.logoloop--reduced-motion .logoloop__item img,
+.logoloop--reduced-motion .logoloop__node {
+  transition: none !important;
+}
+
+/* System-level reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .logoloop__track {
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .logoloop__item img,
+  .logoloop__node {
+    transition: none !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .logoloop {
+    --logoloop-gap: 24px;
+    --logoloop-logoHeight: 24px;
+  }
+
+  .logoloop--fade::before,
+  .logoloop--fade::after {
+    width: clamp(24px, 8%, 60px);
+  }
+}
+
+@media (max-width: 480px) {
+  .logoloop {
+    --logoloop-gap: 16px;
+    --logoloop-logoHeight: 20px;
+  }
+}

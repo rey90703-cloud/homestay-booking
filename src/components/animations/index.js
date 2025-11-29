@@ -27,7 +27,7 @@ export { default as AnimatedTestimonials } from './AnimatedTestimonials/Animated
 export { default as ExpandableCards } from './ExpandableCards/ExpandableCards';
 
 // LogoLoop - Infinite logo scroll animation
-// export { LogoLoop } from './LogoLoop/LogoLoop';
+export { default as LogoLoop } from './LogoLoop/LogoLoop';
 
-// Note: Exports will be uncommented as components are implemented
-// This ensures tree-shaking works correctly and only used components are bundled
+// Note: All animation components are now exported
+// Tree-shaking ensures only used components are bundled

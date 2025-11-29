@@ -1,7 +1,6 @@
 .footer {
   background: #111827;
   padding: var(--space-2xl) var(--space-md);
-  margin-top: var(--space-2xl);
 }
 
 .footer-container {

@@ -1,0 +1,32 @@
+.partners-section {
+  max-width: 1200px;
+  margin: 56px auto;
+  padding: 0 20px;
+}
+
+.partners-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #141217;
+  text-align: center;
+  margin: 0 0 24px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .partners-section {
+    margin: 40px auto;
+    padding: 0 16px;
+  }
+
+  .partners-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .partners-title {
+    font-size: 24px;
+  }
+}

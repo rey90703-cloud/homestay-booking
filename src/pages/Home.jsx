@@ -6,6 +6,7 @@ import DestinationsSection from '../components/DestinationsSection';
 import AmenitiesSection from '../components/AmenitiesSection';
 import PromotionSection from '../components/PromotionSection';
 import TestimonialSection from '../components/TestimonialSection';
+import PartnersSection from '../components/PartnersSection';
 import API_BASE_URL from '../config/api';
 
 function Home() {
@@ -71,6 +72,7 @@ function Home() {
       <AmenitiesSection />
       <PromotionSection />
       <TestimonialSection />
+      <PartnersSection />
     </>
   );
 }
