@@ -21,7 +21,7 @@ export { default as StatsCount } from './StatsCount/StatsCount';
 export { default as TypeAnimation } from './TypeAnimation/TypeAnimation';
 
 // AnimatedTestimonials - Testimonial carousel with animations
-// export { AnimatedTestimonials } from './AnimatedTestimonials/AnimatedTestimonials';
+export { default as AnimatedTestimonials } from './AnimatedTestimonials/AnimatedTestimonials';
 
 // ExpandableCards - Cards with hover expansion effect
 // export { ExpandableCards } from './ExpandableCards/ExpandableCards';
