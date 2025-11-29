@@ -1,0 +1,130 @@
+/**
+ * StatsCount Component Styles
+ * 
+ * Responsive layout with dividers for animated statistics counter.
+ * Uses CSS transforms for GPU acceleration (Requirements: 7.3)
+ * 
+ * Requirements: 1.4 - Display final values with proper styling
+ */
+
+.stats-count {
+  width: 100%;
+}
+
+.stats-count__title {
+  font-size: var(--font-lg, 1.125rem);
+  font-weight: 700;
+  color: #141217;
+  text-align: center;
+  margin: 0 0 var(--space-lg, 1.5rem) 0;
+  line-height: 1.4;
+}
+
+.stats-count__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm, 0.75rem);
+  flex-wrap: wrap;
+}
+
+.stats-count__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs, 0.5rem);
+  padding: var(--space-md, 1rem);
+  background: #FFE3EF;
+  border: 1px solid rgba(20, 18, 23, 0.08);
+  border-radius: 14px;
+  min-width: 100px;
+  flex: 1;
+  max-width: 180px;
+  /* GPU acceleration for smooth animations */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.stats-count__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+
+.stats-count__value {
+  font-size: var(--font-lg, 1.125rem);
+  font-weight: 700;
+  color: #141217;
+  line-height: 1;
+  /* Prevent layout shift during animation */
+  min-width: 3ch;
+  text-align: center;
+  /* Use tabular numbers for consistent width */
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-count__label {
+  font-size: var(--font-xs, 0.75rem);
+  font-weight: 500;
+  color: #6B5A65;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.stats-count__divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(20, 18, 23, 0.12);
+  flex-shrink: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .stats-count__container {
+    gap: var(--space-xs, 0.5rem);
+  }
+
+  .stats-count__item {
+    padding: var(--space-sm, 0.75rem);
+    min-width: 80px;
+  }
+
+  .stats-count__value {
+    font-size: var(--font-base, 1rem);
+  }
+
+  .stats-count__divider {
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-count__container {
+    flex-direction: column;
+    gap: var(--space-xs, 0.5rem);
+  }
+
+  .stats-count__item {
+    width: 100%;
+    max-width: none;
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--space-sm, 0.75rem);
+  }
+
+  .stats-count__divider {
+    display: none;
+  }
+
+  .stats-count__label {
+    text-align: left;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .stats-count__item {
+    will-change: auto;
+  }
+}

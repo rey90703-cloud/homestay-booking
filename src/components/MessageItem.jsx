@@ -18,7 +18,8 @@ const MessageItem = ({
   currentUserId, 
   showSenderName = false,
   senderName = null,
-  onRetry = null
+  onRetry = null,
+  highlightSearchText = null
 }) => {
   // Handle senderId being either string or object (populated)
   const messageSenderId = typeof message.senderId === 'object' && message.senderId !== null
@@ -79,8 +80,8 @@ const MessageItem = ({
 
       <div className={`message-bubble ${isFailed ? 'message-failed' : ''} ${isSending ? 'message-sending' : ''} ${isQueued ? 'message-queued' : ''}`}>
         {/* Message content - Property 23 */}
-        <p className="message-content" data-testid="message-content">
-          {message.content}
+        <p className="message-content" data-testid="message-content" data-message-id={message._id}>
+          {highlightSearchText ? highlightSearchText(message.content, message._id) : message.content}
         </p>
 
         {/* Message metadata */}

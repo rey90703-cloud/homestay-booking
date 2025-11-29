@@ -144,12 +144,28 @@ class ChatService {
       query.bookingId = bookingId;
     }
 
-    const chatRooms = await ChatRoom.find(query)
+    let chatRooms = await ChatRoom.find(query)
       .sort({ 'lastMessage.createdAt': -1 })
       .skip(skip)
       .limit(limit)
       .populate('participants.userId', 'fullName email avatar profile.firstName profile.lastName')
       .lean();
+
+    // Filter out chat rooms where user deleted AND no new messages after deletion
+    chatRooms = chatRooms.filter(room => {
+      const userDelete = room.deletedBy?.find(d => d.userId.toString() === userId.toString());
+      
+      // If user hasn't deleted, show the chat
+      if (!userDelete) return true;
+      
+      // If user deleted but there's a new message after deletion, show the chat
+      if (room.lastMessage?.createdAt && userDelete.deletedAt) {
+        return new Date(room.lastMessage.createdAt) > new Date(userDelete.deletedAt);
+      }
+      
+      // If user deleted and no new messages, hide the chat
+      return false;
+    });
 
     const total = await ChatRoom.countDocuments(query);
 
@@ -212,14 +228,23 @@ class ChatService {
     // Use chatroomId for direct chats, bookingId for booking-based chats
     const roomId = chatRoom.bookingId ? `booking:${chatRoom.bookingId}` : `chatroom:${chatroomId}`;
 
-    const messages = await Message.find({ roomId })
+    // Check if user has deleted this chat and get the deletion timestamp
+    const userDelete = chatRoom.deletedBy?.find(d => d.userId.toString() === userId.toString());
+    
+    // Build query - only get messages after deletion time if user deleted the chat
+    const messageQuery = { roomId };
+    if (userDelete && userDelete.deletedAt) {
+      messageQuery.createdAt = { $gt: userDelete.deletedAt };
+    }
+
+    const messages = await Message.find(messageQuery)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate('senderId', 'name email avatar')
       .lean();
 
-    const total = await Message.countDocuments({ roomId });
+    const total = await Message.countDocuments(messageQuery);
 
     return {
       messages: messages.reverse(), // Reverse to show oldest first
@@ -284,6 +309,10 @@ class ChatService {
       type,
       createdAt: message.createdAt,
     };
+
+    // Don't clear deletedBy - keep the timestamp so old messages stay hidden
+    // The chat will reappear in the list because we filter by deletedBy.userId in getChatRoomsByUserId
+    // But old messages before deletedAt will still be hidden
 
     // Increment unread count for other participants
     chatRoom.participants.forEach((p) => {
@@ -377,6 +406,53 @@ class ChatService {
       .lean();
 
     return chatRooms;
+  }
+
+  /**
+   * Hide chat room for a user (soft delete)
+   * @param {string} chatroomId - Chat room ID
+   * @param {string} userId - User ID who wants to hide
+   * @returns {Promise<Object>}
+   */
+  async hideChatRoom(chatroomId, userId) {
+    const chatRoom = await ChatRoom.findById(chatroomId);
+
+    if (!chatRoom) {
+      throw new ApiError(404, 'Chat room not found');
+    }
+
+    // Check if user is participant
+    const isParticipant = chatRoom.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+
+    if (!isParticipant) {
+      throw new ApiError(403, 'You are not a participant of this chat room');
+    }
+
+    // Add user to deletedBy array with timestamp if not already there
+    const existingDelete = chatRoom.deletedBy.find(d => d.userId.toString() === userId.toString());
+    if (!existingDelete) {
+      chatRoom.deletedBy.push({
+        userId: userId,
+        deletedAt: new Date()
+      });
+    }
+
+    // If both participants have deleted, permanently delete the chat room
+    if (chatRoom.deletedBy.length >= chatRoom.participants.length) {
+      // Delete all messages in this chat room
+      await Message.deleteMany({ chatroomId });
+      
+      // Delete the chat room
+      await ChatRoom.findByIdAndDelete(chatroomId);
+      
+      return { deleted: true, message: 'Chat room permanently deleted' };
+    }
+
+    await chatRoom.save();
+
+    return { deleted: false, chatRoom };
   }
 }
 

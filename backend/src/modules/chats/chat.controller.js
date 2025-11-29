@@ -116,3 +116,16 @@ exports.searchChatRooms = catchAsync(async (req, res) => {
 
   return ApiResponse.success(res, chatRooms, 'Search results retrieved successfully');
 });
+
+/**
+ * Hide chat room for current user (soft delete)
+ * POST /api/v1/chat/rooms/:id/hide
+ */
+exports.hideChatRoom = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user._id;
+
+  const chatRoom = await chatService.hideChatRoom(id, userId);
+
+  return ApiResponse.success(res, chatRoom, 'Chat room hidden successfully');
+});

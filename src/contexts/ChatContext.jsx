@@ -496,6 +496,10 @@ export const ChatProvider = ({ children }) => {
       // Nếu là chatroom mới (chưa có _id), tạo chatroom trước
       if (!activeChatRoom._id && activeChatRoom.recipientId) {
         const token = localStorage.getItem('token');
+        console.log('🔑 Creating chatroom with token:', token ? 'exists' : 'missing');
+        console.log('📤 Request to:', `${API_BASE_URL}/chat/rooms`);
+        console.log('👤 Participant ID:', activeChatRoom.recipientId);
+        
         const response = await fetch(`${API_BASE_URL}/chat/rooms`, {
           method: 'POST',
           headers: {
@@ -508,8 +512,12 @@ export const ChatProvider = ({ children }) => {
           })
         });
 
+        console.log('📥 Response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Failed to create chatroom');
+          const errorData = await response.json().catch(() => ({}));
+          console.error('❌ Create chatroom error:', errorData);
+          throw new Error(errorData.message || 'Failed to create chatroom');
         }
 
         const data = await response.json();
@@ -641,6 +649,55 @@ export const ChatProvider = ({ children }) => {
     }
   }, [socket, isConnected, calculateUnreadTotal]);
 
+  // Delete chat room (soft delete - only hide for current user)
+  const deleteChatRoom = useCallback(async (chatroomId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const userId = user.id || user._id;
+      
+      // Call API to soft delete (hide for current user)
+      const response = await fetch(`${API_BASE_URL}/chat/rooms/${chatroomId}/hide`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: userId
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to delete chat room');
+      }
+
+      // Remove from local state (hide from UI)
+      setChatRooms(prev => {
+        const next = prev.filter(room => room._id !== chatroomId);
+        chatRoomsRef.current = next;
+        return next;
+      });
+
+      // Clear active chat if it was deleted
+      if (activeChatRoom?._id === chatroomId) {
+        setActiveChatRoom(null);
+        setMessages([]);
+        messagesRef.current = [];
+      }
+
+      // Recalculate unread total
+      calculateUnreadTotal();
+
+      return true;
+    } catch (err) {
+      console.error('Error deleting chat room:', err);
+      setError(err.message);
+      return false;
+    }
+  }, [activeChatRoom, calculateUnreadTotal]);
+
   // Search chat rooms
   const searchChatRooms = useCallback(async (query) => {
     try {
@@ -766,6 +823,7 @@ export const ChatProvider = ({ children }) => {
     sendMessage,
     retryMessage,
     markAsRead,
+    deleteChatRoom,
     searchChatRooms,
     
     // Pagination helpers

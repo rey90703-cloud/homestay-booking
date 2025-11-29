@@ -16,7 +16,8 @@ const MessageList = ({
   onLoadMore, 
   hasMore, 
   loading,
-  onRetry
+  onRetry,
+  highlightSearchText
 }) => {
   const listRef = useRef(null);
   const containerRef = useRef(null);
@@ -127,6 +128,7 @@ const MessageList = ({
               message={message}
               currentUserId={currentUserId}
               onRetry={onRetry}
+              highlightSearchText={highlightSearchText}
             />
           );
         }}

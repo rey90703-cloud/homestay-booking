@@ -38,6 +38,16 @@ const chatRoomSchema = new mongoose.Schema(
       enum: ['active', 'archived'],
       default: 'active',
     },
+    deletedBy: [{
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      deletedAt: {
+        type: Date,
+        default: Date.now,
+      }
+    }],
     metadata: {
       homestayId: mongoose.Schema.Types.ObjectId,
       homestayName: String,
