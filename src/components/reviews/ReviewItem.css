@@ -299,3 +299,90 @@
     padding: 0.4rem 0.8rem;
   }
 }
+
+
+/* ==================== DARK MODE ==================== */
+[data-theme="dark"] .review-item {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .reviewer-details h4 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .review-date {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .rating-number {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .category-ratings {
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .category-name {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .review-title {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .review-comment {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .host-reply {
+  background: var(--bg-tertiary);
+  border-left-color: var(--primary-color);
+}
+
+[data-theme="dark"] .reply-header strong {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .reply-date {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .host-reply p {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .review-actions {
+  border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .action-btn {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .action-btn:hover {
+  border-color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .reply-form {
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .reply-form textarea {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .btn-cancel {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .btn-cancel:hover {
+  background: var(--bg-tertiary);
+}

@@ -12,7 +12,29 @@ const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [toast, setToast] = useState(null);
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const dropdownRef = useRef(null);
+
+  // Handle scroll to show/hide header opacity
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        // Cuộn xuống - mờ đi
+        setHeaderVisible(false);
+      } else {
+        // Cuộn lên - hiển thị rõ
+        setHeaderVisible(true);
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Debug: Log user info
   useEffect(() => {
@@ -74,7 +96,7 @@ const Header = () => {
           onClose={() => setToast(null)}
         />
       )}
-      <header className="header">
+      <header className={`header ${headerVisible ? 'header-visible' : 'header-faded'}`}>
         <div className="header-container">
         <Link to="/" className="logo">
           <img src="/logo.png" alt="HomestayBooking" className="logo-image" />

@@ -1,5 +1,5 @@
-import React from 'react';
 import { Masonry } from './animations';
+import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
 import './DestinationsSection.css';
 
 function DestinationsSection() {
@@ -64,7 +64,10 @@ function DestinationsSection() {
 
   return (
     <section className="destinations-section">
-      <h2 className="section-title">Điểm đến phổ biến</h2>
+      <ScrollReveal animation="fade-up" duration={0.5}>
+        <h2 className="section-title">Điểm đến phổ biến</h2>
+      </ScrollReveal>
+      <ScrollReveal animation="scale" duration={0.6} delay={0.1}>
       <div className="destinations-masonry-container">
         <Masonry
           items={destinations}
@@ -80,6 +83,7 @@ function DestinationsSection() {
           showOverlay={true}
         />
       </div>
+      </ScrollReveal>
     </section>
   );
 }

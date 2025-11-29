@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
 import './AmenitiesSection.css';
 import { 
   RadialSocials, 
@@ -33,6 +34,7 @@ function AmenitiesSection() {
   return (
     <section className="amenities-section">
       <div className="amenities-container">
+        <ScrollReveal animation="fade-left" duration={0.6}>
         <div className="amenities-text">
           <h2 className="amenities-title">Tiện nghi Homestay</h2>
           <p className="amenities-desc">
@@ -40,7 +42,9 @@ function AmenitiesSection() {
             Từ WiFi tốc độ cao đến hồ bơi riêng, chúng tôi đảm bảo mọi nhu cầu của bạn.
           </p>
         </div>
+        </ScrollReveal>
 
+        <ScrollReveal animation="fade-right" duration={0.6} delay={0.2}>
         <div className="amenities-radial-wrapper">
           <RadialSocials animationDelay={200} expandDuration={600}>
             <RadialSocialsContent>
@@ -59,6 +63,7 @@ function AmenitiesSection() {
             </RadialSocialsContent>
           </RadialSocials>
         </div>
+        </ScrollReveal>
       </div>
     </section>
   );

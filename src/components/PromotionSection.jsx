@@ -1,5 +1,5 @@
-import React from 'react';
 import RotatingText from './animations/RotatingText/RotatingText';
+import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
 import './PromotionSection.css';
 
 function PromotionSection() {
@@ -12,6 +12,7 @@ function PromotionSection() {
 
   return (
     <section className="promotion-section">
+      <ScrollReveal animation="bounce" duration={0.7}>
       <div className="promotion-card">
         <div className="promotion-badge">
           <span>Khuyến mãi tháng 11</span>
@@ -39,6 +40,7 @@ function PromotionSection() {
           </button>
         </div>
       </div>
+      </ScrollReveal>
     </section>
   );
 }

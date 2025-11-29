@@ -71,7 +71,7 @@ const ThemeSwitch = ({
       <div
         className="theme-switch-indicator"
         style={{
-          transform: `translateX(${activeIndex * 32}px)`,
+          '--indicator-offset': `${activeIndex}`,
         }}
       />
       {visibleModes.map((mode) => (

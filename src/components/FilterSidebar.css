@@ -346,3 +346,66 @@
   }
 }
 
+
+
+/* Dark Mode Styles */
+[data-theme="dark"] .filter-sidebar {
+  background: var(--bg-secondary, #1a1a1a);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .filter-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .filter-title {
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .filter-reset {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .filter-reset:hover {
+  background: var(--bg-tertiary, #252525);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+[data-theme="dark"] .filter-section {
+  background: rgba(244, 114, 182, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .filter-section-title {
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .filter-option {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .filter-option:hover {
+  background: rgba(244, 114, 182, 0.15);
+  border-color: rgba(244, 114, 182, 0.4);
+}
+
+[data-theme="dark"] .filter-option.active {
+  background: #F472B6;
+  border-color: #F472B6;
+  color: #000000;
+}
+
+[data-theme="dark"] .filter-sections::-webkit-scrollbar-thumb {
+  background: rgba(244, 114, 182, 0.4);
+}
+
+[data-theme="dark"] .filter-sections::-webkit-scrollbar-thumb:hover {
+  background: rgba(244, 114, 182, 0.6);
+}
+
+[data-theme="dark"] .filter-sections {
+  scrollbar-color: rgba(244, 114, 182, 0.4) transparent;
+}

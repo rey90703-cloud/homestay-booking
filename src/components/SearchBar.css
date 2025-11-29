@@ -303,7 +303,7 @@
     font-size: 11px;
     bottom: -18px;
   }
-}/
+}
 * Select dropdown styling */
 .search-select {
   appearance: none;
@@ -343,3 +343,4 @@
     padding-right: 35px;
   }
 }
+

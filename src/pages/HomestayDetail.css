@@ -777,3 +777,205 @@
     font-size: var(--font-sm);
   }
 }
+
+
+/* ==================== DARK MODE ==================== */
+[data-theme="dark"] .listing-detail {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .breadcrumb {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .breadcrumb span:hover {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .breadcrumb .current {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .detail-header h1 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .header-badge {
+  background: rgba(244, 114, 182, 0.15);
+}
+
+[data-theme="dark"] .badge-text {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .detail-meta {
+  color: var(--text-secondary);
+}
+
+/* Section Cards */
+[data-theme="dark"] .section-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .section-title {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .description-text {
+  color: var(--text-secondary);
+}
+
+/* Amenities */
+[data-theme="dark"] .amenity-pill {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .amenity-pill:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* Location */
+[data-theme="dark"] .location-text {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .map-placeholder {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .map-placeholder p {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .btn-view-map {
+  background: var(--bg-tertiary) !important;
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Reviews */
+[data-theme="dark"] .review-card {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .reviewer-name {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .review-date {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .review-comment {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .show-all-reviews-btn {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .show-all-reviews-btn:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Booking Card */
+[data-theme="dark"] .booking-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="dark"] .price-amount {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .price-unit {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .date-input-group label,
+[data-theme="dark"] .guest-input-group label {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .date-input-group input,
+[data-theme="dark"] .guest-input-group select {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .date-input-group input:focus,
+[data-theme="dark"] .guest-input-group select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.2);
+}
+
+[data-theme="dark"] .pricing-row {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .pricing-row.total {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .pricing-divider {
+  background: var(--border-color);
+}
+
+[data-theme="dark"] .booking-disclaimer {
+  color: var(--text-muted);
+}
+
+/* Host Card */
+[data-theme="dark"] .host-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .host-name {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .host-status {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .rule-item {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .contact-note {
+  color: var(--text-muted);
+}
+
+/* Loading & Not Found */
+[data-theme="dark"] .homestay-detail-loading,
+[data-theme="dark"] .homestay-not-found {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .spinner {
+  border-color: var(--border-color);
+  border-top-color: var(--primary-color);
+}
+
+[data-theme="dark"] .homestay-not-found h2 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .homestay-not-found button {
+  background: var(--primary-color);
+  color: white;
+}

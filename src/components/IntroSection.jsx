@@ -1,4 +1,5 @@
 import StatsCount from './animations/StatsCount/StatsCount';
+import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
 import './IntroSection.css';
 
 /**
@@ -27,6 +28,7 @@ const introStats = [
 const IntroSection = () => {
   return (
     <section className="intro-section">
+      <ScrollReveal animation="fade-up" duration={0.6}>
       <div className="intro-card">
         <div className="intro-illustration">
           <img 
@@ -45,13 +47,15 @@ const IntroSection = () => {
             <StatsCount
               stats={introStats}
               showDividers={true}
-              triggerOnce={true}
+              triggerOnce={false}
               threshold={0.3}
             />
           </div>
         </div>
       </div>
+      </ScrollReveal>
       
+      <ScrollReveal animation="fade-up" duration={0.6} delay={0.2} stagger={0.1}>
       <div className="features-card">
         <h4 className="features-title">Vì sao chọn HomestayBooking?</h4>
         <div className="features-grid">
@@ -105,6 +109,7 @@ const IntroSection = () => {
           </div>
         </div>
       </div>
+      </ScrollReveal>
     </section>
   );
 };

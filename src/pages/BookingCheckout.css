@@ -452,3 +452,169 @@
   }
 }
 
+
+/* ==================== DARK MODE ==================== */
+[data-theme="dark"] .booking-checkout {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .checkout-breadcrumb {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .breadcrumb-container {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .breadcrumb-container a {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .breadcrumb-container strong {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .checkout-title-section h1 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .discount-badge {
+  background: rgba(244, 114, 182, 0.15);
+  border-color: rgba(244, 114, 182, 0.3);
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .security-info {
+  color: var(--text-secondary);
+}
+
+/* Cards */
+[data-theme="dark"] .checkout-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .checkout-card h3 {
+  color: var(--text-primary);
+  border-bottom-color: var(--border-color);
+}
+
+/* Form inputs */
+[data-theme="dark"] .input-field label {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .input-field input {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .input-field input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.2);
+}
+
+[data-theme="dark"] .input-field input:read-only {
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .input-field input::placeholder {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .info-text {
+  color: var(--text-secondary);
+}
+
+/* Payment method */
+[data-theme="dark"] .payment-method-vietqr {
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+  border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .payment-method-vietqr label {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .payment-method-vietqr p {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .vietqr-info {
+  background: rgba(244, 114, 182, 0.1);
+  border-color: rgba(244, 114, 182, 0.2);
+}
+
+[data-theme="dark"] .vietqr-info .info-text {
+  color: var(--primary-color);
+}
+
+/* Summary card */
+[data-theme="dark"] .summary-card,
+[data-theme="dark"] .host-info-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="dark"] .summary-info h4 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .summary-info p {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .pricing-row {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .pricing-row.total {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .pricing-divider {
+  background: var(--border-color);
+}
+
+[data-theme="dark"] .disclaimer {
+  color: var(--text-muted);
+}
+
+/* Host info */
+[data-theme="dark"] .host-info-card h4 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .host-name {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .host-status {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .divider {
+  background: var(--border-color);
+}
+
+[data-theme="dark"] .btn-contact {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .btn-contact:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* Loading */
+[data-theme="dark"] .checkout-loading,
+[data-theme="dark"] .checkout-not-found {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}

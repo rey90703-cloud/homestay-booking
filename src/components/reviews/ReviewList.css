@@ -141,3 +141,76 @@
     font-size: 13px;
   }
 }
+
+
+/* ==================== DARK MODE ==================== */
+[data-theme="dark"] .review-filters {
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .filter-group label {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .filter-select {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .rating-filter-btn {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .rating-filter-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .rating-filter-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .no-reviews {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .review-pagination {
+  border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .pagination-btn {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .pagination-btn:hover:not(:disabled) {
+  border-color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .pagination-info {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .spinner {
+  border-color: var(--border-color);
+  border-top-color: var(--primary-color);
+}
+
+
+/* Fix dark mode for filter labels */
+[data-theme="dark"] .filter-group > span,
+[data-theme="dark"] .review-filters span {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .filter-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}

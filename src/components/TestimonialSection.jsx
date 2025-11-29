@@ -1,5 +1,5 @@
-import React from 'react';
 import { AnimatedTestimonials } from './animations';
+import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
 import './TestimonialSection.css';
 
 /**
@@ -40,14 +40,18 @@ const TestimonialSection = () => {
 
   return (
     <section className="testimonial-section">
-      <h2 className="section-title">Khách hàng nói gì về chúng tôi?</h2>
+      <ScrollReveal animation="fade-up" duration={0.5}>
+        <h2 className="section-title">Khách hàng nói gì về chúng tôi?</h2>
+      </ScrollReveal>
       {/* Requirements: 3.1 - Display testimonials in animated carousel format */}
       {/* Requirements: 3.3 - Auto advance after 5 seconds idle */}
+      <ScrollReveal animation="fade-up" duration={0.6} delay={0.1}>
       <AnimatedTestimonials
         data={testimonials}
         autoPlay={true}
         autoPlayInterval={5000}
       />
+      </ScrollReveal>
     </section>
   );
 };

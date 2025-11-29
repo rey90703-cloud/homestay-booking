@@ -1,5 +1,5 @@
-import React from 'react';
 import { LogoLoop } from './animations';
+import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
 import './PartnersSection.css';
 
 /**
@@ -37,7 +37,10 @@ const partnerLogos = [
 const PartnersSection = () => {
   return (
     <section className="partners-section">
-      <h2 className="partners-title">Đối tác thanh toán</h2>
+      <ScrollReveal animation="fade" duration={0.6}>
+        <h2 className="partners-title">Đối tác thanh toán</h2>
+      </ScrollReveal>
+      <ScrollReveal animation="fade-up" duration={0.5} delay={0.1}>
       <LogoLoop
         logos={partnerLogos}
         speed={40}
@@ -48,6 +51,7 @@ const PartnersSection = () => {
         fadeOut={false}
         ariaLabel="Đối tác thanh toán của HomestayBooking"
       />
+      </ScrollReveal>
     </section>
   );
 };

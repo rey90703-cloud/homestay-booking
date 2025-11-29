@@ -5,6 +5,7 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-lg);
   padding: 0 var(--space-md);
+  overflow: hidden;
 }
 
 .intro-card {

@@ -251,3 +251,63 @@
   }
 }
 
+
+
+/* Dark Mode Styles */
+[data-theme="dark"] .homestay-card {
+  background: var(--bg-secondary, #1a1a1a);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .homestay-card:hover {
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .card-favorite {
+  background: rgba(30, 30, 30, 0.9);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .card-favorite:hover {
+  background: rgba(40, 40, 40, 1);
+}
+
+[data-theme="dark"] .card-favorite.active {
+  background: rgba(244, 114, 182, 0.2);
+  border-color: #F472B6;
+}
+
+[data-theme="dark"] .heart-icon {
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .card-favorite.active .heart-icon {
+  color: #F472B6;
+}
+
+[data-theme="dark"] .card-title {
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .card-location {
+  color: var(--text-secondary, #a0a0a0);
+}
+
+[data-theme="dark"] .card-price {
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .card-rating {
+  color: var(--text-secondary, #a0a0a0);
+}
+
+[data-theme="dark"] .card-tag {
+  background: rgba(244, 114, 182, 0.15);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .card-badge {
+  background: #F472B6;
+  color: #000000;
+}

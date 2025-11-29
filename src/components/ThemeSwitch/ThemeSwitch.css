@@ -38,6 +38,7 @@
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   z-index: 0;
+  transform: translateX(calc(var(--indicator-offset, 0) * 32px));
 }
 
 [data-theme="dark"] .theme-switch-indicator {
@@ -86,13 +87,54 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .theme-switch {
+    padding: 3px;
+  }
+
+  .theme-switch-indicator {
+    top: 3px;
+    left: 3px;
+    width: 28px;
+    height: 28px;
+    transform: translateX(calc(var(--indicator-offset, 0) * 28px));
+  }
+
   .theme-switch-button {
     width: 28px;
     height: 28px;
+    min-width: 28px;
+    min-height: 28px;
   }
-  
+
   .theme-switch-button svg {
     width: 14px;
     height: 14px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .theme-switch {
+    padding: 2px;
+  }
+
+  .theme-switch-indicator {
+    top: 2px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    transform: translateX(calc(var(--indicator-offset, 0) * 26px));
+  }
+
+  .theme-switch-button {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    min-height: 26px;
+  }
+
+  .theme-switch-button svg {
+    width: 13px;
+    height: 13px;
   }
 }

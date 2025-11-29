@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ExpandableCards from './animations/ExpandableCards/ExpandableCards';
+import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
 import './HomestaySection.css';
 
 /**
@@ -60,10 +61,16 @@ const HomestaySection = ({
     )
   }));
 
+  // Determine animation direction based on title
+  const animationDirection = title.includes('Hà Nội') ? 'fade-left' : 'fade-right';
+
   return (
     <section className="homestay-section">
-      <h2 className="section-title">{title}</h2>
+      <ScrollReveal animation="fade-up" duration={0.5}>
+        <h2 className="section-title">{title}</h2>
+      </ScrollReveal>
       
+      <ScrollReveal animation={animationDirection} duration={0.6} delay={0.1}>
       {useExpandableView ? (
         <div className="homestay-expandable-wrapper">
           <ExpandableCards 
@@ -106,6 +113,7 @@ const HomestaySection = ({
           ))}
         </div>
       )}
+      </ScrollReveal>
       
       <div className="section-action">
         <button className="btn-view-all" onClick={handleViewAll}>

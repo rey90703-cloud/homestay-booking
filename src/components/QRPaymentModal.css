@@ -13,7 +13,7 @@
 }
 
 .qr-modal {
-  background: white;
+  background: var(--card-bg, white);
   border-radius: 16px;
   max-width: 1400px;
   width: 98vw;
@@ -21,6 +21,7 @@
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: modalSlideIn 0.3s ease-out;
+  transition: background-color 0.3s ease;
 }
 
 @keyframes modalSlideIn {
@@ -39,21 +40,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
 }
 
 .qr-modal-header h2 {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary, #333);
 }
 
 .btn-close {
   background: none;
   border: none;
   font-size: 32px;
-  color: #666;
+  color: var(--text-secondary, #666);
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -66,8 +67,8 @@
 }
 
 .btn-close:hover {
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--bg-tertiary, #f5f5f5);
+  color: var(--text-primary, #333);
 }
 
 .qr-modal-body {
@@ -104,7 +105,7 @@
 }
 
 .qr-loading p {
-  color: #666;
+  color: var(--text-secondary, #666);
   font-size: 14px;
 }
 
@@ -122,11 +123,11 @@
 .qr-error h3 {
   margin: 0 0 8px;
   font-size: 20px;
-  color: #333;
+  color: var(--text-primary, #333);
 }
 
 .qr-error p {
-  color: #666;
+  color: var(--text-secondary, #666);
   margin-bottom: 24px;
 }
 
@@ -157,12 +158,12 @@
 }
 
 .btn-cancel {
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--bg-tertiary, #f5f5f5);
+  color: var(--text-primary, #333);
 }
 
 .btn-cancel:hover {
-  background-color: #e0e0e0;
+  background-color: var(--border-color, #e0e0e0);
 }
 
 /* Success State */
@@ -200,11 +201,11 @@
 .qr-success h3 {
   margin: 0 0 8px;
   font-size: 24px;
-  color: #333;
+  color: var(--text-primary, #333);
 }
 
 .qr-success p {
-  color: #666;
+  color: var(--text-secondary, #666);
   font-size: 14px;
 }
 
@@ -222,11 +223,11 @@
 .qr-expired h3 {
   margin: 0 0 8px;
   font-size: 20px;
-  color: #333;
+  color: var(--text-primary, #333);
 }
 
 .qr-expired p {
-  color: #666;
+  color: var(--text-secondary, #666);
   margin-bottom: 24px;
 }
 
@@ -261,10 +262,10 @@
   max-width: 450px;
   height: auto;
   aspect-ratio: 1;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-color, #e0e0e0);
   border-radius: 12px;
   padding: 24px;
-  background: white;
+  background: var(--card-bg, white);
   margin-bottom: 20px;
 }
 
@@ -298,7 +299,7 @@
 }
 
 .payment-info {
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary, #f9f9f9);
   border-radius: 12px;
   padding: 20px;
 }
@@ -307,7 +308,7 @@
   margin: 0 0 16px;
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary, #333);
 }
 
 .info-row {
@@ -315,7 +316,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
 }
 
 .info-row:last-child {
@@ -324,13 +325,13 @@
 
 .info-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary, #666);
   font-weight: 500;
 }
 
 .info-value {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary, #333);
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -349,20 +350,20 @@
 }
 
 .btn-copy {
-  background: #f5f5f5;
-  border: 1px solid #e0e0e0;
+  background: var(--bg-tertiary, #f5f5f5);
+  border: 1px solid var(--border-color, #e0e0e0);
   cursor: pointer;
   font-size: 16px;
   padding: 4px 8px;
   border-radius: 4px;
-  color: #666;
+  color: var(--text-secondary, #666);
   transition: all 0.2s;
 }
 
 .btn-copy:hover {
-  background: #e0e0e0;
-  color: #333;
-  border-color: #ccc;
+  background: var(--border-color, #e0e0e0);
+  color: var(--text-primary, #333);
+  border-color: var(--border-color, #ccc);
 }
 
 /* Payment Instructions */
@@ -378,7 +379,7 @@
   margin: 0 0 12px;
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary, #333);
 }
 
 .payment-instructions ol {
@@ -388,7 +389,7 @@
 
 .payment-instructions li {
   font-size: 13px;
-  color: #666;
+  color: var(--text-secondary, #666);
   margin-bottom: 8px;
   line-height: 1.5;
 }

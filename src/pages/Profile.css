@@ -1,7 +1,8 @@
 .profile-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #FFF7FB 0%, #FFFFFF 100%);
+  background: var(--bg-primary);
   padding: 40px 20px;
+  transition: background-color 0.3s ease;
 }
 
 .profile-container {
@@ -10,10 +11,11 @@
 }
 
 .profile-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 20px;
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--card-shadow);
   padding: 40px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-header {
@@ -24,13 +26,15 @@
 .profile-title {
   font-size: 28px;
   font-weight: 700;
-  color: #141217;
+  color: var(--text-primary);
   margin-bottom: 8px;
+  transition: color 0.3s ease;
 }
 
 .profile-subtitle {
   font-size: 16px;
-  color: #64748B;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 .profile-form {
@@ -51,8 +55,9 @@
   align-items: center;
   gap: 24px;
   padding: 24px;
-  background: #F8FAFC;
+  background: var(--bg-tertiary);
   border-radius: 12px;
+  transition: background-color 0.3s ease;
 }
 
 .avatar-preview {
@@ -64,7 +69,7 @@
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #E11D48;
+  border: 3px solid var(--primary-color);
 }
 
 .avatar-placeholder {
@@ -92,7 +97,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #E11D48;
+  background: var(--primary-color);
   color: white;
   border: none;
   border-radius: 10px;
@@ -104,15 +109,15 @@
 }
 
 .btn-upload-avatar:hover {
-  background: #BE123C;
+  background: var(--primary-hover);
   transform: translateY(-1px);
 }
 
 .btn-remove-avatar {
   padding: 10px 20px;
   background: transparent;
-  color: #E11D48;
-  border: 2px solid #E11D48;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
@@ -122,26 +127,29 @@
 }
 
 .btn-remove-avatar:hover {
-  background: #FEE2E2;
+  background: rgba(225, 29, 72, 0.1);
 }
 
 .avatar-help-text {
   font-size: 13px;
-  color: #64748B;
+  color: var(--text-secondary);
   margin: 0;
+  transition: color 0.3s ease;
 }
 
-.section-title {
+.profile-page .section-title {
   font-size: 20px;
   font-weight: 600;
-  color: #141217;
+  color: var(--text-primary) !important;
   margin-bottom: 4px;
+  transition: color 0.3s ease;
 }
 
-.section-subtitle {
+.profile-page .section-subtitle {
   font-size: 14px;
-  color: #64748B;
+  color: var(--text-secondary);
   margin-top: -12px;
+  transition: color 0.3s ease;
 }
 
 .form-group {
@@ -153,26 +161,30 @@
 .form-label {
   font-size: 15px;
   font-weight: 500;
-  color: #141217;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .form-input {
   padding: 14px 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   font-size: 15px;
-  color: #141217;
-  transition: border 0.2s;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  transition: border 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #E11D48;
+  border-color: var(--primary-color);
 }
 
 .form-input:disabled {
-  background-color: #F8FAFC;
-  color: #94A3B8;
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-muted) !important;
+  -webkit-text-fill-color: var(--text-muted);
+  opacity: 1;
   cursor: not-allowed;
 }
 
@@ -188,8 +200,9 @@
 
 .help-text {
   font-size: 13px;
-  color: #64748B;
+  color: var(--text-secondary);
   margin-top: -4px;
+  transition: color 0.3s ease;
 }
 
 .error-alert {
@@ -220,9 +233,9 @@
 .btn-cancel {
   padding: 14px 24px;
   background: transparent;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
-  color: #64748B;
+  color: var(--text-secondary);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -230,8 +243,8 @@
 }
 
 .btn-cancel:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
 }
 
 .btn-cancel:disabled {
@@ -241,7 +254,7 @@
 
 .btn-save {
   padding: 14px 24px;
-  background: #E11D48;
+  background: var(--primary-color);
   border: none;
   border-radius: 12px;
   color: white;
@@ -252,11 +265,11 @@
 }
 
 .btn-save:hover {
-  background: #BE123C;
+  background: var(--primary-hover);
 }
 
 .btn-save:disabled {
-  background: #FCA5A5;
+  background: rgba(225, 29, 72, 0.4);
   cursor: not-allowed;
 }
 

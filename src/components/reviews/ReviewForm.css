@@ -220,3 +220,132 @@
     width: 100%;
   }
 }
+
+
+/* ==================== DARK MODE ==================== */
+[data-theme="dark"] .review-form {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .review-form h3 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .review-form-message {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .review-form-message p {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .form-group label {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .rating-text {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .category-ratings-input {
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .category-label {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-group input[type="text"],
+[data-theme="dark"] .form-group textarea {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-group input[type="text"]:focus,
+[data-theme="dark"] .form-group textarea:focus {
+  border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .char-count {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .form-actions {
+  border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .btn-cancel {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .btn-cancel:hover {
+  background: var(--bg-secondary);
+  border-color: var(--text-primary);
+}
+
+
+/* Additional dark mode styles for inner components */
+[data-theme="dark"] .star-btn {
+  filter: grayscale(0);
+}
+
+[data-theme="dark"] .star-btn-mini {
+  filter: grayscale(0);
+}
+
+[data-theme="dark"] .form-group input[type="text"]::placeholder,
+[data-theme="dark"] .form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .error-text {
+  color: #f87171;
+}
+
+[data-theme="dark"] .btn-submit {
+  background: var(--primary-color);
+}
+
+[data-theme="dark"] .btn-submit:hover:not(:disabled) {
+  background: var(--primary-hover);
+  box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
+}
+
+
+/* Fix dark mode for form labels and category items */
+[data-theme="dark"] .form-group > label {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .category-rating-input {
+  background: transparent;
+}
+
+[data-theme="dark"] .star-rating-input {
+  color: var(--text-primary);
+}
+
+
+/* Fix category rating items in dark mode */
+[data-theme="dark"] .category-ratings-input {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .category-rating-input .category-label {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .review-form h3 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .form-group > .category-label,
+[data-theme="dark"] .category-rating-input > span {
+  color: var(--text-primary) !important;
+}

@@ -15,7 +15,7 @@
 }
 
 .cancel-modal {
-  background: white;
+  background: var(--card-bg, white);
   border-radius: 12px;
   max-width: 600px;
   width: 100%;
@@ -23,6 +23,7 @@
   overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   animation: slideDown 0.3s ease-out;
+  transition: background-color 0.3s ease;
 }
 
 @keyframes slideDown {
@@ -41,21 +42,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
 }
 
 .cancel-modal-header h2 {
   margin: 0;
   font-size: 24px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary, #111827);
 }
 
 .close-btn {
   background: none;
   border: none;
   font-size: 32px;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   cursor: pointer;
   line-height: 1;
   padding: 0;
@@ -69,8 +70,8 @@
 }
 
 .close-btn:hover {
-  background: #f3f4f6;
-  color: #111827;
+  background: var(--bg-tertiary, #f3f4f6);
+  color: var(--text-primary, #111827);
 }
 
 .cancel-modal-body {
@@ -89,14 +90,14 @@
 .reason-section h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary, #111827);
   margin: 0 0 12px 0;
 }
 
 .booking-info-card,
 .policy-card {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-tertiary, #f9fafb);
+  border: 1px solid var(--border-color, #e5e7eb);
   border-radius: 8px;
   padding: 16px;
 }
@@ -111,18 +112,18 @@
 
 .info-row:not(:last-child),
 .refund-row:not(:last-child) {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
 }
 
 .info-row .label,
 .refund-row .label {
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   font-size: 14px;
 }
 
 .info-row .value,
 .refund-row .value {
-  color: #111827;
+  color: var(--text-primary, #111827);
   font-weight: 500;
   font-size: 14px;
 }
@@ -198,7 +199,7 @@
 .policy-rules h4 {
   font-size: 14px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary, #111827);
   margin: 0 0 12px 0;
 }
 
@@ -213,7 +214,7 @@
   align-items: flex-start;
   padding: 8px 0;
   font-size: 14px;
-  color: #374151;
+  color: var(--text-secondary, #374151);
   line-height: 1.5;
 }
 
@@ -227,24 +228,26 @@
 .reason-textarea {
   width: 100%;
   padding: 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-color, #d1d5db);
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
   resize: vertical;
   min-height: 100px;
   transition: border-color 0.2s;
+  background-color: var(--bg-tertiary, #ffffff);
+  color: var(--text-primary, #111827);
 }
 
 .reason-textarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--primary-color, #3b82f6);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .char-count {
   text-align: right;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   font-size: 12px;
   margin-top: 4px;
 }
@@ -278,8 +281,8 @@
   justify-content: flex-end;
   gap: 12px;
   padding: 16px 24px;
-  border-top: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-top: 1px solid var(--border-color, #e5e7eb);
+  background: var(--bg-tertiary, #f9fafb);
 }
 
 .btn-secondary,
@@ -294,13 +297,13 @@
 }
 
 .btn-secondary {
-  background: white;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  background: var(--card-bg, white);
+  color: var(--text-secondary, #374151);
+  border: 1px solid var(--border-color, #d1d5db);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #f3f4f6;
+  background: var(--bg-tertiary, #f3f4f6);
 }
 
 .btn-danger {

@@ -54,6 +54,8 @@
   --primary-color: #E91E63;
   --primary-hover: #C2185B;
   --section-title-color: #E91E63;
+  --accent-light: #F9A8D4;
+  --accent-dark: #4A0E2B;
 }
 
 /* Dark theme */
@@ -72,6 +74,8 @@
   --primary-hover: #EC4899;
   --tag-bg: rgba(244, 114, 182, 0.15);
   --section-title-color: #f5f5f5;
+  --accent-light: #831843;
+  --accent-dark: #FBB6CE;
 }
 
 html {
@@ -89,6 +93,7 @@ body {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   transition: background-color 0.3s ease, color 0.3s ease;
+  padding-top: 80px; /* Offset for fixed header */
 }
 
 #root {

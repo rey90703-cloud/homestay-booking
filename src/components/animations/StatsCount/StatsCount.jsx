@@ -113,7 +113,18 @@ const StatsCount = ({
         animateCounter(index, stat.value, duration, decimals);
       });
     }
-  }, [isVisible, hasStarted, stats, prefersReducedMotion, animateCounter]);
+    
+    // Reset when leaving viewport (if triggerOnce is false)
+    if (!isVisible && !triggerOnce) {
+      // Cancel any ongoing animations
+      animationFrameRefs.current.forEach(frameId => {
+        if (frameId) cancelAnimationFrame(frameId);
+      });
+      // Reset counters to 0
+      setCounters(stats.map(() => 0));
+      setHasStarted(false);
+    }
+  }, [isVisible, hasStarted, stats, prefersReducedMotion, animateCounter, triggerOnce]);
 
   /**
    * Cleanup animation frames on unmount
