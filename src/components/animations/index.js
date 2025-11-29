@@ -29,5 +29,16 @@ export { default as ExpandableCards } from './ExpandableCards/ExpandableCards';
 // LogoLoop - Infinite logo scroll animation
 export { default as LogoLoop } from './LogoLoop/LogoLoop';
 
+// RotatingText - Text rotation animation with spring effects
+export { default as RotatingText } from './RotatingText/RotatingText';
+
+// RadialSocials - Radial icons with circular rotation animation
+export { 
+  RadialSocials, 
+  RadialSocialsContent, 
+  RadialCircular, 
+  RadialIcon 
+} from './RadialSocials/RadialSocials';
+
 // Note: All animation components are now exported
 // Tree-shaking ensures only used components are bundled

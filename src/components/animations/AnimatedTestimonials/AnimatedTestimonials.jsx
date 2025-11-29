@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
 import './AnimatedTestimonials.css';
 
 /**
@@ -24,6 +25,13 @@ const AnimatedTestimonials = ({
   className = ''
 }) => {
   const prefersReducedMotion = useReducedMotion();
+  
+  // Viewport-based animation pausing (Requirements: 7.4, 7.5)
+  const [containerRef, isInViewport] = useIntersectionObserver({
+    threshold: 0.1,
+    triggerOnce: false // Keep observing for pause/resume
+  });
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const autoPlayRef = useRef(null);
   const isHoveredRef = useRef(false);
@@ -44,16 +52,17 @@ const AnimatedTestimonials = ({
 
   /**
    * Start auto-play timer
+   * Pauses when not in viewport (Requirements: 7.4, 7.5)
    */
   const startAutoPlay = useCallback(() => {
-    if (!autoPlay || data.length <= 1) return;
+    if (!autoPlay || data.length <= 1 || !isInViewport) return;
     
     autoPlayRef.current = setInterval(() => {
       if (!isHoveredRef.current) {
         goToNext();
       }
     }, autoPlayInterval);
-  }, [autoPlay, autoPlayInterval, data.length, goToNext]);
+  }, [autoPlay, autoPlayInterval, data.length, goToNext, isInViewport]);
 
   /**
    * Stop auto-play timer
@@ -73,17 +82,23 @@ const AnimatedTestimonials = ({
     isHoveredRef.current = false;
   }, []);
 
-  // Setup auto-play
+  // Setup auto-play - pause when not in viewport (Requirements: 7.4, 7.5)
   useEffect(() => {
-    startAutoPlay();
+    if (isInViewport) {
+      startAutoPlay();
+    } else {
+      stopAutoPlay();
+    }
     return stopAutoPlay;
-  }, [startAutoPlay, stopAutoPlay]);
+  }, [startAutoPlay, stopAutoPlay, isInViewport]);
 
   // Reset auto-play timer on navigation
   useEffect(() => {
     stopAutoPlay();
-    startAutoPlay();
-  }, [activeIndex, startAutoPlay, stopAutoPlay]);
+    if (isInViewport) {
+      startAutoPlay();
+    }
+  }, [activeIndex, startAutoPlay, stopAutoPlay, isInViewport]);
 
   // Don't render if no data
   if (data.length === 0) {
@@ -143,6 +158,7 @@ const AnimatedTestimonials = ({
 
   return (
     <div 
+      ref={containerRef}
       className={`animated-testimonials ${className}`.trim()}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

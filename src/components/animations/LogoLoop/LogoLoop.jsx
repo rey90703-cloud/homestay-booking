@@ -25,6 +25,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
 import './LogoLoop.css';
 
 // Animation configuration constants
@@ -111,6 +112,7 @@ const useImageLoader = (seqRef, onLoad, dependencies) => {
 /**
  * Custom hook for animation loop using requestAnimationFrame
  * Uses GPU-accelerated transform for smooth 60fps performance
+ * Pauses when not in viewport (Requirements: 7.4, 7.5)
  */
 const useAnimationLoop = (
   trackRef,
@@ -118,7 +120,8 @@ const useAnimationLoop = (
   seqWidth,
   isHovered,
   hoverSpeed,
-  isPaused
+  isPaused,
+  isInViewport
 ) => {
   const rafRef = useRef(null);
   const lastTimestampRef = useRef(null);
@@ -127,7 +130,8 @@ const useAnimationLoop = (
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track || isPaused) return;
+    // Pause when not in viewport or when isPaused (Requirements: 7.4, 7.5)
+    if (!track || isPaused || !isInViewport) return;
 
     // Initialize position
     if (seqWidth > 0) {
@@ -172,7 +176,7 @@ const useAnimationLoop = (
       }
       lastTimestampRef.current = null;
     };
-  }, [targetVelocity, seqWidth, isHovered, hoverSpeed, isPaused, trackRef]);
+  }, [targetVelocity, seqWidth, isHovered, hoverSpeed, isPaused, isInViewport, trackRef]);
 };
 
 /**
@@ -212,6 +216,12 @@ export const LogoLoop = memo(({
 
   // Check for reduced motion preference (Requirement 6.4, 6.5)
   const prefersReducedMotion = useReducedMotion();
+  
+  // Viewport-based animation pausing (Requirements: 7.4, 7.5)
+  const [viewportRef, isInViewport] = useIntersectionObserver({
+    threshold: 0.1,
+    triggerOnce: false // Keep observing for pause/resume
+  });
 
   // Calculate hover speed (0 = pause, undefined = no change)
   const effectiveHoverSpeed = useMemo(() => {
@@ -246,14 +256,15 @@ export const LogoLoop = memo(({
   // Wait for images to load before calculating dimensions
   useImageLoader(seqRef, updateDimensions, [logos, gap, logoHeight]);
 
-  // Run animation loop (paused if reduced motion is preferred)
+  // Run animation loop (paused if reduced motion is preferred or not in viewport)
   useAnimationLoop(
     trackRef,
     targetVelocity,
     seqWidth,
     isHovered,
     effectiveHoverSpeed,
-    prefersReducedMotion
+    prefersReducedMotion,
+    isInViewport
   );
 
   // CSS custom properties for styling
@@ -339,6 +350,14 @@ export const LogoLoop = memo(({
       </ul>
     )), [copyCount, logos, renderLogoItem]);
 
+  // Merge refs for container (resize observer) and viewport (intersection observer)
+  const setContainerRef = useCallback((node) => {
+    containerRef.current = node;
+    if (viewportRef && typeof viewportRef === 'object') {
+      viewportRef.current = node;
+    }
+  }, [viewportRef]);
+
   // Don't render if no logos
   if (!logos || logos.length === 0) {
     return null;
@@ -346,7 +365,7 @@ export const LogoLoop = memo(({
 
   return (
     <div
-      ref={containerRef}
+      ref={setContainerRef}
       className={rootClassName}
       style={cssVariables}
       role="region"

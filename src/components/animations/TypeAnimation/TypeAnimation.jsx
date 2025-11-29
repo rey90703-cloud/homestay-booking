@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
 import './TypeAnimation.css';
 
 /**
@@ -33,6 +34,12 @@ const TypeAnimation = ({
   onComplete
 }) => {
   const prefersReducedMotion = useReducedMotion();
+  
+  // Viewport-based animation pausing (Requirements: 7.4, 7.5)
+  const [containerRef, isInViewport] = useIntersectionObserver({
+    threshold: 0.1,
+    triggerOnce: false // Keep observing for pause/resume
+  });
   
   // State for current display text and animation phase
   const [displayText, setDisplayText] = useState('');
@@ -129,10 +136,16 @@ const TypeAnimation = ({
       return;
     }
 
+    // Pause animation when not in viewport (Requirements: 7.4, 7.5)
+    if (!isInViewport) {
+      clearTimers();
+      return;
+    }
+
     tick();
 
     return clearTimers;
-  }, [tick, prefersReducedMotion, currentText, clearTimers]);
+  }, [tick, prefersReducedMotion, currentText, clearTimers, isInViewport]);
 
   // Handle reduced motion - show all texts in rotation without animation
   useEffect(() => {
@@ -164,7 +177,7 @@ const TypeAnimation = ({
   }
 
   return (
-    <span className={`type-animation ${className}`}>
+    <span ref={containerRef} className={`type-animation ${className}`}>
       <span className="type-animation__text">{displayText}</span>
       {showCursor && (
         <span 
