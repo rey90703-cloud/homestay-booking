@@ -18,7 +18,7 @@
 export { default as StatsCount } from './StatsCount/StatsCount';
 
 // TypeAnimation - Typing effect animation
-// export { TypeAnimation } from './TypeAnimation/TypeAnimation';
+export { default as TypeAnimation } from './TypeAnimation/TypeAnimation';
 
 // AnimatedTestimonials - Testimonial carousel with animations
 // export { AnimatedTestimonials } from './AnimatedTestimonials/AnimatedTestimonials';

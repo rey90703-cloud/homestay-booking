@@ -57,6 +57,17 @@
   color: #141217;
 }
 
+/* TypeAnimation styling in hero badge */
+.hero-badge .hero-destination-text,
+.hero-badge .hero-destination-text .type-animation__text {
+  color: #E11D48 !important;
+  font-weight: 600;
+}
+
+.hero-badge .hero-destination-text .type-animation__cursor {
+  color: #E11D48 !important;
+}
+
 .hero-badge-bottom {
   display: inline-flex;
   padding: 12px 20px;

@@ -1,0 +1,56 @@
+/**
+ * TypeAnimation Component Styles
+ * 
+ * Styles for the typing animation effect including cursor blinking.
+ * Uses CSS animations for GPU-accelerated performance.
+ * 
+ * Requirements: 2.5 - Display blinking cursor indicator
+ */
+
+.type-animation {
+  display: inline-flex;
+  align-items: center;
+}
+
+.type-animation__text {
+  /* Ensure text doesn't cause layout shifts */
+  display: inline-block;
+  min-width: 1ch;
+}
+
+.type-animation__cursor {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: 400;
+  color: currentColor;
+  /* Use opacity for GPU-accelerated animation */
+  opacity: 1;
+}
+
+/* Blinking cursor animation */
+.type-animation__cursor--blinking {
+  animation: cursor-blink 1s ease-in-out infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion - disable cursor blinking */
+@media (prefers-reduced-motion: reduce) {
+  .type-animation__cursor--blinking {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Optional: Smooth text appearance */
+.type-animation__text {
+  /* Prevent text from jumping during typing */
+  white-space: nowrap;
+}
