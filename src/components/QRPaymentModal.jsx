@@ -276,19 +276,6 @@ const QRPaymentModal = ({ bookingId, onSuccess, onClose }) => {
                   </span>
                 </div>
                 </div>
-
-                <div className="payment-instructions">
-                  <h4>Hướng dẫn thanh toán</h4>
-                  <ol>
-                    <li>Mở ứng dụng ngân hàng của bạn</li>
-                    <li>Chọn chức năng quét mã QR</li>
-                    <li>Quét mã QR bên trái</li>
-                    <li>Kiểm tra thông tin và xác nhận thanh toán</li>
-                  </ol>
-                  <p className="note">
-                    💡 Hệ thống sẽ tự động xác nhận thanh toán sau khi bạn chuyển khoản thành công
-                  </p>
-                </div>
               </div>
             </>
           )}

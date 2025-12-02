@@ -618,3 +618,127 @@
   background: var(--bg-primary);
   color: var(--text-primary);
 }
+
+/* Promo Code Section */
+.promo-code-section {
+  background: white;
+  border-radius: 12px;
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
+}
+
+.promo-title {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-primary, #141217);
+  margin-bottom: var(--space-sm);
+}
+
+.btn-select-promo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: var(--space-sm);
+}
+
+.btn-select-promo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+}
+
+.promo-btn-icon {
+  font-size: 20px;
+}
+
+.promo-btn-arrow {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s;
+}
+
+.btn-select-promo:hover .promo-btn-arrow {
+  transform: translateX(4px);
+}
+
+.promo-applied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm);
+  background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%);
+  border: 1px solid #FCA5A5;
+  border-radius: 8px;
+}
+
+.promo-applied-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.promo-applied-icon {
+  font-size: 24px;
+}
+
+.promo-applied-name {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-primary, #141217);
+  margin: 0 0 2px 0;
+}
+
+.promo-applied-code {
+  font-size: var(--font-xs);
+  color: var(--primary-color, #E11D48);
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  margin: 0;
+}
+
+.btn-remove-promo {
+  width: 28px;
+  height: 28px;
+  background: white;
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.12));
+  border-radius: 50%;
+  color: var(--text-secondary, #717171);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove-promo:hover {
+  background: var(--bg-secondary, #F5F5F5);
+  color: var(--text-primary, #141217);
+}
+
+.promo-error {
+  margin-top: var(--space-xs);
+  font-size: var(--font-xs);
+  color: #DC2626;
+  margin-bottom: 0;
+}
+
+.pricing-row.discount {
+  color: var(--primary-color, #E11D48);
+}
+
+.discount-amount {
+  font-weight: 600;
+}
+
+

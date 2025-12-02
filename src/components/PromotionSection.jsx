@@ -1,8 +1,17 @@
+import { useState } from 'react';
 import RotatingText from './animations/RotatingText/RotatingText';
 import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
+import PromotionModal from './PromotionModal';
 import './PromotionSection.css';
 
 function PromotionSection() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Get current month
+  const getCurrentMonth = () => {
+    return new Date().getMonth() + 1; // 1-12
+  };
+
   const promotionTexts = [
     'Top homestay giảm đến 30%',
     'Ưu đãi đặc biệt cuối tuần',
@@ -15,7 +24,7 @@ function PromotionSection() {
       <ScrollReveal animation="bounce" duration={0.7}>
       <div className="promotion-card">
         <div className="promotion-badge">
-          <span>Khuyến mãi tháng 11</span>
+          <span>Khuyến mãi tháng {getCurrentMonth()}</span>
         </div>
         <div className="promotion-content">
           <h3 className="promotion-title">
@@ -35,12 +44,14 @@ function PromotionSection() {
           <p className="promotion-description">Đặt sớm hôm nay để nhận ưu đãi giới hạn.</p>
         </div>
         <div className="promotion-action">
-          <button className="btn-promotion btn-pulse">
+          <button className="btn-promotion btn-pulse" onClick={() => setIsModalOpen(true)}>
             % Xem ưu đãi
           </button>
         </div>
       </div>
       </ScrollReveal>
+
+      <PromotionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );
 }

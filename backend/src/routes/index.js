@@ -9,6 +9,7 @@ const paymentRoutes = require('./payment.routes');
 const configRoutes = require('../modules/config/config.routes');
 const reviewRoutes = require('../modules/reviews/review.routes');
 const chatRoutes = require('../modules/chats/chat.routes');
+const promoCodeRoutes = require('./promoCode.routes');
 const paymentPoller = require('../services/payment-poller.service');
 const mongoose = require('mongoose');
 
@@ -26,6 +27,7 @@ router.use('/contacts', contactRoutes);
 router.use('/payments', paymentRoutes);
 router.use('/config', configRoutes);
 router.use('/chat', chatRoutes);
+router.use('/promo-codes', promoCodeRoutes);
 router.use('/', reviewRoutes);
 
 // Health check endpoint

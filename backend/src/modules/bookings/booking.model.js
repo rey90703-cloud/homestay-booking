@@ -46,6 +46,12 @@ const bookingSchema = new mongoose.Schema(
       phone: String,
     },
 
+    // Promo code
+    promoCode: {
+      type: String,
+      uppercase: true,
+    },
+
     // Pricing breakdown
     pricing: {
       basePrice: {
@@ -58,6 +64,10 @@ const bookingSchema = new mongoose.Schema(
         default: 0,
       },
       serviceFee: {
+        type: Number,
+        default: 0,
+      },
+      discount: {
         type: Number,
         default: 0,
       },

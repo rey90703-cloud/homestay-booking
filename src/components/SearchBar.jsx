@@ -192,11 +192,7 @@ function SearchBar({ variant = 'hero', initialData = {} }) {
       </div>
 
       <button type="submit" className="search-btn" disabled={isLoading}>
-        {isLoading ? (
-          <div className="btn-spinner"></div>
-        ) : (
-          <img src="/images/icon-search-white.svg" alt="search" className="btn-icon" />
-        )}
+        {isLoading && <div className="btn-spinner"></div>}
         <span>
           {isLoading 
             ? 'Đang tìm...' 

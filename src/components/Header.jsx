@@ -124,7 +124,6 @@ const Header = () => {
           )}
           {(!isAuthenticated || user?.role === 'owner') && (
             <button className="btn-primary mobile-btn" onClick={() => { handleAddHomestay(); setShowMobileMenu(false); }}>
-              <img src="/images/icon-plus.svg" alt="plus" className="btn-icon" />
               <span>Đăng homestay</span>
             </button>
           )}
@@ -173,7 +172,6 @@ const Header = () => {
 
         {(!isAuthenticated || user?.role === 'owner') && (
           <button className="btn-primary desktop-btn" onClick={handleAddHomestay}>
-            <img src="/images/icon-plus.svg" alt="plus" className="btn-icon" />
             <span>Đăng homestay</span>
           </button>
         )}

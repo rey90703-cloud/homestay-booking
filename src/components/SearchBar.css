@@ -86,7 +86,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 24px;
+  padding: 16px 28px;
   background: #E11D48;
   border: none;
   border-radius: 14px;
@@ -96,7 +96,7 @@
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
   white-space: nowrap;
-  min-height: 48px;
+  min-height: 54px;
   align-self: flex-end;
   line-height: 1;
 }

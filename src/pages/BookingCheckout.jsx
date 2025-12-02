@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import API_BASE_URL from '../config/api';
 import QRPaymentModal from '../components/QRPaymentModal';
+import PromoCodeModal from '../components/PromoCodeModal';
 import './BookingCheckout.css';
 
 const BookingCheckout = () => {
@@ -22,6 +23,9 @@ const BookingCheckout = () => {
     checkOutDate: '',
     guests: 1,
   };
+
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [showPromoModal, setShowPromoModal] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: user?.fullName || '',
@@ -80,10 +84,25 @@ const BookingCheckout = () => {
       const subtotal = homestay.pricing.basePrice * nights;
       const cleaningFee = homestay.pricing.cleaningFee || 0;
       const serviceFee = homestay.pricing.serviceFee || 0;
-      const total = subtotal + cleaningFee + serviceFee;
-      return { nights, subtotal, cleaningFee, serviceFee, total };
+      let discount = 0;
+      
+      // Apply promo code discount
+      if (appliedPromo) {
+        discount = Math.round(subtotal * (appliedPromo.discount / 100));
+      }
+      
+      const total = subtotal + cleaningFee + serviceFee - discount;
+      return { nights, subtotal, cleaningFee, serviceFee, discount, total };
     }
-    return { nights: 0, subtotal: 0, cleaningFee: 0, serviceFee: 0, total: 0 };
+    return { nights: 0, subtotal: 0, cleaningFee: 0, serviceFee: 0, discount: 0, total: 0 };
+  };
+
+  const handleSelectPromo = (promo) => {
+    setAppliedPromo(promo);
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
   };
 
   const handleInputChange = (e) => {
@@ -119,6 +138,7 @@ const BookingCheckout = () => {
 
       // Call API to create booking
       const token = localStorage.getItem('token');
+      const pricing = calculatePricing();
       const bookingData = {
         homestayId: id,
         checkInDate: bookingInfo.checkInDate,
@@ -131,6 +151,8 @@ const BookingCheckout = () => {
           phone: formData.phone,
         },
         specialRequests: formData.specialRequests,
+        promoCode: appliedPromo?.code || null,
+        totalAmount: pricing.total,
       };
 
       const response = await fetch(`${API_BASE_URL}/bookings`, {
@@ -378,6 +400,48 @@ const BookingCheckout = () => {
               </div>
             </div>
 
+            {/* Promo Code Section */}
+            <div className="promo-code-section">
+              <h4 className="promo-title">Mã giảm giá</h4>
+              {!appliedPromo ? (
+                <button 
+                  className="btn-select-promo" 
+                  onClick={() => setShowPromoModal(true)}
+                  type="button"
+                >
+                  <span className="promo-btn-icon">🎁</span>
+                  <span>Chọn mã ưu đãi</span>
+                  <svg className="promo-btn-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              ) : (
+                <div className="promo-applied">
+                  <div className="promo-applied-info">
+                    <span className="promo-applied-icon">{appliedPromo.icon || '🎉'}</span>
+                    <div>
+                      <p className="promo-applied-name">{appliedPromo.name}</p>
+                      <p className="promo-applied-code">Mã: {appliedPromo.code} (-{appliedPromo.discount}%)</p>
+                    </div>
+                  </div>
+                  <button 
+                    className="btn-remove-promo" 
+                    onClick={handleRemovePromo}
+                    type="button"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <PromoCodeModal 
+              isOpen={showPromoModal}
+              onClose={() => setShowPromoModal(false)}
+              onSelectPromo={handleSelectPromo}
+              bookingInfo={bookingInfo}
+            />
+
             <div className="pricing-summary">
               <div className="pricing-row">
                 <span>Giá phòng ({pricing.nights} đêm)</span>
@@ -391,6 +455,12 @@ const BookingCheckout = () => {
                 <span>Phí dịch vụ</span>
                 <span>{pricing.serviceFee.toLocaleString('vi-VN')}đ</span>
               </div>
+              {pricing.discount > 0 && (
+                <div className="pricing-row discount">
+                  <span>Giảm giá ({appliedPromo?.discount}%)</span>
+                  <span className="discount-amount">-{pricing.discount.toLocaleString('vi-VN')}đ</span>
+                </div>
+              )}
               <div className="pricing-divider"></div>
               <div className="pricing-row total">
                 <span>Tổng cộng</span>
@@ -407,7 +477,7 @@ const BookingCheckout = () => {
             </button>
 
             <p className="disclaimer">
-              Bạn sẽ không bị trừ tiền ngay lúc này. Chủ nhà sẽ xác nhận đặt phòng trong vòng 24 giờ.
+              Chủ nhà sẽ xác nhận đặt phòng trong vòng 24 giờ.
             </p>
           </div>
 

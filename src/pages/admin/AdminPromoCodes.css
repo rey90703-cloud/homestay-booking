@@ -1,0 +1,414 @@
+.admin-promo-codes {
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-promo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-xl);
+  gap: var(--space-md);
+}
+
+.admin-promo-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  color: var(--text-primary, #141217);
+  margin-bottom: var(--space-xs);
+}
+
+.admin-promo-subtitle {
+  font-size: var(--font-sm);
+  color: var(--text-secondary, #717171);
+}
+
+.btn-create-promo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--primary-color, #E11D48);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-create-promo:hover {
+  background: var(--primary-hover, #BE123C);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+}
+
+.btn-create-promo svg {
+  width: 20px;
+  height: 20px;
+}
+
+.promo-loading {
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color, rgba(20, 18, 23, 0.12));
+  border-top-color: var(--primary-color, #E11D48);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto var(--space-md);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.promo-codes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--space-lg);
+}
+
+.promo-code-card {
+  background: white;
+  border-radius: 12px;
+  padding: var(--space-md);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
+  transition: all 0.2s;
+}
+
+.promo-code-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.promo-code-card.inactive {
+  opacity: 0.6;
+}
+
+.promo-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+  gap: var(--space-sm);
+}
+
+.promo-card-code {
+  flex: 1;
+}
+
+.code-text {
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--primary-color, #E11D48);
+}
+
+.status-badge {
+  font-size: var(--font-xs);
+  padding: 4px var(--space-xs);
+  border-radius: 6px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-badge.active {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.status-badge.inactive {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.promo-card-actions {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
+}
+
+.btn-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.12));
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: var(--font-xs);
+  font-weight: 500;
+  color: var(--text-primary, #141217);
+}
+
+.btn-action:hover {
+  background: var(--bg-secondary, #F5F5F5);
+  transform: translateY(-1px);
+}
+
+.btn-action.edit:hover {
+  border-color: #3B82F6;
+  background: #EFF6FF;
+  color: #1E40AF;
+}
+
+.btn-action.toggle:hover {
+  border-color: #F59E0B;
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.btn-action.delete:hover {
+  border-color: #EF4444;
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.promo-card-name {
+  font-family: 'Roboto Slab', serif;
+  font-size: var(--font-md);
+  font-weight: 600;
+  color: var(--text-primary, #141217);
+  margin-bottom: var(--space-xs);
+}
+
+.promo-card-description {
+  font-size: var(--font-sm);
+  color: var(--text-secondary, #717171);
+  margin-bottom: var(--space-md);
+}
+
+.promo-card-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-label {
+  font-size: var(--font-xs);
+  color: var(--text-tertiary, #BDBDBD);
+}
+
+.detail-value {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-primary, #141217);
+}
+
+.detail-value.discount {
+  color: var(--primary-color, #E11D48);
+  font-size: var(--font-md);
+}
+
+/* Modal */
+.promo-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: var(--space-md);
+  overflow-y: auto;
+}
+
+.promo-modal {
+  background: white;
+  border-radius: 16px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.promo-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
+}
+
+.promo-modal-header h2 {
+  font-family: 'Roboto Slab', serif;
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text-primary, #141217);
+  margin: 0;
+}
+
+.btn-close-modal {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--bg-secondary, #F5F5F5);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.2s;
+}
+
+.btn-close-modal:hover {
+  background: var(--border-color, rgba(20, 18, 23, 0.12));
+  transform: rotate(90deg);
+}
+
+.promo-form {
+  padding: var(--space-lg);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+}
+
+.form-group {
+  margin-bottom: var(--space-md);
+}
+
+.form-group label {
+  display: block;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--text-primary, #141217);
+  margin-bottom: var(--space-xs);
+}
+
+.required {
+  color: var(--primary-color, #E11D48);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: var(--space-sm);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.12));
+  border-radius: 8px;
+  font-size: var(--font-sm);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color, #E11D48);
+}
+
+.form-group textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-color, rgba(20, 18, 23, 0.08));
+}
+
+.btn-cancel,
+.btn-submit {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: 8px;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel {
+  background: var(--bg-secondary, #F5F5F5);
+  border: 1px solid var(--border-color, rgba(20, 18, 23, 0.12));
+  color: var(--text-primary, #141217);
+}
+
+.btn-cancel:hover {
+  background: var(--border-color, rgba(20, 18, 23, 0.12));
+}
+
+.btn-submit {
+  background: var(--primary-color, #E11D48);
+  border: none;
+  color: white;
+}
+
+.btn-submit:hover {
+  background: var(--primary-hover, #BE123C);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-promo-header {
+    flex-direction: column;
+  }
+
+  .btn-create-promo {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .promo-codes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

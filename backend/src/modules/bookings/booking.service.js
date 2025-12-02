@@ -85,7 +85,7 @@ class BookingService {
   }
 
   async createBooking(guestId, data) {
-    const { homestayId, checkInDate, checkOutDate, numberOfGuests, specialRequests } = data;
+    const { homestayId, checkInDate, checkOutDate, numberOfGuests, specialRequests, promoCode } = data;
 
     // Verify homestay exists and is active
     const homestay = await Homestay.findById(homestayId);
@@ -108,7 +108,27 @@ class BookingService {
     const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
 
     const baseAmount = homestay.pricing.basePrice * nights;
-    const totalAmount = baseAmount + homestay.pricing.cleaningFee + homestay.pricing.serviceFee;
+    let totalAmount = baseAmount + homestay.pricing.cleaningFee + homestay.pricing.serviceFee;
+    let discount = 0;
+    let appliedPromoCode = null;
+
+    // Apply promo code if provided
+    if (promoCode) {
+      const PromoCode = require('../../models/promoCode.model');
+      const promo = await PromoCode.findOne({ code: promoCode.toUpperCase() });
+      
+      if (promo && promo.isValid()) {
+        if (totalAmount >= promo.minOrderAmount) {
+          discount = promo.calculateDiscount(totalAmount);
+          totalAmount -= discount;
+          appliedPromoCode = promo.code;
+          
+          // Increment usage count
+          promo.usedCount += 1;
+          await promo.save();
+        }
+      }
+    }
     
     // Calculate commission (10% for platform, 90% for host)
     const commissionRate = 0.1;
@@ -150,11 +170,13 @@ class BookingService {
           numberOfGuests,
           specialRequests,
           holdExpiresAt,
+          promoCode: appliedPromoCode,
           pricing: {
             basePrice: homestay.pricing.basePrice,
             numberOfNights: nights,
             cleaningFee: homestay.pricing.cleaningFee,
             serviceFee: homestay.pricing.serviceFee,
+            discount,
             totalAmount,
             currency: homestay.pricing.currency,
             hostAmount,
