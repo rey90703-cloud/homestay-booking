@@ -85,3 +85,57 @@
   background-color: #fee2e2;
   color: #991b1b;
 }
+
+/* Dark Mode */
+[data-theme="dark"] .no-bookings {
+  background: #1a1a1a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .no-bookings p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .bookings-table {
+  background: #1a1a1a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .bookings-table th {
+  color: #94a3b8;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .bookings-table td {
+  color: #e2e8f0;
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .bookings-table tr:hover {
+  background-color: #2a2a2a;
+}
+
+[data-theme="dark"] .status-pending {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .status-paid {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+[data-theme="dark"] .status-confirmed {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .status-completed {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #818cf8;
+}
+
+[data-theme="dark"] .status-cancelled {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}

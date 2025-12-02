@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AuthProvider } from './contexts/AuthContext';
 import { ChatProvider } from './contexts/ChatContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { WishlistProvider } from './contexts/WishlistContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -21,6 +22,7 @@ import MyBookings from './pages/MyBookings';
 import Profile from './pages/Profile';
 import HomestayHanoi from './pages/HomestayHanoi';
 import HomestayLaoCai from './pages/HomestayLaoCai';
+import Wishlist from './pages/Wishlist';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import HostDashboard from './pages/host/HostDashboard';
@@ -66,8 +68,9 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <ChatProvider>
-          <Router>
+        <WishlistProvider>
+          <ChatProvider>
+            <Router>
           <ScrollRestoration />
           <div className="app">
           <Routes>
@@ -176,6 +179,13 @@ function App() {
                 <Footer />
               </>
             } />
+            <Route path="/wishlist" element={
+              <>
+                <Header />
+                <Wishlist />
+                <Footer />
+              </>
+            } />
             <Route path="/" element={
               <>
                 <Header />
@@ -188,8 +198,9 @@ function App() {
           {/* Chat Widget - Available on all pages */}
           <ChatWidget />
         </div>
-        </Router>
-        </ChatProvider>
+            </Router>
+          </ChatProvider>
+        </WishlistProvider>
       </AuthProvider>
     </ThemeProvider>
   );

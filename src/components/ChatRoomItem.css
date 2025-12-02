@@ -175,3 +175,60 @@
     font-size: 11px;
   }
 }
+
+/* Dark Mode */
+[data-theme="dark"] .chat-room-item {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .chat-room-item:hover {
+  background-color: #1a1a1a;
+}
+
+[data-theme="dark"] .chat-room-item.has-unread {
+  background-color: rgba(225, 29, 72, 0.1);
+}
+
+[data-theme="dark"] .chat-room-item.has-unread:hover {
+  background-color: rgba(225, 29, 72, 0.15);
+}
+
+[data-theme="dark"] .online-indicator {
+  border-color: #0f0f0f;
+}
+
+[data-theme="dark"] .chat-room-name {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .chat-room-item.has-unread .chat-room-name {
+  color: #E11D48;
+}
+
+[data-theme="dark"] .chat-room-time {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .chat-room-item.has-unread .chat-room-time {
+  color: #E11D48;
+}
+
+[data-theme="dark"] .chat-room-participant {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .chat-room-item.has-unread .chat-room-participant {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .chat-room-last-message {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .chat-room-item.has-unread .chat-room-last-message {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .chat-room-unread-badge {
+  background: #E11D48;
+}

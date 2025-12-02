@@ -667,3 +667,203 @@
   margin: 0;
   line-height: 1.5;
 }
+
+/* Dark Mode */
+[data-theme="dark"] .payment-success {
+  background: #0f0f0f;
+}
+
+[data-theme="dark"] .success-card,
+[data-theme="dark"] .success-badge-card,
+[data-theme="dark"] .host-contact-card,
+[data-theme="dark"] .ticket-card {
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .card-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .card-header h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .booking-dates {
+  background: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .homestay-info h4 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .homestay-info p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .homestay-thumb {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .info-row label,
+[data-theme="dark"] .info-box label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .info-row p,
+[data-theme="dark"] .info-box p {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .info-box {
+  background: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .note {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .pricing-row {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .pricing-row.total {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .payment-method {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .policy-item {
+  background: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .policy-item h4 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .policy-item p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .divider {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .success-badge h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .success-badge p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .download-info {
+  background: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .download-info h4 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .download-info p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .host-contact-card h3,
+[data-theme="dark"] .ticket-card h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .host-info h4 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .host-info p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-contact {
+  background: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .btn-contact:hover {
+  background: #3a3a3a;
+  border-color: #e11d48;
+  color: #e11d48;
+}
+
+[data-theme="dark"] .qr-placeholder {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .ticket-info h4 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .ticket-info p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .reminder-item h4 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .reminder-item p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .loading-state .spinner {
+  border-color: #2a2a2a;
+  border-top-color: #e11d48;
+}
+
+[data-theme="dark"] .loading-state p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .error-state h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .error-state p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .cancellation-info {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+[data-theme="dark"] .cancellation-info .info-row span:first-child {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .cancellation-info .info-row span:last-child {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .refund-info h4 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .refund-note {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .payment-pending-info {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+[data-theme="dark"] .payment-pending-info p {
+  color: #fbbf24;
+}

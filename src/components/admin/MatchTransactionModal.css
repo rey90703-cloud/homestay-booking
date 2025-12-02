@@ -333,3 +333,141 @@
     width: 100%;
   }
 }
+
+/* Dark Mode */
+[data-theme="dark"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .modal-content {
+  background: #1a1a1a;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .modal-header h2 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .modal-close {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .modal-close:hover {
+  background: #2a2a2a;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .transaction-info-box {
+  background: #0f0f0f;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .transaction-info-box h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .info-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .info-value {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .search-input {
+  background: #0f0f0f;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .search-input:focus {
+  border-color: #E11D48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+}
+
+[data-theme="dark"] .bookings-list h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .bookings-scroll::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .bookings-scroll::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+}
+
+[data-theme="dark"] .bookings-scroll::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+[data-theme="dark"] .booking-item {
+  background: #0f0f0f;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .booking-item:hover {
+  border-color: #E11D48;
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .booking-item.selected {
+  border-color: #E11D48;
+  background: rgba(225, 29, 72, 0.1);
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+}
+
+[data-theme="dark"] .booking-detail-item {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .booking-detail-item strong {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .amount-warning {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .loading-state,
+[data-theme="dark"] .empty-state-small {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .notes-section label {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .notes-textarea {
+  background: #0f0f0f;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .notes-textarea:focus {
+  border-color: #E11D48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+}
+
+[data-theme="dark"] .modal-footer {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .btn-secondary {
+  background: #2a2a2a;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn-secondary:hover:not(:disabled) {
+  background: #3a3a3a;
+}
+
+[data-theme="dark"] .btn-primary:disabled {
+  background: #3a3a3a;
+}

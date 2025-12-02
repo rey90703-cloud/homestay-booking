@@ -61,3 +61,31 @@
     grid-column: span 1;
   }
 }
+
+/* Dark Mode */
+[data-theme="dark"] .filters-section {
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .filter-group label {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .filter-select,
+[data-theme="dark"] .filter-input {
+  background: #0f0f0f;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .filter-select:focus,
+[data-theme="dark"] .filter-input:focus {
+  border-color: #E11D48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+}
+
+[data-theme="dark"] .filter-select:hover,
+[data-theme="dark"] .filter-input:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}

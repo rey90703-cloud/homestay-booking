@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useWishlist } from '../contexts/WishlistContext';
 import './HomestayCard.css';
 
 function HomestayCard({ homestay }) {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isInWishlist, toggleWishlist } = useWishlist();
+
+  // Support both old and new data structure
+  const id = homestay._id || homestay.id;
+  const isFavorite = isInWishlist(id);
 
   const toggleFavorite = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsFavorite(!isFavorite);
+    toggleWishlist(id);
   };
 
-  // Support both old and new data structure
-  const id = homestay._id || homestay.id;
   const title = homestay.title || homestay.name;
   const image = homestay.coverImage || homestay.images?.[0]?.url || homestay.image || '/placeholder.jpg';
   const price = homestay.pricing?.basePrice || homestay.price;

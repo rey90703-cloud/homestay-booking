@@ -9,7 +9,11 @@
     "test:watch": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"**/*.js\""
+    "format": "prettier --write \"**/*.js\"",
+    "seed:amenities": "node scripts/seed-amenities.js",
+    "update:homestay-amenities": "node scripts/update-homestay-amenities.js",
+    "test:filters": "node scripts/test-filter-api.js",
+    "test:rating-filter": "node scripts/test-rating-filter.js"
   },
   "keywords": [],
   "author": "",

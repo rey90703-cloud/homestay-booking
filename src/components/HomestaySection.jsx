@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useWishlist } from '../contexts/WishlistContext';
 import ExpandableCards from './animations/ExpandableCards/ExpandableCards';
 import ScrollReveal from './animations/ScrollReveal/ScrollReveal';
 import './HomestaySection.css';
@@ -24,6 +25,7 @@ const HomestaySection = ({
   defaultExpandedId 
 }) => {
   const navigate = useNavigate();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   const handleViewAll = () => {
     if (title.includes('Hà Nội')) {
@@ -92,13 +94,21 @@ const HomestaySection = ({
                   <img src={homestay.image} alt={homestay.name} className="card-image" />
                   <div className="card-badge">{homestay.badge}</div>
                   <button 
-                    className="card-favorite"
+                    className={`card-favorite ${isInWishlist(homestay.id) ? 'active' : ''}`}
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
+                      toggleWishlist(homestay.id);
                     }}
                   >
-                    <img src={homestay.heartIcon} alt="favorite" />
+                    <svg className="heart-icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path 
+                        d="M9 15.75L8.0625 14.8875C4.5 11.6625 2.25 9.6375 2.25 7.125C2.25 5.1 3.825 3.525 5.85 3.525C6.975 3.525 8.0625 4.05 8.775 4.875C9.4875 4.05 10.575 3.525 11.7 3.525C13.725 3.525 15.3 5.1 15.3 7.125C15.3 9.6375 13.05 11.6625 9.4875 14.8875L9 15.75Z" 
+                        fill={isInWishlist(homestay.id) ? '#E11D48' : 'none'}
+                        stroke="currentColor" 
+                        strokeWidth="1.5"
+                      />
+                    </svg>
                   </button>
                 </div>
                 <div className="card-content">

@@ -470,18 +470,50 @@ class HomestayService {
       const normalizedSlugs = amenityArray.map(a => 
         a.trim().toLowerCase().replace(/_/g, '-')
       );
+      logger.info(`🔍 Searching for amenities with slugs: ${normalizedSlugs.join(', ')}`);
+      
       // Find amenity IDs by slug
       const amenityDocs = await Amenity.find({ 
         slug: { $in: normalizedSlugs } 
-      }).select('_id');
+      }).select('_id slug');
+      
+      logger.info(`✅ Found ${amenityDocs.length} amenities: ${amenityDocs.map(a => a.slug).join(', ')}`);
+      
       const amenityIds = amenityDocs.map(a => a._id);
       if (amenityIds.length > 0) {
         query.amenities = { $all: amenityIds };
+      } else {
+        logger.warn(`⚠️ No amenities found for slugs: ${normalizedSlugs.join(', ')}`);
       }
     }
 
-    // Rating
-    if (minRating) query['stats.averageRating'] = { $gte: parseFloat(minRating) };
+    // Rating - homestays without reviews are treated as 5 stars (new/unrated)
+    // Use $and to avoid overwriting existing $or conditions
+    if (minRating) {
+      const minRatingValue = parseFloat(minRating);
+      const ratingCondition = {
+        $or: [
+          { 'stats.averageRating': { $gte: minRatingValue } }, // Has rating >= minRating
+          { 'stats.averageRating': { $eq: 0 } }, // No reviews yet (treated as 5 stars)
+          { 'stats.averageRating': { $exists: false } }, // Field doesn't exist
+          { 'stats.totalReviews': { $eq: 0 } }, // Explicitly no reviews
+          { 'stats.totalReviews': { $exists: false } }, // No review stats
+        ]
+      };
+      
+      // If query already has $or, wrap both in $and
+      if (query.$or) {
+        const existingOr = query.$or;
+        delete query.$or;
+        query.$and = [
+          { $or: existingOr },
+          ratingCondition
+        ];
+      } else {
+        // No existing $or, just add the rating condition
+        Object.assign(query, ratingCondition);
+      }
+    }
 
     // Instant book
     if (instantBook === 'true' || instantBook === true) {

@@ -193,6 +193,13 @@ const AdminHomestays = () => {
   const openEditModal = (homestay) => {
     setModalMode('edit');
     setSelectedHomestay(homestay);
+    
+    // Convert amenityNames (tên tiếng Việt) sang amenity ids
+    const amenityIds = (homestay.amenityNames || []).map(name => {
+      const found = AMENITIES.find(a => a.name === name || a.id === name);
+      return found ? found.id : name;
+    }).filter(Boolean);
+    
     setFormData({
       title: homestay.title || '',
       description: homestay.description || '',
@@ -205,7 +212,7 @@ const AdminHomestays = () => {
       bathrooms: homestay.capacity?.bathrooms || '',
       coverImage: null,
       images: [],
-      amenities: homestay.amenityNames || [],
+      amenities: amenityIds,
     });
     setCoverImagePreview(homestay.coverImage || '');
     setImagesPreview(homestay.images?.map(img => img.url) || []);
@@ -335,10 +342,12 @@ const AdminHomestays = () => {
     formDataToSend.append('capacity[beds]', formData.bedrooms); // Default: beds = bedrooms
     formDataToSend.append('capacity[bathrooms]', formData.bathrooms);
 
-    // Thêm amenities
+    // Thêm amenities - convert id sang tên tiếng Việt để lưu vào DB
     if (formData.amenities && formData.amenities.length > 0) {
-      formData.amenities.forEach((amenity) => {
-        formDataToSend.append('amenities[]', amenity);
+      formData.amenities.forEach((amenityId) => {
+        const found = AMENITIES.find(a => a.id === amenityId);
+        const amenityName = found ? found.name : amenityId;
+        formDataToSend.append('amenities[]', amenityName);
       });
     }
 
@@ -742,6 +751,7 @@ const AdminHomestays = () => {
                     <option value="Đà Nẵng">Đà Nẵng</option>
                     <option value="Nha Trang">Nha Trang</option>
                     <option value="Đà Lạt">Đà Lạt</option>
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
                     <option value="TP.HCM">TP.HCM</option>
                   </select>
                 </div>
@@ -852,18 +862,28 @@ const AdminHomestays = () => {
                 <div className="amenities-grid">
                   {AMENITIES.map((amenity) => {
                     const IconComponent = amenity.icon;
+                    const isSelected = formData.amenities?.includes(amenity.id) || false;
+                    
                     return (
-                      <label key={amenity.id} className="amenity-checkbox">
+                      <label 
+                        key={amenity.id} 
+                        className={`amenity-checkbox ${isSelected ? 'selected' : ''}`}
+                      >
                         <input
                           type="checkbox"
-                          checked={formData.amenities?.includes(amenity.id) || false}
+                          checked={isSelected}
                           onChange={() => handleAmenityToggle(amenity.id)}
                         />
                         <div className="amenity-content">
-                          <IconComponent 
-                            className="amenity-icon" 
-                            style={{ color: amenity.color }}
-                          />
+                          <div 
+                            className="amenity-icon-wrapper"
+                            style={{ 
+                              backgroundColor: isSelected ? amenity.color : '#f3f4f6',
+                              color: isSelected ? 'white' : amenity.color
+                            }}
+                          >
+                            <IconComponent className="amenity-icon" />
+                          </div>
                           <span className="amenity-name">{amenity.name}</span>
                         </div>
                       </label>

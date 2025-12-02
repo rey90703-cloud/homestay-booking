@@ -101,8 +101,13 @@ class SearchService {
     };
   }
 
-  // Filter homestays by amenities (frontend filtering)
+  // Filter homestays by amenities (frontend filtering - kept for backward compatibility)
+  // Note: Backend now handles amenity filtering, this is only used as fallback
   filterByAmenities(homestays, selectedAmenities) {
+    if (!selectedAmenities || selectedAmenities.length === 0) {
+      return homestays;
+    }
+    
     return homestays.filter(homestay => {
       // Get homestay amenities (both IDs and names)
       const homestayAmenities = [
@@ -117,13 +122,13 @@ class SearchService {
           // Direct match
           if (homestayAmenity === selectedAmenity) return true;
           
-          // ID to name mapping
+          // ID to name mapping (updated with hyphen format)
           const amenityMapping = {
             'wifi': 'WiFi',
             'tv': 'TV', 
             'kitchen': 'Bếp',
-            'washing_machine': 'Máy giặt',
-            'air_conditioning': 'Điều hòa',
+            'washing-machine': 'Máy giặt',
+            'air-conditioning': 'Điều hòa',
             'heating': 'Sưởi ấm',
             'workspace': 'Không gian làm việc',
             'pool': 'Hồ bơi',

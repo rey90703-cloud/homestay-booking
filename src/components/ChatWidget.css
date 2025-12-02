@@ -531,3 +531,133 @@
     height: 56px;
   }
 }
+
+/* Dark Mode */
+[data-theme="dark"] .chat-window {
+  background: #1a1a1a;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .chat-header {
+  background: #0f0f0f;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .chat-title {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .chat-close-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .chat-close-btn:hover {
+  background: #2a2a2a;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .chat-back-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .chat-back-btn:hover {
+  background: #2a2a2a;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .conversation-list {
+  background: #0f0f0f;
+}
+
+[data-theme="dark"] .conversation-list::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+}
+
+[data-theme="dark"] .conversation-list::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+[data-theme="dark"] .conversation-item {
+  background: #1a1a1a;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .conversation-item:hover {
+  background: #2a2a2a;
+}
+
+[data-theme="dark"] .conversation-item.has-unread {
+  background: rgba(225, 29, 72, 0.1);
+}
+
+[data-theme="dark"] .conversation-item.has-unread:hover {
+  background: rgba(225, 29, 72, 0.15);
+}
+
+[data-theme="dark"] .conversation-name {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .conversation-time {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .conversation-last-message {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .conversation-item.has-unread .conversation-last-message {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .chat-messages {
+  background: #0f0f0f;
+}
+
+[data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+}
+
+[data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+[data-theme="dark"] .message-support .message-bubble {
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .message-support .message-text {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .typing-indicator span {
+  background: #64748b;
+}
+
+[data-theme="dark"] .chat-input-form {
+  background: #1a1a1a;
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .chat-input {
+  background: #0f0f0f;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .chat-input:focus {
+  border-color: #E11D48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+}
+
+[data-theme="dark"] .chat-input::placeholder {
+  color: #64748b;
+}
+
+[data-theme="dark"] .conversation-loading,
+[data-theme="dark"] .conversation-empty,
+[data-theme="dark"] .messages-loading,
+[data-theme="dark"] .messages-empty {
+  color: #94a3b8;
+}

@@ -403,3 +403,140 @@
 .btn-view:hover {
   background: #bfdbfe;
 }
+
+/* Dark Mode */
+[data-theme="dark"] .page-title {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .no-homestays {
+  background: #1a1a1a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .no-homestays p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .homestay-card {
+  background: #1a1a1a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .homestay-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .homestay-title {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .homestay-location {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-edit {
+  background: #2a2a2a;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn-edit:hover {
+  background: #3a3a3a;
+}
+
+[data-theme="dark"] .btn-delete {
+  background: rgba(220, 38, 38, 0.1);
+  color: #ef4444;
+}
+
+[data-theme="dark"] .btn-delete:hover {
+  background: rgba(220, 38, 38, 0.2);
+}
+
+[data-theme="dark"] .btn-view {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .btn-view:hover {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .loading {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .modal-content {
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .modal-header {
+  background: #1a1a1a;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .modal-header h2 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .btn-close {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-close:hover {
+  background: #2a2a2a;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .form-group label {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] .form-group select {
+  background: #0f0f0f;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group textarea:focus,
+[data-theme="dark"] .form-group select:focus {
+  border-color: #E11D48;
+}
+
+[data-theme="dark"] .amenity-checkbox {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .amenity-checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: #2a2a2a;
+}
+
+[data-theme="dark"] .amenity-checkbox.selected {
+  border-color: #E11D48;
+  background: rgba(225, 29, 72, 0.1);
+}
+
+[data-theme="dark"] .amenity-name {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .modal-actions {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .btn-cancel {
+  background: #2a2a2a;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn-cancel:hover {
+  background: #3a3a3a;
+}

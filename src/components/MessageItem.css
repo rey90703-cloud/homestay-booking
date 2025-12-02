@@ -209,3 +209,30 @@
   opacity: 0.6;
   border: 1px dashed rgba(255, 255, 255, 0.3);
 }
+
+/* Dark Mode */
+[data-theme="dark"] .message-sender-name {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .message-other .message-bubble {
+  background-color: #1a1a1a;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .message-other .message-time {
+  color: #64748b;
+}
+
+[data-theme="dark"] .message-item.error .message-bubble {
+  border-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+[data-theme="dark"] .message-item.error .message-content {
+  color: #ef4444;
+}
+
+[data-theme="dark"] .message-other .message-status {
+  color: #64748b;
+}

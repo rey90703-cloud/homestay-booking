@@ -293,3 +293,99 @@
     padding: 10px;
   }
 }
+
+/* Dark Mode */
+[data-theme="dark"] .payment-tabs {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .tab-button {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .tab-button:hover {
+  color: #E11D48;
+  background: rgba(225, 29, 72, 0.1);
+}
+
+[data-theme="dark"] .tab-button.active {
+  color: #E11D48;
+  border-bottom-color: #E11D48;
+  background: rgba(225, 29, 72, 0.1);
+}
+
+[data-theme="dark"] .table-container {
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .table-wrapper::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .table-wrapper::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+}
+
+[data-theme="dark"] .table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+[data-theme="dark"] .data-table thead {
+  background: #0f0f0f;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .data-table th {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .data-table tbody tr {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .data-table tbody tr:hover {
+  background: #2a2a2a;
+}
+
+[data-theme="dark"] .data-table td {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .booking-id {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .badge-warning {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .badge-success {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+[data-theme="dark"] .badge-danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+[data-theme="dark"] .badge-info {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .badge-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-action.btn-info {
+  background: #2a2a2a;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn-action.btn-info:hover {
+  background: #3a3a3a;
+}

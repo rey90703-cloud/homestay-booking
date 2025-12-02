@@ -47,3 +47,18 @@
 }
 
 /* Message item styles are now in MessageItem.css */
+
+/* Dark Mode */
+[data-theme="dark"] .message-list-loading {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .message-list-empty {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .message-date-text {
+  background: #1a1a1a;
+  color: #94a3b8;
+}

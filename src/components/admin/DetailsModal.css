@@ -435,3 +435,133 @@
     font-size: 20px;
   }
 }
+
+/* Dark Mode */
+[data-theme="dark"] .details-section {
+  background: #0f0f0f;
+}
+
+[data-theme="dark"] .section-title {
+  color: #f1f5f9;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .detail-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .detail-value {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .detail-value.code {
+  color: #60a5fa;
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .detail-item.highlight {
+  background: #1a1a1a;
+  border-color: #3b82f6;
+}
+
+[data-theme="dark"] .detail-value.badge-pending {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .detail-value.badge-completed {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+[data-theme="dark"] .detail-value.badge-processing {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .detail-value.badge-failed {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+[data-theme="dark"] .detail-value.badge-refunded {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+/* Dark Mode Bill */
+[data-theme="dark"] .bill-container {
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .bill-header {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .bill-logo p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .bill-number {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .bill-date {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .bill-info-row {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .info-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .info-value {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .bill-divider {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .bill-table thead {
+  background: #0f0f0f;
+}
+
+[data-theme="dark"] .bill-table th {
+  color: #94a3b8;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .bill-table td {
+  color: #f1f5f9;
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .bill-breakdown {
+  background: #0f0f0f;
+}
+
+[data-theme="dark"] .breakdown-item {
+  color: #f1f5f9;
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .bill-total {
+  background: #2a2a2a;
+}
+
+[data-theme="dark"] .bill-footer {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .bill-footer-item small {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .bill-footer-item strong {
+  color: #f1f5f9;
+}

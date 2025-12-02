@@ -24,13 +24,13 @@ function FilterSidebar({ onFilterChange }) {
     amenities: []
   });
 
-  // Danh sách tiện nghi với icons
+  // Danh sách tiện nghi với icons (slug phải khớp với database)
   const AMENITIES = [
     { id: 'wifi', name: 'WiFi', icon: FaWifi, color: '#4285F4' },
     { id: 'tv', name: 'TV', icon: FaTv, color: '#FF6B6B' },
     { id: 'kitchen', name: 'Bếp', icon: FaKitchenSet, color: '#4ECDC4' },
-    { id: 'washing_machine', name: 'Máy giặt', icon: MdLocalLaundryService, color: '#45B7D1' },
-    { id: 'air_conditioning', name: 'Điều hòa', icon: FaSnowflake, color: '#74C0FC' },
+    { id: 'washing-machine', name: 'Máy giặt', icon: MdLocalLaundryService, color: '#45B7D1' },
+    { id: 'air-conditioning', name: 'Điều hòa', icon: FaSnowflake, color: '#74C0FC' },
     { id: 'heating', name: 'Sưởi ấm', icon: FaFire, color: '#FF8E53' },
     { id: 'workspace', name: 'Không gian làm việc', icon: FaBriefcase, color: '#6C5CE7' },
     { id: 'pool', name: 'Hồ bơi', icon: FaSwimmer, color: '#00B894' },

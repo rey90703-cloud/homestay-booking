@@ -144,6 +144,9 @@ const Header = () => {
                   <button className="dropdown-item" onClick={handleProfile}>
                     Thông tin cá nhân
                   </button>
+                  <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/wishlist'); }}>
+                    Yêu thích
+                  </button>
                   {user?.role !== 'admin' && (
                     <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/my-bookings'); }}>
                       Lịch sử đặt phòng

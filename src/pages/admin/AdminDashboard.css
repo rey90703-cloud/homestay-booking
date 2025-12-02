@@ -182,3 +182,42 @@
     padding: 15px;
   }
 }
+
+/* Dark Mode */
+[data-theme="dark"] .admin-dashboard {
+  background-color: #0f0f0f;
+}
+
+[data-theme="dark"] .admin-sidebar {
+  background: linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 100%);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .sidebar-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .nav-item.active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .nav-item-website {
+  background: rgba(34, 197, 94, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .nav-item-website:hover {
+  background: rgba(34, 197, 94, 0.15);
+}
+
+[data-theme="dark"] .sidebar-footer {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .admin-content {
+  background-color: #0f0f0f;
+}

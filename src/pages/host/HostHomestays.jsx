@@ -82,6 +82,13 @@ const HostHomestays = ({ onAddClick }) => {
 
   const openEditModal = (homestay) => {
     setSelectedHomestay(homestay);
+    
+    // Convert amenityNames (tên tiếng Việt) sang amenity ids
+    const amenityIds = (homestay.amenityNames || []).map(name => {
+      const found = AMENITIES.find(a => a.name === name || a.id === name);
+      return found ? found.id : name;
+    }).filter(Boolean);
+    
     setFormData({
       title: homestay.title || '',
       description: homestay.description || '',
@@ -95,7 +102,7 @@ const HostHomestays = ({ onAddClick }) => {
       basePrice: homestay.pricing?.basePrice || '',
       coverImage: null,
       images: [],
-      amenities: homestay.amenityNames || []
+      amenities: amenityIds
     });
     setCoverImagePreview(homestay.coverImage || '');
     setImagesPreview(homestay.images?.map(img => img.url) || []);
@@ -209,9 +216,12 @@ const HostHomestays = ({ onAddClick }) => {
       formDataToSend.append('capacity[bathrooms]', formData.bathrooms);
       formDataToSend.append('pricing[basePrice]', formData.basePrice);
 
+      // Thêm amenities - convert id sang tên tiếng Việt để lưu vào DB
       if (formData.amenities && formData.amenities.length > 0) {
-        formData.amenities.forEach((amenity) => {
-          formDataToSend.append('amenities[]', amenity);
+        formData.amenities.forEach((amenityId) => {
+          const found = AMENITIES.find(a => a.id === amenityId);
+          const amenityName = found ? found.name : amenityId;
+          formDataToSend.append('amenities[]', amenityName);
         });
       }
 
@@ -325,7 +335,7 @@ const HostHomestays = ({ onAddClick }) => {
                 <div className="homestay-actions">
                   <button 
                     className="btn-view"
-                    onClick={() => navigate(`/homestay/${homestay._id}`)}
+                    onClick={() => window.open(`/homestay/${homestay._id}`, '_blank')}
                   >
                     Xem
                   </button>
@@ -387,10 +397,12 @@ const HostHomestays = ({ onAddClick }) => {
                     <option value="">Chọn thành phố</option>
                     <option value="Hà Nội">Hà Nội</option>
                     <option value="Lào Cai">Lào Cai</option>
+                    <option value="Hạ Long">Hạ Long</option>
                     <option value="Đà Nẵng">Đà Nẵng</option>
-                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
                     <option value="Nha Trang">Nha Trang</option>
                     <option value="Đà Lạt">Đà Lạt</option>
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                    <option value="TP.HCM">TP.HCM</option>
                   </select>
                 </div>
 

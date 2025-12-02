@@ -343,3 +343,74 @@
   }
 }
 
+/* Dark Mode */
+[data-theme="dark"] .form-label {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .form-input {
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .form-input::placeholder {
+  color: #64748b;
+}
+
+[data-theme="dark"] .form-input:focus {
+  border-color: #E11D48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+}
+
+[data-theme="dark"] .role-option {
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .role-option:hover {
+  border-color: rgba(225, 29, 72, 0.3);
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .role-option.active {
+  border-color: #E11D48;
+  background: rgba(225, 29, 72, 0.1);
+}
+
+[data-theme="dark"] .role-title {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .role-description {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .checkbox-group .checkbox-label {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .login-text {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .divider::before {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .divider span {
+  background: #0f0f0f;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-social {
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .btn-social:hover {
+  background: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+

@@ -262,14 +262,15 @@ class HomestayController {
       }
     }
 
-    if (homestayData['capacity[maxGuests]']) {
-      const maxGuests = parseInt(homestayData['capacity[maxGuests]']);
-      const bedrooms = parseInt(homestayData['capacity[bedrooms]']);
-      const bathrooms = parseFloat(homestayData['capacity[bathrooms]']);
-      const beds = parseInt(homestayData['capacity[beds]']) || bedrooms || 1;
+    // Handle capacity - support both capacity[guests] and capacity[maxGuests]
+    if (homestayData['capacity[guests]'] || homestayData['capacity[maxGuests]']) {
+      const guests = parseInt(homestayData['capacity[guests]'] || homestayData['capacity[maxGuests]']) || 1;
+      const bedrooms = parseInt(homestayData['capacity[bedrooms]']) || 1;
+      const bathrooms = parseFloat(homestayData['capacity[bathrooms]']) || 1;
+      const beds = parseInt(homestayData['capacity[beds]']) || bedrooms;
 
       homestayData.capacity = {
-        guests: maxGuests,
+        guests: guests,
         bedrooms: bedrooms,
         beds: beds,
         bathrooms: bathrooms,

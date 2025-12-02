@@ -92,7 +92,7 @@
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(8px);
-  transition: background 0.2s, transform 0.1s;
+  transition: background 0.2s, transform 0.1s, border-color 0.2s;
 }
 
 .card-favorite:hover {
@@ -100,9 +100,24 @@
   transform: scale(1.1);
 }
 
+.card-favorite.active {
+  background: #FFE3EF;
+  border-color: #E11D48;
+}
+
 .card-favorite img {
   width: 16px;
   height: 16px;
+}
+
+.card-favorite .heart-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-primary, #141217);
+}
+
+.card-favorite.active .heart-icon {
+  color: #E11D48;
 }
 
 .card-content {

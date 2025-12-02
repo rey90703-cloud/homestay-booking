@@ -116,72 +116,63 @@
 }
 
 /* Amenities Grid */
-.amenities-grid {
+.admin-homestays .amenities-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 12px;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
-.amenity-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+.admin-homestays .amenity-checkbox {
+  display: block;
+  cursor: pointer;
   border: 2px solid #e2e8f0;
   border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  padding: 12px;
+  transition: all 0.2s;
   background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.amenity-checkbox:hover {
-  border-color: #3b82f6;
-  background: #f0f9ff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+.admin-homestays .amenity-checkbox:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
 }
 
-.amenity-checkbox input[type="checkbox"] {
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-  accent-color: #3b82f6;
+.admin-homestays .amenity-checkbox.selected {
+  border-color: #e91e63;
+  background: #fef2f2;
 }
 
-.amenity-checkbox input[type="checkbox"]:checked ~ .amenity-content {
-  color: #3b82f6;
+.admin-homestays .amenity-checkbox input {
+  display: none;
 }
 
-.amenity-checkbox input[type="checkbox"]:checked ~ .amenity-content .amenity-name {
-  font-weight: 700;
+.admin-homestays .amenity-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
-.amenity-content {
+.admin-homestays .amenity-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex: 1;
+  justify-content: center;
   transition: all 0.2s;
 }
 
-.amenity-icon {
+.admin-homestays .amenity-icon {
   font-size: 20px;
-  transition: all 0.2s;
-  flex-shrink: 0;
 }
 
-.amenity-checkbox:hover .amenity-icon {
-  transform: scale(1.1);
-}
-
-.amenity-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #475569;
-  transition: all 0.2s;
-  flex: 1;
+.admin-homestays .amenity-name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: center;
+  color: #334155;
 }
 
 @media (max-width: 768px) {
@@ -274,4 +265,61 @@
 
 .admin-homestays .btn-action.btn-info:hover {
   background: #e2e8f0;
+}
+
+/* Dark Mode */
+[data-theme="dark"] .homestay-title {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .badge-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .badge-info {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .badge-dark {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .badge-primary {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .image-preview-item {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .admin-homestays .amenity-checkbox {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .admin-homestays .amenity-checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: #2a2a2a;
+}
+
+[data-theme="dark"] .admin-homestays .amenity-checkbox.selected {
+  border-color: #E11D48;
+  background: rgba(225, 29, 72, 0.1);
+}
+
+[data-theme="dark"] .admin-homestays .amenity-name {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .admin-homestays .btn-action.btn-info {
+  background: #2a2a2a;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .admin-homestays .btn-action.btn-info:hover {
+  background: #3a3a3a;
 }
