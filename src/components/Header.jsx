@@ -16,6 +16,10 @@ const Header = () => {
   const lastScrollY = useRef(0);
   const dropdownRef = useRef(null);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Handle scroll to show/hide header opacity
   useEffect(() => {
     const handleScroll = () => {
@@ -46,6 +50,7 @@ const Header = () => {
   }, [isAuthenticated, user, showDropdown]);
 
   const handleAddHomestay = () => {
+    scrollToTop();
     if (!isAuthenticated) {
       setToast({
         message: 'Bạn cần đăng nhập với tài khoản Người cho thuê để đăng homestay!',
@@ -65,11 +70,13 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     setShowDropdown(false);
+    scrollToTop();
     navigate('/');
   };
 
   const handleProfile = () => {
     setShowDropdown(false);
+    scrollToTop();
     navigate('/profile');
   };
 
@@ -98,7 +105,7 @@ const Header = () => {
       )}
       <header className={`header ${headerVisible ? 'header-visible' : 'header-faded'}`}>
         <div className="header-container">
-        <Link to="/" className="logo">
+        <Link to="/" className="logo" onClick={scrollToTop}>
           <img src="/logo.png" alt="HomestayBooking" className="logo-image" />
           <span className="logo-text">HomestayBooking</span>
         </Link>
@@ -115,10 +122,10 @@ const Header = () => {
         </button>
 
         <nav className={`nav-links ${showMobileMenu ? 'mobile-open' : ''}`}>
-          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setShowMobileMenu(false)}>Trang chủ</Link>
-          <Link to="/homestay-ha-noi" className={`nav-link ${location.pathname === '/homestay-ha-noi' ? 'active' : ''}`} onClick={() => setShowMobileMenu(false)}>Homestay Hà Nội</Link>
-          <Link to="/homestay-lao-cai" className={`nav-link ${location.pathname === '/homestay-lao-cai' ? 'active' : ''}`} onClick={() => setShowMobileMenu(false)}>Homestay Lào Cai</Link>
-          <Link to="/contact" className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} onClick={() => setShowMobileMenu(false)}>Liên hệ</Link>
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => { setShowMobileMenu(false); scrollToTop(); }}>Trang chủ</Link>
+          <Link to="/homestay-ha-noi" className={`nav-link ${location.pathname === '/homestay-ha-noi' ? 'active' : ''}`} onClick={() => { setShowMobileMenu(false); scrollToTop(); }}>Homestay Hà Nội</Link>
+          <Link to="/homestay-lao-cai" className={`nav-link ${location.pathname === '/homestay-lao-cai' ? 'active' : ''}`} onClick={() => { setShowMobileMenu(false); scrollToTop(); }}>Homestay Lào Cai</Link>
+          <Link to="/contact" className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} onClick={() => { setShowMobileMenu(false); scrollToTop(); }}>Liên hệ</Link>
           {!isAuthenticated && (
             <Link to="/login" className="nav-link" onClick={() => setShowMobileMenu(false)}>Đăng nhập</Link>
           )}
@@ -143,21 +150,21 @@ const Header = () => {
                   <button className="dropdown-item" onClick={handleProfile}>
                     Thông tin cá nhân
                   </button>
-                  <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/wishlist'); }}>
+                  <button className="dropdown-item" onClick={() => { setShowDropdown(false); scrollToTop(); navigate('/wishlist'); }}>
                     Yêu thích
                   </button>
                   {user?.role !== 'admin' && (
-                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/my-bookings'); }}>
+                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); scrollToTop(); navigate('/my-bookings'); }}>
                       Lịch sử đặt phòng
                     </button>
                   )}
                   {(user?.role === 'owner' || user?.role === 'host') && (
-                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/host/dashboard'); }}>
+                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); scrollToTop(); navigate('/host/dashboard'); }}>
                       Dashboard
                     </button>
                   )}
                   {user?.role === 'admin' && (
-                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/admin'); }}>
+                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); scrollToTop(); navigate('/admin'); }}>
                       Admin System
                     </button>
                   )}

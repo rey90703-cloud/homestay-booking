@@ -29,40 +29,9 @@ import HostDashboard from './pages/host/HostDashboard';
 import HostHomestays from './pages/host/HostHomestays';
 import AddHomestay from './pages/AddHomestay';
 import ChatWidget from './components/ChatWidget';
+import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 import './styles/responsive-fixes.css';
-
-// Component to save and restore scroll position
-function ScrollRestoration() {
-  const location = useLocation();
-
-  useEffect(() => {
-    // Save scroll position before unload
-    const saveScrollPosition = () => {
-      sessionStorage.setItem('scrollPosition', window.scrollY.toString());
-      sessionStorage.setItem('scrollPath', location.pathname);
-    };
-
-    window.addEventListener('beforeunload', saveScrollPosition);
-
-    // Restore scroll position on mount
-    const savedPath = sessionStorage.getItem('scrollPath');
-    const savedPosition = sessionStorage.getItem('scrollPosition');
-    
-    if (savedPath === location.pathname && savedPosition) {
-      // Use setTimeout to ensure DOM is fully loaded
-      setTimeout(() => {
-        window.scrollTo(0, parseInt(savedPosition, 10));
-      }, 0);
-    }
-
-    return () => {
-      window.removeEventListener('beforeunload', saveScrollPosition);
-    };
-  }, [location]);
-
-  return null;
-}
 
 function App() {
   return (
@@ -71,7 +40,7 @@ function App() {
         <WishlistProvider>
           <ChatProvider>
             <Router>
-          <ScrollRestoration />
+          <ScrollToTop />
           <div className="app">
           <Routes>
             <Route path="/login" element={
