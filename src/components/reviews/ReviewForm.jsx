@@ -25,6 +25,7 @@ const ReviewForm = ({ homestayId, bookingId, onSuccess, onCancel }) => {
 
   useEffect(() => {
     checkReviewEligibility();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homestayId]);
 
   const checkReviewEligibility = async () => {

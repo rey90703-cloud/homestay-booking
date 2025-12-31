@@ -19,6 +19,7 @@ const ForgotPassword = () => {
       // Call API directly without form submit
       sendOTPEmail();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
   const sendOTPEmail = async () => {

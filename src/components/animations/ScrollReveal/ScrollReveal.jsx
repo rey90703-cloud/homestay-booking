@@ -15,6 +15,7 @@ const ScrollReveal = ({
   stagger = 0,
   threshold = 0.2,
   className = '',
+  // eslint-disable-next-line no-unused-vars
   as: Component = 'div',
   ...props
 }) => {

@@ -25,7 +25,7 @@ const EMAIL_CONFIG = {
     passwordReset: '[Homestay Booking] Mã xác thực đặt lại mật khẩu',
     bookingConfirmation: 'Booking Confirmation',
     newBookingHost: 'New Booking Received',
-    paymentConfirmation: '✅ Thanh toán thành công - Booking đã được xác nhận',
+    paymentConfirmation: ' Thanh toán thành công - Booking đã được xác nhận',
     bookingConfirmedHost: '🎉 Booking mới đã được thanh toán - Homestay của bạn',
     paymentReminder: '⏰ Nhắc nhở thanh toán - Mã QR đã hết hạn',
   },

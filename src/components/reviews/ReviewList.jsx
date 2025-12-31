@@ -18,6 +18,7 @@ const ReviewList = ({ homestayId }) => {
   useEffect(() => {
     loadReviews();
     loadStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homestayId, filters]);
 
   const loadReviews = async () => {

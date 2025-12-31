@@ -39,6 +39,7 @@ export const ChatProvider = ({ children }) => {
   const hasMoreMessagesRef = useRef(true);
   const chatRoomsRef = useRef([]);
   const activeChatRoomRef = useRef(null);
+  const messagesRef = useRef([]);
 
   // Process queued messages when connection is restored
   const processMessageQueue = useCallback(() => {
@@ -139,7 +140,7 @@ export const ChatProvider = ({ children }) => {
       
       // Update messages if in active chatroom (use ref to get latest value)
       if (activeChatRoomRef.current && chatroomId === activeChatRoomRef.current._id) {
-        console.log('✅ Adding message to UI');
+        console.log(' Adding message to UI');
         
         // Check if this is our own message (replace optimistic update)
         const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -167,7 +168,7 @@ export const ChatProvider = ({ children }) => {
           return [...prev, message];
         });
       } else {
-        console.log('❌ NOT adding message - chatroom not active or ID mismatch');
+        console.log(' NOT adding message - chatroom not active or ID mismatch');
       }
 
       // Update chatroom's lastMessage and unreadCount
@@ -217,7 +218,7 @@ export const ChatProvider = ({ children }) => {
       });
     });
 
-    newSocket.on('message_read', ({ chatroomId, userId, readAt }) => {
+    newSocket.on('message_read', ({ chatroomId, userId, readAt: _readAt }) => {
       console.log('Message read:', chatroomId, userId);
       // Update read status
     });
@@ -227,7 +228,7 @@ export const ChatProvider = ({ children }) => {
       setOnlineUsers(prev => new Set([...prev, userId]));
     });
 
-    newSocket.on('user_offline', ({ userId, lastSeenAt }) => {
+    newSocket.on('user_offline', ({ userId, lastSeenAt: _lastSeenAt }) => {
       console.log('User offline:', userId);
       setOnlineUsers(prev => {
         const updated = new Set(prev);
@@ -241,6 +242,7 @@ export const ChatProvider = ({ children }) => {
     return () => {
       newSocket.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeChatRoom, processMessageQueue]);
 
   // Disconnect socket
@@ -310,8 +312,14 @@ export const ChatProvider = ({ children }) => {
       chatRoomsPageRef.current = page;
       hasMoreChatRoomsRef.current = rooms.length === limit;
 
-      // Calculate total unread
-      calculateUnreadTotal();
+      // Calculate total unread inline to avoid dependency
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const userId = user.id || user._id;
+      const total = rooms.reduce((sum, room) => {
+        const userUnread = room.unreadCount?.[userId] || room.unreadCount || 0;
+        return sum + userUnread;
+      }, 0);
+      setUnreadTotal(total);
 
       return rooms;
     } catch (err) {
@@ -321,7 +329,7 @@ export const ChatProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [calculateUnreadTotal]);
+  }, []);
 
   // Select a chat room
   const selectChatRoom = useCallback(async (chatroomId, tempChatRoom = null) => {
@@ -368,10 +376,67 @@ export const ChatProvider = ({ children }) => {
       }
 
       // Load messages for this room
-      await loadMessages(chatroomId, 1);
+      const loadMessagesAsync = async (roomId, page) => {
+        try {
+          const msgToken = localStorage.getItem('token');
+          const msgResponse = await fetch(
+            `${API_BASE_URL}/chat/rooms/${roomId}/messages?page=${page}&limit=50`,
+            {
+              headers: {
+                'Authorization': `Bearer ${msgToken}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+          if (!msgResponse.ok) {
+            throw new Error('Failed to load messages');
+          }
+
+          const msgData = await msgResponse.json();
+          const newMessages = msgData.data?.messages || msgData.data || [];
+
+          if (activeChatRoomRef.current?._id === roomId) {
+            setMessages(newMessages);
+            messagesPageRef.current = page;
+            hasMoreMessagesRef.current = newMessages.length === 50;
+          }
+
+          return newMessages;
+        } catch (err) {
+          console.error('Error loading messages:', err);
+          return [];
+        }
+      };
+
+      await loadMessagesAsync(chatroomId, 1);
 
       // Mark as read
-      await markAsRead(chatroomId);
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const userId = user.id || user._id;
+
+      if (socket && isConnected) {
+        socket.emit('mark_as_read', chatroomId);
+      }
+
+      setChatRooms(prev => {
+        const next = prev.map(r => {
+          if (r._id === chatroomId) {
+            return {
+              ...r,
+              unreadCount: {
+                ...r.unreadCount,
+                [userId]: 0
+              }
+            };
+          }
+          return r;
+        });
+        chatRoomsRef.current = next;
+        return next;
+      });
+
+      calculateUnreadTotal();
 
       return room;
     } catch (err) {
@@ -381,7 +446,7 @@ export const ChatProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [socket, isConnected]);
+  }, [socket, isConnected, calculateUnreadTotal]);
 
   // Load messages with pagination
   const loadMessages = useCallback(async (chatroomId, page = 1, limit = 50) => {
@@ -516,7 +581,7 @@ export const ChatProvider = ({ children }) => {
         
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          console.error('❌ Create chatroom error:', errorData);
+          console.error(' Create chatroom error:', errorData);
           throw new Error(errorData.message || 'Failed to create chatroom');
         }
 

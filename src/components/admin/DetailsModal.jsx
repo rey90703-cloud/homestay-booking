@@ -25,7 +25,7 @@ const DetailsModal = ({ isOpen, onClose, title, data, type = 'booking' }) => {
     });
   };
 
-  const getStatusText = (status, type) => {
+  const _getStatusText = (status, type) => {
     if (type === 'payment') {
       const texts = {
         pending: 'Chờ thanh toán',

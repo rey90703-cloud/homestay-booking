@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useChat } from '../contexts/ChatContext';
+import SmartDoorControl from '../components/smartdoor/SmartDoorControl';
 import './PaymentSuccess.css';
 
 const PaymentSuccess = () => {
@@ -9,12 +10,16 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, loading: authLoading } = useAuth();
-  const { selectChatRoom, loadChatRooms } = useChat();
+  const { selectChatRoom } = useChat();
+  const { user } = useAuth();
   
   const [bookingData, setBookingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openingChat, setOpeningChat] = useState(false);
+  const [confirmingAccess, setConfirmingAccess] = useState(false);
+  const [confirmError, setConfirmError] = useState(null);
+  const [waitingForPassword, setWaitingForPassword] = useState(false);
 
   useEffect(() => {
     // Chờ auth loading xong trước khi check authentication
@@ -29,6 +34,7 @@ const PaymentSuccess = () => {
 
     // Fetch booking data from API
     fetchBookingData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingId, isAuthenticated, authLoading, navigate]);
 
   const fetchBookingData = async () => {
@@ -59,10 +65,14 @@ const PaymentSuccess = () => {
       
       // Transform API data to match component structure
       setBookingData({
+        _id: booking._id,
         bookingCode: booking.payment?.reference || booking._id?.slice(-8) || 'N/A',
         status: booking.status,
         paymentStatus: booking.payment?.status,
         cancellation: booking.cancellation,
+        smartDoorAccess: booking.smartDoorAccess || { enabled: false },
+        hostId: booking.hostId?._id || booking.hostId,
+        guestId: booking.guestId?._id || booking.guestId,
         homestay: {
           title: booking.homestayId?.title || 'Homestay',
           location: booking.homestayId?.location || 'Việt Nam',
@@ -187,6 +197,94 @@ const PaymentSuccess = () => {
     }
   };
 
+  /**
+   * Handle confirm access - Host xác nhận và gửi mật khẩu cho guest
+   * Requirements: 3.2, 3.3, 3.4
+   */
+  const handleConfirmAccess = async () => {
+    try {
+      setConfirmingAccess(true);
+      setConfirmError(null);
+      setWaitingForPassword(false);
+
+      const token = localStorage.getItem('token');
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api/v1';
+
+      const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/confirm-access`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Kiểm tra nếu lỗi là do chưa có password từ ESP32
+        if (data.error?.message?.includes('No active guest password found')) {
+          setWaitingForPassword(true);
+          setConfirmError('Đang chờ ESP32 tạo mật khẩu. Vui lòng thử lại sau vài giây...');
+          
+          // Tự động retry sau 3 giây
+          setTimeout(() => {
+            handleConfirmAccess();
+          }, 3000);
+          return;
+        }
+
+        throw new Error(data.error?.message || 'Không thể xác nhận truy cập');
+      }
+
+      // Thành công - refresh booking data
+      alert(' Đã xác nhận thành công! Mật khẩu đã được gửi qua email cho khách.');
+      await fetchBookingData();
+      
+    } catch (error) {
+      console.error('Error confirming access:', error);
+      setConfirmError(error.message);
+      alert(` Lỗi: ${error.message}`);
+    } finally {
+      setConfirmingAccess(false);
+    }
+  };
+
+  /**
+   * Handle booking cancellation - Disable password
+   * Requirements: 10.2
+   */
+  const handleCancelBooking = async () => {
+    if (!confirm('Bạn có chắc muốn vô hiệu hóa mật khẩu cửa? Khách sẽ không thể truy cập nữa.')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api/v1';
+
+      const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/set-duration`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ durationMinutes: 0 }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error?.message || 'Không thể vô hiệu hóa mật khẩu');
+      }
+
+      alert(' Đã vô hiệu hóa mật khẩu cửa thành công!');
+      await fetchBookingData();
+      
+    } catch (error) {
+      console.error('Error disabling password:', error);
+      alert(` Lỗi: ${error.message}`);
+    }
+  };
+
   if (loading) {
     return (
       <div className="payment-success">
@@ -222,7 +320,7 @@ const PaymentSuccess = () => {
       <div className="payment-success">
         <div className="success-container">
           <div className="error-state">
-            <div className="error-icon">❌</div>
+            <div className="error-icon"></div>
             <h3>Không tìm thấy thông tin đặt phòng</h3>
             <p>Vui lòng kiểm tra lại mã đặt phòng</p>
             <button className="btn-primary" onClick={() => navigate('/bookings')}>
@@ -496,10 +594,83 @@ const PaymentSuccess = () => {
               </button>
             </div>
           </div>
-
-
         </div>
       </div>
+
+      {/* Smart Door Access Confirmation - Only for Host */}
+      {user && bookingData.hostId === user._id && 
+       bookingData.paymentStatus === 'completed' && 
+       bookingData.status !== 'cancelled' && 
+       !bookingData.smartDoorAccess?.enabled && (
+        <div className="success-container">
+          <div className="confirm-access-card">
+            <div className="confirm-access-header">
+              <div className="icon-wrapper">
+                <span className="icon">🔐</span>
+              </div>
+              <div>
+                <h3>Xác nhận khách thuê</h3>
+                <p>Gửi mật khẩu cửa thông minh cho khách qua email</p>
+              </div>
+            </div>
+
+            {confirmError && !waitingForPassword && (
+              <div className="error-message">
+                <span className="error-icon">⚠️</span>
+                <span>{confirmError}</span>
+              </div>
+            )}
+
+            {waitingForPassword && (
+              <div className="waiting-message">
+                <div className="spinner-small"></div>
+                <span>Đang chờ ESP32 tạo mật khẩu...</span>
+              </div>
+            )}
+
+            <div className="confirm-access-actions">
+              <button
+                className="btn-confirm-access"
+                onClick={handleConfirmAccess}
+                disabled={confirmingAccess || waitingForPassword}
+              >
+                {confirmingAccess ? (
+                  <>
+                    <span className="spinner-small"></span>
+                    <span>Đang xác nhận...</span>
+                  </>
+                ) : waitingForPassword ? (
+                  <>
+                    <span className="spinner-small"></span>
+                    <span>Đang chờ mật khẩu...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>✓</span>
+                    <span>Xác nhận và gửi mật khẩu</span>
+                  </>
+                )}
+              </button>
+
+              <div className="confirm-access-info">
+                <p>
+                  <strong>Lưu ý:</strong> Sau khi xác nhận, hệ thống sẽ gửi email chứa mật khẩu cửa 
+                  cho khách. Mật khẩu sẽ tự động làm mới khi hết hạn.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Smart Door Control - Only show for confirmed bookings */}
+      {bookingData.smartDoorAccess?.enabled && 
+       bookingData.paymentStatus === 'completed' && 
+       user && bookingData.hostId === user._id && (
+        <div className="success-container">
+          <SmartDoorControl bookingId={bookingId} onDisableAccess={handleCancelBooking} />
+        </div>
+      )}
     </div>
   );
 };

@@ -40,7 +40,7 @@ const ANIMATION_CONFIG = {
  * @param {number|string} value - Value to convert
  * @returns {string|undefined} CSS length value
  */
-const toCssLength = (value) => {
+const _toCssLength = (value) => {
   if (typeof value === 'number') return `${value}px`;
   return value ?? undefined;
 };
@@ -69,7 +69,8 @@ const useResizeObserver = (callback, elements, dependencies) => {
     return () => {
       observers.forEach((observer) => observer?.disconnect());
     };
-  }, [callback, ...dependencies]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [callback, elements, ...dependencies]);
 };
 
 /**
@@ -106,6 +107,7 @@ const useImageLoader = (seqRef, onLoad, dependencies) => {
         img.removeEventListener('error', handleImageLoad);
       });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onLoad, seqRef, ...dependencies]);
 };
 

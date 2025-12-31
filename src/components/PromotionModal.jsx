@@ -22,6 +22,7 @@ function PromotionModal({ isOpen, onClose }) {
     if (isOpen) {
       fetchPromoCodes();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const fetchPromoCodes = async () => {

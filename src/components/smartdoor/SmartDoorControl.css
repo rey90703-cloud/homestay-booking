@@ -1,0 +1,278 @@
+/* SmartDoorControl - Đồng nhất với HostBookingDetail design system */
+
+.smart-door-control {
+  width: 100%;
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.control-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.control-header h3 svg {
+  color: #e91e63;
+  flex-shrink: 0;
+}
+
+.mqtt-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.mqtt-status.connected {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.mqtt-status.disconnected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.mqtt-status.connected .status-dot {
+  background: #10b981;
+}
+
+.mqtt-status.disconnected .status-dot {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .control-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.control-left,
+.control-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Loading & Error States */
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.loading-state .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #e91e63;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  color: #64748b;
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.error-state {
+  color: #64748b;
+}
+
+.error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 0.75rem;
+  background: #fee2e2;
+  border-radius: 50%;
+  color: #ef4444;
+}
+
+.error-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.error-state h4 {
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.error-state p {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Disable Access Section */
+.disable-access-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+}
+
+.btn-disable-access {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-disable-access:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-disable-access:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.disable-access-note {
+  font-size: 0.75rem;
+  color: #991b1b;
+  margin: 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .control-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .mqtt-status {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .control-grid {
+    gap: 1rem;
+  }
+
+  .control-left,
+  .control-right {
+    gap: 0.75rem;
+  }
+}
+
+/* Dark Mode */
+[data-theme="dark"] .control-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .control-header h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .mqtt-status.connected {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+[data-theme="dark"] .mqtt-status.disconnected {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+[data-theme="dark"] .loading-state,
+[data-theme="dark"] .error-state {
+  background: #0f0f0f;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .loading-state .spinner {
+  border-color: rgba(255, 255, 255, 0.1);
+  border-top-color: #e91e63;
+}
+
+[data-theme="dark"] .loading-state p {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .error-icon {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+[data-theme="dark"] .error-state h4 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .disable-access-section {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="dark"] .disable-access-note {
+  color: #f87171;
+}

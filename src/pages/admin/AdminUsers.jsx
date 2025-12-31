@@ -32,6 +32,7 @@ const AdminUsers = () => {
 
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, pagination.currentPage]);
 
   const fetchUsers = async () => {

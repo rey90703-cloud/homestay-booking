@@ -40,6 +40,28 @@ class BookingController {
   });
 
   /**
+   * Get host's bookings (bookings for homestays owned by host)
+   * GET /api/v1/bookings/host
+   */
+  getHostBookings = catchAsync(async (req, res) => {
+    const { page, limit, status } = req.query;
+
+    const result = await bookingService.getHostBookings(
+      req.user._id,
+      { status },
+      { page, limit },
+    );
+
+    ApiResponse.success(
+      res,
+      { bookings: result.bookings },
+      'Host bookings retrieved successfully',
+      200,
+      { pagination: result.pagination },
+    );
+  });
+
+  /**
    * Get all bookings (Admin only)
    * GET /api/v1/bookings
    */

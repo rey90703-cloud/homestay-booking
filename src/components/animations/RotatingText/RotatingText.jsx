@@ -1,7 +1,8 @@
 'use client';
 
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+// eslint-disable-next-line no-unused-vars
+import { AnimatePresence, motion } from 'motion/react';
 import './RotatingText.css';
 
 function cn(...classes) {

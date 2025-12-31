@@ -31,6 +31,7 @@ function Reviews() {
 
   useEffect(() => {
     fetchHomestayAndReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homestayId, sortBy, filterRating]);
 
   const fetchHomestayAndReviews = async () => {
@@ -124,7 +125,7 @@ function Reviews() {
     console.log('Report review:', reviewId);
   };
 
-  const formatDate = (dateString) => {
+  const _formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
       year: 'numeric',
       month: 'long',

@@ -215,7 +215,7 @@
 
 /* Hide mobile button on desktop */
 .mobile-btn {
-  display: none;
+  display: none !important;
 }
 
 /* Hamburger Menu - Hidden on desktop */
@@ -315,7 +315,7 @@
 
   /* Show button inside mobile menu */
   .nav-links .mobile-btn {
-    display: flex;
+    display: flex !important;
     width: 100%;
     margin-top: var(--space-md);
     padding: var(--space-sm);
@@ -399,8 +399,8 @@
 .dropdown-menu {
   z-index: 99999999 !important;
 }
-/
-* Ultimate dropdown fix - highest possible z-index */
+
+/* Ultimate dropdown fix - highest possible z-index */
 .user-dropdown .dropdown-menu {
   z-index: 2147483647 !important;
   position: fixed !important;

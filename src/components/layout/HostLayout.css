@@ -1,0 +1,183 @@
+/* HostLayout.css - Reusable layout cho các trang host */
+
+.host-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.host-layout .host-sidebar {
+  width: 240px;
+  background: linear-gradient(180deg, #1e3a5f 0%, #2d4a6f 100%) !important;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+}
+
+.sidebar-header {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.user-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9375rem;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-left: 4px solid #60a5fa;
+  font-weight: 600;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  flex: 1;
+}
+
+.nav-item-website {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.5rem;
+}
+
+.nav-item-logout {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fca5a5;
+}
+
+.nav-item-logout:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #fecaca;
+}
+
+.host-main {
+  flex: 1;
+  margin-left: 240px;
+  padding: 2rem 2.5rem;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  overflow-y: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .host-sidebar {
+    width: 100%;
+    position: relative;
+    height: auto;
+  }
+
+  .host-main {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
+
+  .host-layout {
+    flex-direction: column;
+  }
+}
+
+/* Dark Mode */
+[data-theme="dark"] .host-layout {
+  background-color: #0f0f0f;
+}
+
+[data-theme="dark"] .host-sidebar {
+  background: linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 100%);
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .sidebar-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .nav-item {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="dark"] .nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+[data-theme="dark"] .nav-item.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+[data-theme="dark"] .nav-item-website {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .nav-item-logout {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .host-main {
+  background-color: #0f0f0f;
+}

@@ -43,6 +43,7 @@ const MessageInput = ({ chatroomId, disabled }) => {
         setContent('');
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatroomId, DRAFT_KEY]);
 
   // Save draft to localStorage whenever content changes

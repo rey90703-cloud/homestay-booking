@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Toast from '../components/Toast';
 import '../styles/Auth.css';
@@ -7,8 +7,8 @@ import '../styles/Auth.css';
 const ResetPassword = () => {
   const navigate = useNavigate();
   const { resetPassword } = useAuth();
-
-  const [step, setStep] = useState(1); // Step 1: Email + OTP, Step 2: New Password
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token'); // Lấy token từ URL query params
   const [formData, setFormData] = useState({
     email: '',
     otp: '',

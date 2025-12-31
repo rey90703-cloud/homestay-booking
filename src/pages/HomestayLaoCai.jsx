@@ -6,7 +6,6 @@ import './HomestayLaoCai.css';
 
 function HomestayLaoCai() {
   const [laoCaiHomestays, setLaoCaiHomestays] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     total: 0,
     areas: 8,
@@ -15,11 +14,11 @@ function HomestayLaoCai() {
 
   useEffect(() => {
     fetchHomestays();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchHomestays = async () => {
     try {
-      setLoading(true);
       const response = await fetch(`${API_BASE_URL}/homestays?city=Lào Cai&status=active`);
       const data = await response.json();
       
@@ -33,8 +32,6 @@ function HomestayLaoCai() {
       }
     } catch (error) {
       console.error('Error fetching homestays:', error);
-    } finally {
-      setLoading(false);
     }
   };
 

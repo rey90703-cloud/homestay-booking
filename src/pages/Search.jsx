@@ -81,6 +81,7 @@ function Search() {
   // Search when params or filters change
   useEffect(() => {
     searchHomestays(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, checkIn, checkOut, guests, filters, sortBy, currentPage]);
 
   // Initial setup

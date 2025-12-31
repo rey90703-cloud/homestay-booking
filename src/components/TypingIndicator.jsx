@@ -69,6 +69,7 @@ const TypingIndicator = ({ typingUsers = new Set(), participants = [], currentUs
     return () => {
       newTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typingUsers, currentUserId]);
 
   // Get names of typing users

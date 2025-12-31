@@ -10,6 +10,7 @@ const swaggerUi = require('swagger-ui-express');
 const routes = require('./routes');
 const { errorHandler, notFound } = require('./middlewares/error.middleware');
 const morganMiddleware = require('./middlewares/logger.middleware');
+const { trackAPIMetrics } = require('./middlewares/metrics.middleware');
 const { apiLimiter } = require('./middlewares/rateLimit.middleware');
 const swaggerSpec = require('./config/swagger');
 
@@ -84,6 +85,12 @@ app.use(compression());
  * Logging Middleware
  */
 app.use(morganMiddleware);
+
+/**
+ * Metrics Middleware
+ * Track API request metrics (Requirements: 18.3)
+ */
+app.use(trackAPIMetrics);
 
 /**
  * Rate Limiting

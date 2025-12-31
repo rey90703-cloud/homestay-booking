@@ -72,7 +72,7 @@ class HomestayController {
       };
     }
 
-    console.log('✅ Final homestayData.capacity:', homestayData.capacity);
+    console.log(' Final homestayData.capacity:', homestayData.capacity);
 
     // Handle pricing - support both flat structure and nested object
     if (homestayData['pricing[basePrice]']) {
@@ -107,7 +107,7 @@ class HomestayController {
           if (geocodeResult.placeId) {
             homestayData.location.placeId = geocodeResult.placeId;
           }
-          logger.info(`✅ Geocoded successfully: [${geocodeResult.lng}, ${geocodeResult.lat}], placeId: ${geocodeResult.placeId || 'N/A'}`);
+          logger.info(` Geocoded successfully: [${geocodeResult.lng}, ${geocodeResult.lat}], placeId: ${geocodeResult.placeId || 'N/A'}`);
         } else {
           logger.warn(`⚠️ Geocoding failed for: ${fullAddress}, using default coordinates`);
           homestayData.location.coordinates = {
@@ -116,7 +116,7 @@ class HomestayController {
           };
         }
       } catch (error) {
-        logger.error(`❌ Geocoding error: ${error.message}`);
+        logger.error(` Geocoding error: ${error.message}`);
         homestayData.location.coordinates = {
           type: 'Point',
           coordinates: [105.8342, 21.0278], // Default to Hanoi on error
@@ -154,7 +154,7 @@ class HomestayController {
       delete homestayData.amenities; // Remove amenities, use amenityNames instead
     }
 
-    console.log('✅ Final amenityNames:', homestayData.amenityNames);
+    console.log(' Final amenityNames:', homestayData.amenityNames);
 
     // Handle file uploads
     if (req.files) {
@@ -252,12 +252,12 @@ class HomestayController {
           if (geocodeResult.placeId) {
             homestayData.location.placeId = geocodeResult.placeId;
           }
-          logger.info(`✅ Geocoded successfully: [${geocodeResult.lng}, ${geocodeResult.lat}], placeId: ${geocodeResult.placeId || 'N/A'}`);
+          logger.info(` Geocoded successfully: [${geocodeResult.lng}, ${geocodeResult.lat}], placeId: ${geocodeResult.placeId || 'N/A'}`);
         } else {
           logger.warn(`⚠️ Geocoding failed, keeping existing coordinates`);
         }
       } catch (error) {
-        logger.error(`❌ Geocoding error during update: ${error.message}`);
+        logger.error(` Geocoding error during update: ${error.message}`);
         // Keep existing coordinates on error
       }
     }

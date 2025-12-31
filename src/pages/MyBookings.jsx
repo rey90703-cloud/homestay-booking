@@ -8,7 +8,7 @@ import './MyBookings.css';
 
 const MyBookings = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all'); // all, upcoming, completed, cancelled
@@ -33,6 +33,7 @@ const MyBookings = () => {
     }
 
     fetchBookings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, authLoading, navigate]);
 
   const fetchBookings = async () => {

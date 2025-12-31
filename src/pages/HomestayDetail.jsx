@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import API_BASE_URL from '../config/api';
@@ -23,7 +23,7 @@ import './HomestayDetail.css';
 const HomestayDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [homestay, setHomestay] = useState(null);
   const [loading, setLoading] = useState(true);
   const [bookingData, setBookingData] = useState({
@@ -34,14 +34,10 @@ const HomestayDetail = () => {
   const [mapEmbedUrl, setMapEmbedUrl] = useState('');
   const [mapUrls, setMapUrls] = useState({ directionsUrl: '', viewUrl: '' });
   const [checkingAvailability, setCheckingAvailability] = useState(false);
-  const [availabilityStatus, setAvailabilityStatus] = useState({
-    checking: false,
-    available: null,
-    message: '',
-  });
 
   useEffect(() => {
     fetchHomestayDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleContactHost = () => {
@@ -194,7 +190,7 @@ const HomestayDetail = () => {
       const data = await response.json();
 
       if (data.success && !data.data.available) {
-        let message = '❌ PHÒNG ĐÃ BỊ TRÙNG LỊCH!\n';
+        let message = ' PHÒNG ĐÃ BỊ TRÙNG LỊCH!\n';
         
         if (data.data.overlapPeriods && data.data.overlapPeriods.length > 0) {
           message += '📅 Vào ngày :\n';
@@ -239,7 +235,7 @@ const HomestayDetail = () => {
     return 0;
   };
 
-  const calculateTotal = () => {
+  const _calculateTotal = () => {
     const nights = calculateNights();
     if (nights > 0 && homestay) {
       const subtotal = homestay.pricing.basePrice * nights;

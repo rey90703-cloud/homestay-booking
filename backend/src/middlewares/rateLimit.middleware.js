@@ -133,6 +133,50 @@ const webhookRateLimiter = rateLimit({
   }
 });
 
+/**
+ * Rate limiter for Smart Door control endpoints
+ * Limit: 10 requests per minute per user
+ * Requirements: API Security, 13.8
+ * 
+ * Ngăn chặn abuse của door control (open/close/set-duration)
+ */
+const doorControlRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // 10 requests per minute per user
+  message: 'Too many door control requests. Please try again after 1 minute.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  
+  // Key generator: rate limit per user ID
+  keyGenerator: (req) => {
+    // Use user ID if authenticated, otherwise use IP
+    return req.user?._id?.toString() || req.ip;
+  },
+  
+  handler: (req, res) => {
+    const userId = req.user?._id?.toString();
+    const clientIP = req.headers['x-forwarded-for']?.split(',')[0]?.trim() 
+      || req.headers['x-real-ip']
+      || req.ip;
+
+    logger.warn('Rate limit exceeded for door control', {
+      userId,
+      ip: clientIP,
+      path: req.path,
+      method: req.method
+    });
+
+    throw new TooManyRequestsError(
+      'Too many door control requests. Please try again after 1 minute.',
+    );
+  },
+  
+  skip: (req) => {
+    // Skip rate limiting for admin users
+    return req.user && req.user.role === 'admin';
+  },
+});
+
 module.exports = {
   qrCodeRateLimiter,
   bookingCreationRateLimiter,
@@ -141,4 +185,5 @@ module.exports = {
   authLimiter,
   passwordResetLimiter,
   webhookRateLimiter,
+  doorControlRateLimiter,
 };

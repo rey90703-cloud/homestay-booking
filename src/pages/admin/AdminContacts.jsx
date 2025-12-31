@@ -21,6 +21,7 @@ const AdminContacts = () => {
 
   useEffect(() => {
     fetchContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, pagination.currentPage, activeTab]);
 
   const fetchContacts = async () => {

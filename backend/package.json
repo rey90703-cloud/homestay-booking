@@ -13,7 +13,8 @@
     "seed:amenities": "node scripts/seed-amenities.js",
     "update:homestay-amenities": "node scripts/update-homestay-amenities.js",
     "test:filters": "node scripts/test-filter-api.js",
-    "test:rating-filter": "node scripts/test-rating-filter.js"
+    "test:rating-filter": "node scripts/test-rating-filter.js",
+    "test:mqtt-config": "node scripts/test-mqtt-config.js"
   },
   "keywords": [],
   "author": "",
@@ -43,6 +44,7 @@
     "moment-timezone": "^0.6.0",
     "mongoose": "^8.19.2",
     "morgan": "^1.10.1",
+    "mqtt": "^5.14.1",
     "multer": "^2.0.2",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.10",

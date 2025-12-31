@@ -21,47 +21,10 @@ function Profile() {
   });
 
   const [errors, setErrors] = useState({});
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [_uploadingAvatar, setUploadingAvatar] = useState(false);
 
-  // Check authentication
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login');
-    }
-  }, [isAuthenticated, navigate]);
-
-  // Update formData when user changes (e.g., after refresh)
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        fullName: user.fullName || `${user.profile?.firstName || ''} ${user.profile?.lastName || ''}`.trim() || '',
-        email: user.email || '',
-        phone: user.profile?.phone || '',
-        currentPassword: '',
-        newPassword: '',
-        confirmNewPassword: ''
-      });
-    }
-  }, [user]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-    
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: ''
-      });
-    }
-    setApiError('');
-    setSuccessMessage('');
-  };
-
-  const handleAvatarChange = async (e) => {
+  // Avatar handlers - kept for future use
+  const _handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -132,7 +95,7 @@ function Profile() {
     }
   };
 
-  const handleRemoveAvatar = async () => {
+  const _handleRemoveAvatar = async () => {
     if (!confirm('Bạn có chắc muốn xóa ảnh đại diện?')) return;
 
     try {
@@ -169,6 +132,44 @@ function Profile() {
     } finally {
       setUploadingAvatar(false);
     }
+  };
+
+  // Check authentication
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Update formData when user changes (e.g., after refresh)
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.fullName || `${user.profile?.firstName || ''} ${user.profile?.lastName || ''}`.trim() || '',
+        email: user.email || '',
+        phone: user.profile?.phone || '',
+        currentPassword: '',
+        newPassword: '',
+        confirmNewPassword: ''
+      });
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+    
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: ''
+      });
+    }
+    setApiError('');
+    setSuccessMessage('');
   };
 
   const validateForm = () => {

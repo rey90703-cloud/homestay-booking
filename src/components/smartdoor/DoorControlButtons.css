@@ -1,0 +1,256 @@
+/* DoorControlButtons - Đồng nhất với HostBookingDetail design system */
+
+.door-control-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  align-items: stretch;
+}
+
+.door-control-buttons .btn-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid !important;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white !important;
+  white-space: nowrap;
+  min-width: 0;
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
+}
+
+.btn-control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.door-control-buttons .btn-open {
+  border-color: #10b981 !important;
+  color: #059669;
+}
+
+.door-control-buttons .btn-open:not(:disabled):hover {
+  background: #ecfdf5 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.door-control-buttons .btn-close {
+  border-color: #3b82f6 !important;
+  color: #2563eb;
+  margin: 0 !important;
+}
+
+.door-control-buttons .btn-close:not(:disabled):hover {
+  background: #eff6ff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.control-warning {
+  padding: 0.75rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Confirmation Dialog */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1.25rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.confirm-dialog {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.confirm-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  background: #f1f5f9;
+  border-radius: 50%;
+  color: #64748b;
+}
+
+.confirm-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.confirm-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-align: center;
+  color: #1e293b;
+}
+
+.confirm-message {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.9375rem;
+  text-align: center;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.confirm-error {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.btn-cancel, .btn-confirm {
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-cancel {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+.btn-confirm {
+  color: white;
+}
+
+.btn-confirm-open {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.btn-confirm-open:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-confirm-close {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.btn-confirm-close:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-cancel:disabled, .btn-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .door-control-buttons { gap: 0.625rem; }
+  .btn-control { padding: 0.75rem 1rem; font-size: 0.8125rem; }
+  .btn-icon svg { width: 18px; height: 18px; }
+  .confirm-dialog { padding: 1.5rem; }
+  .confirm-icon { width: 48px; height: 48px; }
+  .confirm-icon svg { width: 24px; height: 24px; }
+  .confirm-title { font-size: 1rem; }
+  .confirm-message { font-size: 0.875rem; }
+  .btn-cancel, .btn-confirm { padding: 0.625rem 1rem; font-size: 0.875rem; }
+}
+
+/* Dark Mode */
+[data-theme="dark"] .door-control-buttons .btn-control { background: #1a1a1a !important; }
+[data-theme="dark"] .door-control-buttons .btn-open { border-color: rgba(16, 185, 129, 0.5) !important; color: #34d399; }
+[data-theme="dark"] .door-control-buttons .btn-open:not(:disabled):hover { background: rgba(16, 185, 129, 0.1) !important; }
+[data-theme="dark"] .door-control-buttons .btn-close { border-color: rgba(59, 130, 246, 0.5) !important; color: #60a5fa; }
+[data-theme="dark"] .door-control-buttons .btn-close:not(:disabled):hover { background: rgba(59, 130, 246, 0.1) !important; }
+[data-theme="dark"] .control-warning { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
+[data-theme="dark"] .confirm-dialog { background: #1a1a1a; }
+[data-theme="dark"] .confirm-icon { background: #0f0f0f; color: #94a3b8; }
+[data-theme="dark"] .confirm-title { color: #f1f5f9; }
+[data-theme="dark"] .confirm-message { color: #94a3b8; }
+[data-theme="dark"] .confirm-error { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
+[data-theme="dark"] .btn-cancel { background: #0f0f0f; color: #e2e8f0; }
+[data-theme="dark"] .btn-cancel:hover:not(:disabled) { background: #2a2a2a; }

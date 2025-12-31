@@ -55,10 +55,10 @@ class HomestayService {
             if (geocodeResult.placeId) {
               dataToSave.location.placeId = geocodeResult.placeId;
             }
-            logger.info(`✅ Service: Geocoded successfully: [${geocodeResult.lng}, ${geocodeResult.lat}], placeId: ${geocodeResult.placeId || 'N/A'}`);
+            logger.info(` Service: Geocoded successfully: [${geocodeResult.lng}, ${geocodeResult.lat}], placeId: ${geocodeResult.placeId || 'N/A'}`);
           }
         } catch (error) {
-          logger.error(`❌ Service: Geocoding error: ${error.message}`);
+          logger.error(` Service: Geocoding error: ${error.message}`);
         }
       }
     }
@@ -228,10 +228,10 @@ class HomestayService {
             if (geocodeResult.placeId) {
               homestay.location.placeId = geocodeResult.placeId;
             }
-            logger.info(`✅ Service: Geocoded successfully: [${geocodeResult.lng}, ${geocodeResult.lat}], placeId: ${geocodeResult.placeId || 'N/A'}`);
+            logger.info(` Service: Geocoded successfully: [${geocodeResult.lng}, ${geocodeResult.lat}], placeId: ${geocodeResult.placeId || 'N/A'}`);
           }
         } catch (error) {
-          logger.error(`❌ Service: Geocoding error during update: ${error.message}`);
+          logger.error(` Service: Geocoding error during update: ${error.message}`);
         }
       }
       
@@ -477,7 +477,7 @@ class HomestayService {
         slug: { $in: normalizedSlugs } 
       }).select('_id slug');
       
-      logger.info(`✅ Found ${amenityDocs.length} amenities: ${amenityDocs.map(a => a.slug).join(', ')}`);
+      logger.info(` Found ${amenityDocs.length} amenities: ${amenityDocs.map(a => a.slug).join(', ')}`);
       
       const amenityIds = amenityDocs.map(a => a._id);
       if (amenityIds.length > 0) {

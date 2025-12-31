@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+// eslint-disable-next-line no-unused-vars
+import { AnimatePresence, motion } from 'motion/react';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
 import './AnimatedTestimonials.css';

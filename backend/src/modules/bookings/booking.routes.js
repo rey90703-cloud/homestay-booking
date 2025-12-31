@@ -44,6 +44,13 @@ router.get(
   bookingController.getMyBookings,
 );
 
+// Get host's bookings (bookings for homestays owned by host)
+router.get(
+  '/host',
+  authorize(ROLES.HOST, ROLES.ADMIN),
+  bookingController.getHostBookings,
+);
+
 // Admin only routes - place specific routes before dynamic routes
 router.get(
   '/statistics/payments',

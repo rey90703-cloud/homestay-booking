@@ -249,7 +249,7 @@ class EmailService {
       const builder = new EmailTemplateBuilder();
       
       builder
-        .setHeader('✅', 'Booking Confirmed!', 'Your reservation is confirmed', 'success')
+        .setHeader('', 'Booking Confirmed!', 'Your reservation is confirmed', 'success')
         .setBadge('🎉 Your booking has been confirmed', 'success')
         .addSection('🏠 Booking Details', [
           { label: 'Homestay', value: homestay.title },
@@ -299,7 +299,7 @@ class EmailService {
       
       builder
         .setHeader('🎉', 'New Booking Received!', 'You have a new reservation', 'info')
-        .setBadge('✅ New booking for your property', 'info')
+        .setBadge(' New booking for your property', 'info')
         .addSection('👤 Guest Information', [
           { label: 'Guest Name', value: `${guest.profile.firstName} ${guest.profile.lastName}` },
           { label: 'Email', value: guest.email },
@@ -381,7 +381,7 @@ class EmailService {
       const builder = new EmailTemplateBuilder();
       
       builder
-        .setHeader('✅', 'Thanh toán thành công!', 'Booking của bạn đã được xác nhận', 'success')
+        .setHeader('', 'Thanh toán thành công!', 'Booking của bạn đã được xác nhận', 'success')
         .setBadge('🎉 Thanh toán đã được xác nhận thành công', 'success')
         .addSection('💳 Thông tin thanh toán', [
           { label: 'Mã giao dịch', value: transaction.id || transaction.bankReference },
@@ -419,7 +419,7 @@ class EmailService {
 
       return this.sendEmail(
         guest.email,
-        '✅ Thanh toán thành công - Booking đã được xác nhận',
+        ' Thanh toán thành công - Booking đã được xác nhận',
         html,
         text,
       );
@@ -450,7 +450,7 @@ class EmailService {
       
       builder
         .setHeader('🎉', 'Booking mới đã được thanh toán!', 'Khách hàng đã xác nhận thanh toán', 'info')
-        .setBadge('✅ Booking đã được xác nhận và thanh toán', 'info')
+        .setBadge(' Booking đã được xác nhận và thanh toán', 'info')
         .addSection('💰 Thu nhập của bạn', [
           { label: '', value: formatCurrency(booking.pricing.hostAmount) },
           { label: '', value: `Sau khi trừ phí nền tảng ${booking.pricing.commissionRate * 100}%` },

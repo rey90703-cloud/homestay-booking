@@ -59,6 +59,7 @@ const AdminHomestays = () => {
 
   useEffect(() => {
     fetchHomestays();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, pagination.currentPage]);
 
   const fetchHomestays = async () => {

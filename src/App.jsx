@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ChatProvider } from './contexts/ChatContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -27,6 +27,8 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import HostDashboard from './pages/host/HostDashboard';
 import HostHomestays from './pages/host/HostHomestays';
+import HostBookingDetail from './pages/host/HostBookingDetail';
+import HostLayout from './components/layout/HostLayout';
 import AddHomestay from './pages/AddHomestay';
 import ChatWidget from './components/ChatWidget';
 import ScrollToTop from './components/ScrollToTop';
@@ -81,6 +83,11 @@ function App() {
             } />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/host/dashboard" element={<HostDashboard />} />
+            <Route path="/host/bookings/:id" element={
+              <HostLayout activeTab="bookings">
+                <HostBookingDetail />
+              </HostLayout>
+            } />
             <Route path="/homestay/:id" element={
               <>
                 <Header />
@@ -133,7 +140,11 @@ function App() {
                 <Footer />
               </>
             } />
-            <Route path="/host/homestays" element={<HostHomestays />} />
+            <Route path="/host/homestays" element={
+              <HostLayout activeTab="homestays">
+                <HostHomestays />
+              </HostLayout>
+            } />
             <Route path="/homestay-ha-noi" element={
               <>
                 <Header />

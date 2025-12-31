@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import searchService from '../services/searchService';
 import './SearchBar.css';
 
 function SearchBar({ variant = 'hero', initialData = {} }) {
@@ -104,6 +103,7 @@ function SearchBar({ variant = 'hero', initialData = {} }) {
     if (!searchData.checkOut && !initialData.checkOut) {
       setSearchData(prev => ({ ...prev, checkOut: tomorrowStr }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [today, tomorrowStr, initialData]);
 
   return (

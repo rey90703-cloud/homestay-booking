@@ -207,6 +207,7 @@ export const useSocket = ({
     return () => {
       disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]); // Only reconnect when token changes
 
   return {

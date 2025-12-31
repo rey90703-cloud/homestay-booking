@@ -604,6 +604,47 @@ class BookingService {
   }
 
   /**
+   * Get host's bookings (bookings for homestays owned by host)
+   * GET /api/v1/bookings/host
+   * 
+   * @param {string} hostId - ID của host
+   * @param {Object} filters - Filters (status, etc.)
+   * @param {Object} pagination - Pagination options
+   * @returns {Promise<Object>} { bookings, pagination }
+   */
+  async getHostBookings(hostId, filters = {}, pagination = {}) {
+    const { status } = filters;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = pagination;
+
+    const query = { hostId };
+    if (status) query.status = status;
+
+    const totalBookings = await Booking.countDocuments(query);
+    const totalPages = Math.ceil(totalBookings / limit);
+    const skip = (page - 1) * limit;
+
+    const bookings = await Booking.find(query)
+      .populate('homestayId', 'title coverImage location')
+      .populate('guestId', 'email fullName profile')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    return {
+      bookings,
+      pagination: {
+        currentPage: Number(page),
+        totalPages,
+        totalBookings,
+        limit: Number(limit),
+      },
+    };
+  }
+
+  /**
    * Get booked dates for a homestay
    * GET /api/v1/homestays/:id/booked-dates
    * 

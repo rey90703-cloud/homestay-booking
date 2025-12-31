@@ -56,7 +56,7 @@ async function manualVerifyPayment(bookingId) {
     }
 
     if (!matchedTransaction) {
-      console.error('❌ No matching transaction found!');
+      console.error(' No matching transaction found!');
       console.log('\nRecent transactions:');
       transactions.slice(0, 5).forEach(tx => {
         console.log(`- ${tx.transaction_content} | ${tx.amount_in} VND | ${tx.transaction_date}`);
@@ -64,7 +64,7 @@ async function manualVerifyPayment(bookingId) {
       process.exit(1);
     }
 
-    console.log('✅ Found matching transaction!');
+    console.log(' Found matching transaction!');
     console.log('Transaction ID:', matchedTransaction.id);
     console.log('Amount:', matchedTransaction.amount_in);
     console.log('Content:', matchedTransaction.transaction_content);
@@ -79,7 +79,7 @@ async function manualVerifyPayment(bookingId) {
       'manual'
     );
 
-    console.log('✅ Payment verified successfully!');
+    console.log(' Payment verified successfully!');
     console.log('Booking Status:', result.booking.status);
     console.log('Payment Status:', result.booking.payment.status);
     console.log('');

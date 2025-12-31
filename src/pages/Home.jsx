@@ -12,16 +12,14 @@ import API_BASE_URL from '../config/api';
 function Home() {
   const [hanoiHomestays, setHanoiHomestays] = useState([]);
   const [laoCaiHomestays, setLaoCaiHomestays] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchHomestays();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchHomestays = async () => {
     try {
-      setLoading(true);
-      
       const hanoiResponse = await fetch(`${API_BASE_URL}/homestays?city=Hà Nội&limit=6&status=active`);
       const hanoiData = await hanoiResponse.json();
       
@@ -37,8 +35,6 @@ function Home() {
       }
     } catch (error) {
       console.error('Error fetching homestays:', error);
-    } finally {
-      setLoading(false);
     }
   };
 

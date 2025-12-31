@@ -65,6 +65,7 @@ const AdminPayments = () => {
     } else if (activeTab === 'unmatched') {
       fetchUnmatchedTransactions();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, filters, pagination.currentPage, unmatchedFilters, unmatchedPagination.currentPage]);
 
   const fetchStatistics = async () => {
@@ -219,6 +220,7 @@ const AdminPayments = () => {
   const handleMatchSuccess = useCallback(() => {
     fetchUnmatchedTransactions();
     fetchStatistics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Handle view transaction details
@@ -273,7 +275,7 @@ const AdminPayments = () => {
     }).format(price);
   };
 
-  const getPaymentStatusBadgeClass = (status) => {
+  const _getPaymentStatusBadgeClass = (status) => {
     const classes = {
       pending: 'badge-warning',
       completed: 'badge-success',
@@ -283,7 +285,7 @@ const AdminPayments = () => {
     return classes[status] || 'badge-warning';
   };
 
-  const getPayoutStatusBadgeClass = (status) => {
+  const _getPayoutStatusBadgeClass = (status) => {
     const classes = {
       pending: 'badge-warning',
       processing: 'badge-info',

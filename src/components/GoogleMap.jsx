@@ -14,6 +14,7 @@ const GoogleMap = ({ location, title, apiKey }) => {
     if (location?.coordinates?.coordinates && apiKey) {
       loadGoogleMaps();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, apiKey]);
 
   const loadGoogleMaps = () => {
@@ -209,7 +210,7 @@ const GoogleMap = ({ location, title, apiKey }) => {
     }
   };
 
-  const getStaticMapUrl = () => {
+  const _getStaticMapUrl = () => {
     if (!location?.coordinates?.coordinates || !apiKey) return '';
 
     const [lng, lat] = location.coordinates.coordinates;

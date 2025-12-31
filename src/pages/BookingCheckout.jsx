@@ -50,6 +50,7 @@ const BookingCheckout = () => {
       return;
     }
     fetchHomestayDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isAuthenticated, authLoading]);
 
   const fetchHomestayDetail = async () => {
@@ -129,7 +130,7 @@ const BookingCheckout = () => {
       const availabilityData = await availabilityResponse.json();
 
       if (availabilityData.success && !availabilityData.data.available) {
-        alert('❌ Phòng đã được đặt cho ngày bạn chọn!\n\n' +
+        alert(' Phòng đã được đặt cho ngày bạn chọn!\n\n' +
               'Homestay này đã có người đặt trong khoảng thời gian bạn chọn.\n' +
               'Vui lòng quay lại và chọn ngày khác.');
         setSubmitting(false);
@@ -175,7 +176,7 @@ const BookingCheckout = () => {
         const errorMessage = data.message || 'Không thể tạo booking. Vui lòng thử lại.';
         
         if (errorMessage.includes('not available') || errorMessage.includes('Another booking exists')) {
-          alert('❌ Phòng đã được đặt cho ngày bạn chọn!\n\n' +
+          alert(' Phòng đã được đặt cho ngày bạn chọn!\n\n' +
                 'Homestay này đã có người đặt trong khoảng thời gian bạn chọn.\n' +
                 'Vui lòng chọn ngày khác hoặc tìm homestay khác.');
         } else {

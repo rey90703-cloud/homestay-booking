@@ -20,10 +20,7 @@ const ChatWindow = ({ onBack }) => {
     activeChatRoom,
     messages,
     loading,
-    isConnected,
-    onlineUsers,
     typingUsers,
-    sendMessage,
     retryMessage,
     loadMessages,
     hasMoreMessages,
@@ -41,7 +38,6 @@ const ChatWindow = ({ onBack }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [currentSearchIndex, setCurrentSearchIndex] = useState(0);
   const optionsMenuRef = useRef(null);
-  const searchResultRefs = useRef([]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -112,45 +108,6 @@ const ChatWindow = ({ onBack }) => {
     }
     
     return 'Guest';
-  };
-
-  // Check if participant is online
-  const isParticipantOnline = () => {
-    const otherParticipant = getOtherParticipant();
-    if (!otherParticipant) return false;
-    return onlineUsers?.has(otherParticipant.userId) || false;
-  };
-
-  // Format last seen time
-  const formatLastSeen = (lastSeenAt) => {
-    if (!lastSeenAt) return 'Offline';
-    
-    const date = new Date(lastSeenAt);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'Vừa xong';
-    if (diffMins < 60) return `${diffMins} phút trước`;
-    if (diffHours < 24) return `${diffHours} giờ trước`;
-    if (diffDays < 7) return `${diffDays} ngày trước`;
-    
-    return date.toLocaleDateString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  };
-
-  // Format message time
-  const formatTime = (date) => {
-    if (!date) return '';
-    return new Date(date).toLocaleTimeString('vi-VN', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   // Search messages when query changes
@@ -253,7 +210,6 @@ const ChatWindow = ({ onBack }) => {
     const lowerText = text.toLowerCase();
     
     let index = lowerText.indexOf(query);
-    let matchIndexInMessage = 0;
     
     while (index !== -1) {
       // Add text before match
@@ -283,7 +239,6 @@ const ChatWindow = ({ onBack }) => {
       
       lastIndex = index + query.length;
       index = lowerText.indexOf(query, lastIndex);
-      matchIndexInMessage++;
     }
     
     // Add remaining text
@@ -302,8 +257,6 @@ const ChatWindow = ({ onBack }) => {
     );
   }
 
-  const participantOnline = isParticipantOnline();
-  const otherParticipant = getOtherParticipant();
   const participantName = getParticipantName();
 
   return (

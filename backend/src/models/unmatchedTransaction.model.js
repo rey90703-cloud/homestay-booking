@@ -42,7 +42,7 @@ const unmatchedTransactionSchema = new mongoose.Schema(
         validate: {
           validator: function (v) {
             // Account number phải là masked format (ví dụ: ****7918) hoặc full number
-            return !v || /^[\*\d]{4,}$/.test(v);
+            return !v || /^[*\d]{4,}$/.test(v);
           },
           message: 'Account number phải ở dạng masked (ví dụ: ****7918) hoặc số đầy đủ',
         },

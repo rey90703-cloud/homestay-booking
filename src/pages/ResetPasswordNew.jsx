@@ -51,6 +51,7 @@ const ResetPasswordNew = () => {
     if (otpRefs[0].current) {
       otpRefs[0].current.focus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

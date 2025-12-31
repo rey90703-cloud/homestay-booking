@@ -191,7 +191,7 @@ const bookingSchema = new mongoose.Schema(
           validate: {
             validator: function (v) {
               // Account number phải là masked format (ví dụ: ****7918)
-              return !v || /^[\*\d]{4,}$/.test(v);
+              return !v || /^[*\d]{4,}$/.test(v);
             },
             message: 'Account number phải ở dạng masked (ví dụ: ****7918)',
           },
@@ -296,6 +296,21 @@ const bookingSchema = new mongoose.Schema(
       hoursUntilCheckIn: {
         type: Number,
         min: 0,
+      },
+    },
+
+    // Smart Door Access Control
+    smartDoorAccess: {
+      enabled: {
+        type: Boolean,
+        default: false,
+      },
+      confirmedAt: {
+        type: Date,
+      },
+      confirmedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
       },
     },
 

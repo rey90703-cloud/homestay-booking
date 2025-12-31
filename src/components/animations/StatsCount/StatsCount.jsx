@@ -57,15 +57,15 @@ const StatsCount = ({
   /**
    * Format number with decimals
    */
-  const formatNumber = useCallback((value, decimals = 0) => {
-    return decimals > 0 ? value.toFixed(decimals) : Math.round(value).toString();
+  const formatNumber = useCallback((value, decimalPlaces = 0) => {
+    return decimalPlaces > 0 ? value.toFixed(decimalPlaces) : Math.round(value).toString();
   }, []);
 
   /**
    * Animate a single counter using requestAnimationFrame
    * Requirements: 1.2 - Animate from 0 to target within duration
    */
-  const animateCounter = useCallback((index, targetValue, duration, decimals) => {
+  const animateCounter = useCallback((index, targetValue, duration, _decimals) => {
     const startTime = performance.now();
     startTimeRefs.current[index] = startTime;
 
@@ -131,8 +131,9 @@ const StatsCount = ({
    * Requirements: 1.5 - Continue animation to completion (cleanup only on unmount)
    */
   useEffect(() => {
+    const frameRefs = animationFrameRefs.current;
     return () => {
-      animationFrameRefs.current.forEach(frameId => {
+      frameRefs.forEach(frameId => {
         if (frameId) {
           cancelAnimationFrame(frameId);
         }

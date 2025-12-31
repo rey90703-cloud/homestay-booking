@@ -56,6 +56,7 @@ const ChatWidget = () => {
     return () => {
       window.removeEventListener('openChatWidget', handleOpenChatWidget);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRooms, loadChatRooms, selectChatRoom]);
 
   // Listen for openChat event to start new conversation
@@ -115,6 +116,7 @@ const ChatWidget = () => {
     return () => {
       window.removeEventListener('openChat', handleOpenChat);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRooms, loadChatRooms, selectChatRoom, isAuthenticated, user]);
 
   // Toggle widget open/close

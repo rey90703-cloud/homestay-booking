@@ -97,11 +97,8 @@ class PaymentReminderService {
           ],
         },
         
-        // QR code đã được tạo
-        'payment.qrCode.expiresAt': { $exists: true },
-        
-        // QR code đã hết hạn
-        'payment.qrCode.expiresAt': { $lt: now },
+        // QR code đã được tạo và đã hết hạn
+        'payment.qrCode.expiresAt': { $exists: true, $lt: now },
         
         // Chưa gửi reminder trong 30 phút gần nhất (hoặc chưa từng gửi)
         $or: [

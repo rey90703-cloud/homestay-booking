@@ -10,6 +10,8 @@ const configRoutes = require('../modules/config/config.routes');
 const reviewRoutes = require('../modules/reviews/review.routes');
 const chatRoutes = require('../modules/chats/chat.routes');
 const promoCodeRoutes = require('./promoCode.routes');
+const smartDoorRoutes = require('./smartDoor.routes');
+const monitoringRoutes = require('./monitoring.routes');
 const paymentPoller = require('../services/payment-poller.service');
 const mongoose = require('mongoose');
 
@@ -28,7 +30,9 @@ router.use('/payments', paymentRoutes);
 router.use('/config', configRoutes);
 router.use('/chat', chatRoutes);
 router.use('/promo-codes', promoCodeRoutes);
+router.use('/bookings', smartDoorRoutes); // Smart door routes mounted under /bookings
 router.use('/', reviewRoutes);
+router.use('/monitoring', monitoringRoutes); // Monitoring routes
 
 // Health check endpoint
 router.get('/health', (req, res) => {

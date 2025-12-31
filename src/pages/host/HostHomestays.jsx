@@ -24,6 +24,7 @@ const HostHomestays = ({ onAddClick }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showGuideModal, setShowGuideModal] = useState(false);
   const [selectedHomestay, setSelectedHomestay] = useState(null);
+  const [homestayBookings, setHomestayBookings] = useState({}); // Map homestayId -> bookingId
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -59,6 +60,7 @@ const HostHomestays = ({ onAddClick }) => {
 
   useEffect(() => {
     fetchHomestays();
+    fetchHostBookings();
   }, []);
 
   const fetchHomestays = async () => {
@@ -77,6 +79,47 @@ const HostHomestays = ({ onAddClick }) => {
       console.error('Error fetching homestays:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch bookings của host để map homestay -> booking
+  const fetchHostBookings = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/bookings/host`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      const bookings = data.data?.bookings || [];
+      
+      // Tạo map: homestayId -> booking (ưu tiên booking active/confirmed)
+      const bookingMap = {};
+      bookings.forEach(booking => {
+        const homestayId = booking.homestayId?._id || booking.homestayId;
+        // Ưu tiên booking có status: confirmed > pending > completed
+        const priority = { confirmed: 3, pending: 2, completed: 1 };
+        const existingBooking = bookingMap[homestayId];
+        const existingPriority = existingBooking ? (priority[existingBooking.status] || 0) : 0;
+        const newPriority = priority[booking.status] || 0;
+        
+        if (!existingBooking || newPriority > existingPriority) {
+          bookingMap[homestayId] = booking;
+        }
+      });
+      
+      setHomestayBookings(bookingMap);
+    } catch (error) {
+      console.error('Error fetching host bookings:', error);
+    }
+  };
+
+  // Xử lý click nút Xem - chuyển đến trang chi tiết booking
+  const handleViewBooking = (homestayId) => {
+    const booking = homestayBookings[homestayId];
+    if (booking) {
+      navigate(`/host/bookings/${booking._id}`);
+    } else {
+      alert('Homestay này chưa có đặt phòng nào');
     }
   };
 
@@ -335,7 +378,7 @@ const HostHomestays = ({ onAddClick }) => {
                 <div className="homestay-actions">
                   <button 
                     className="btn-view"
-                    onClick={() => window.open(`/homestay/${homestay._id}`, '_blank')}
+                    onClick={() => handleViewBooking(homestay._id)}
                   >
                     Xem
                   </button>

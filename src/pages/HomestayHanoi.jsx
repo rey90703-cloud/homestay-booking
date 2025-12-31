@@ -7,7 +7,6 @@ import './HomestayHanoi.css';
 
 function HomestayHanoi() {
   const [hanoiHomestays, setHanoiHomestays] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     total: 0,
     districts: 15,
@@ -16,11 +15,11 @@ function HomestayHanoi() {
 
   useEffect(() => {
     fetchHomestays();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchHomestays = async () => {
     try {
-      setLoading(true);
       const response = await fetch(`${API_BASE_URL}/homestays?city=Hà Nội&status=active`);
       const data = await response.json();
       
@@ -34,8 +33,6 @@ function HomestayHanoi() {
       }
     } catch (error) {
       console.error('Error fetching homestays:', error);
-    } finally {
-      setLoading(false);
     }
   };
 

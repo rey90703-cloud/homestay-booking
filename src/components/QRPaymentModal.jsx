@@ -20,6 +20,7 @@ const QRPaymentModal = ({ bookingId, onSuccess, onClose }) => {
       clearPolling();
       clearCountdown();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingId]);
 
   const fetchQRCode = async () => {
